@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -380,7 +380,10 @@ function loadProps(){
     header:   true,
     skipEmptyLines: true,
     complete(res){
-      propsData = res.data.filter(r => IMG_COLS.some(c => r[c] && r[c].trim()));
+      propsData = res.data.filter(r => 
+        IMG_COLS.some(c => r[c] && r[c].trim()) &&
+        (r['publicacion']||'').toLowerCase() === 'signature'
+      );
       renderPropsFromData(propsData);
     },
     error(){
@@ -554,7 +557,8 @@ function render(){
     <p class="cnt-lbl">${t.cPh}</p>
     <p class="cnt-val">
       <a href="tel:+529844106305">+52 984 410 6305</a><br>
-         </p>
+      <a href="tel:+18198089333">+1 (819) 808-9333</a>
+    </p>
     <p class="cnt-lbl">${t.cEm}</p>
     <p class="cnt-val"><a href="mailto:info@luxuryrealestatesignature.com">info@luxuryrealestatesignature.com</a></p>`;
   g('cntForm').innerHTML = `
