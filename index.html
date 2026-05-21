@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -380,10 +380,27 @@ function loadProps(){
     header:   true,
     skipEmptyLines: true,
     complete(res){
-      propsData = res.data.filter(r => 
-        IMG_COLS.some(c => r[c] && r[c].trim()) &&
-        (r['publicacion']||'').toLowerCase() === 'signature'
+      // Encontrar la columna "publicacion" sin importar mayúsculas/acentos/espacios
+      const cols = res.meta.fields || [];
+      const pubCol = cols.find(c => 
+        c.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'') === 'publicacion'
       );
+
+      propsData = res.data.filter(r => {
+        const hasImg = IMG_COLS.some(c => r[c] && r[c].trim());
+        const pubVal = pubCol ? (r[pubCol]||'').trim().toLowerCase() : '';
+        return hasImg && pubVal === 'signature';
+      });
+
+      if(!propsData.length){
+        // Debug: mostrar columnas detectadas en consola
+        console.warn('Columnas en el sheet:', cols);
+        console.warn('Columna publicacion encontrada:', pubCol);
+        console.warn('Total filas:', res.data.length);
+        console.warn('Valores en publicacion:', res.data.map(r=>pubCol?r[pubCol]:'N/A').slice(0,10));
+        grid.innerHTML = '<div class="prp-loading" style="color:rgba(196,163,90,.4)">SIN PROPIEDADES DESTACADAS</div>';
+        return;
+      }
       renderPropsFromData(propsData);
     },
     error(){
