@@ -112,6 +112,16 @@ img{max-width:100%;display:block}
 .prp-detail{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
 .prp-sold{position:absolute;top:20px;left:20px;background:rgba(8,8,6,.75);border:1px solid rgba(196,163,90,.5);color:var(--gold);font-size:8px;letter-spacing:3px;padding:5px 12px;text-transform:uppercase}
 .prp-loading{text-align:center;padding:80px 20px;color:var(--dim);font-size:10px;letter-spacing:4px;text-transform:uppercase;grid-column:1/-1;animation:pulse 1.8s ease-in-out infinite}
+.filter-bar{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:48px;padding:28px 32px;background:var(--bg2);border:1px solid var(--border)}
+.filter-group{display:flex;flex-direction:column;gap:10px;flex:1;min-width:160px}
+.filter-lbl{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--gold)}
+.filter-sel{background:transparent;border:none;border-bottom:1px solid rgba(196,163,90,.22);padding:8px 0;color:var(--text);font-family:'Raleway',sans-serif;font-size:13px;font-weight:300;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;transition:border-color .3s;width:100%}
+.filter-sel:focus{border-color:var(--gold)}
+.filter-sel option{background:var(--bg2);color:var(--text)}
+.prp-more-wrap{text-align:center;margin-top:52px}
+.prp-count{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);margin-bottom:20px}
+.btn-more{padding:14px 52px;border:1px solid rgba(196,163,90,.35);color:rgba(240,235,225,.75);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:4px;text-transform:uppercase;cursor:pointer;background:transparent;transition:border-color .3s,color .3s}
+.btn-more:hover{border-color:var(--gold);color:var(--gold-lt)}
 .prp-lk{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(196,163,90,.3);padding-bottom:2px;transition:color .2s,border-color .2s;display:inline-block}
 .prp-lk:hover{color:var(--gold-lt);border-color:var(--gold-lt)}
 
@@ -247,7 +257,9 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
       <h2 class="s-ti" id="pTi"></h2>
       <div class="s-div"><div class="gdot"></div></div>
     </div>
+    <div id="prpFilters"></div>
     <div class="prp-g" id="prpG"></div>
+    <div id="prpMore"></div>
   </div>
 </section>
 
@@ -311,103 +323,172 @@ const IC = [
 
 // ── GOOGLE SHEETS — PROPIEDADES ──
 const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdEUO8SD2sTqn38dXV8VCzCddB5caiUUKpcbu6ufFsGYvdqEDadT67S88ltOsQamnVQ6itfSIMnv8r/pub?gid=0&single=true&output=csv';
-let propsData = []; // cache — solo un fetch aunque cambies idioma
+let allFetched  = [];   // todas las propiedades con imagen
+let filterState = { city:'', type:'', listing:'' };
+let visibleCount = 5;
 
-const IMG_COLS = ['image[0].url','image[1].url','image[2].url','image[3].url','image[4].url','image[5].url','image[6].url','image[7].url','image[8].url','image[9].url'];
+const IMG_COLS = ['image[0].url','image[1].url','image[2].url','image[3].url','image[4].url',
+                  'image[5].url','image[6].url','image[7].url','image[8].url','image[9].url'];
 
 function formatPrice(val){
   if(!val) return '';
   const n = parseFloat(String(val).replace(/[^0-9.]/g,''));
   if(isNaN(n)) return val;
-  return '$' + n.toLocaleString('en-US', {minimumFractionDigits:0}) + ' MXN';
+  return '$' + n.toLocaleString('en-US') + ' MXN';
 }
 
+// ── Render tarjetas (recibe slice ya filtrado/paginado) ──
 function renderPropsFromData(data){
   const grid = g('prpG');
   const ctaMap = {fr:'DÉCOUVRIR',en:'DISCOVER',es:'DESCUBRIR'};
   const cta = ctaMap[lang];
 
+  if(!data.length){
+    grid.innerHTML = '<div class="prp-loading" style="animation:none;opacity:.5">SIN RESULTADOS</div>';
+    return;
+  }
+
   grid.innerHTML = data.map(p=>{
     const img    = IMG_COLS.map(c=>p[c]).find(u=>u&&u.trim()) || '';
-    const name   = p['Nombre'] || p['home_listing_id'] || '';
+    const name   = p['Nombre'] || '';
     const price  = formatPrice(p['Precio']);
     const city   = [p['Colonia'], p['Ciudad']].filter(Boolean).join(', ');
-    const beds   = p['Recámaras'] || p['Rec\u00e1maras'];
-    const baths  = p['Ba\u00f1os'] || p['Baños'];
+    const beds   = p['Rec\u00e1maras'] || p['Recámaras'] || '';
+    const baths  = p['Ba\u00f1os'] || p['Baños'] || '';
     const area   = p['Area'] ? `${p['Area']} ${p['area_unit']||'m²'}` : '';
     const type   = p['listing_type'] || '';
     const desc   = (p['description']||'').substring(0,130).trim();
     const tour   = p['virtual_tour_url'] || '';
     const status = (p['status']||'').toLowerCase();
-    const sold   = status === 'sold' || status === 'vendido' || status === 'inactive';
-
+    const sold   = status==='sold'||status==='vendido'||status==='inactive';
     const details = [
-      beds  ? `<span class="prp-detail">${beds} rec.</span>` : '',
-      baths ? `<span class="prp-detail">${baths} baños</span>` : '',
-      area  ? `<span class="prp-detail">${area}</span>` : ''
+      beds  ? `<span class="prp-detail">${beds} rec.</span>`:'',
+      baths ? `<span class="prp-detail">${baths} baños</span>`:'',
+      area  ? `<span class="prp-detail">${area}</span>`:''
     ].join('');
 
     return `<div class="prp-c rev">
       <div class="prp-img">
         <img src="${img}" alt="${name}" loading="lazy" onerror="this.style.opacity='.15'">
         <div class="prp-ov"></div>
-        ${type ? `<span class="prp-badge">${type.toUpperCase()}</span>` : ''}
-        ${sold  ? `<span class="prp-sold">VENDIDO</span>` : ''}
+        ${type?`<span class="prp-badge">${type.toUpperCase()}</span>`:''}
+        ${sold?`<span class="prp-sold">VENDIDO</span>`:''}
       </div>
       <div class="prp-body">
         <h3 class="prp-nm">${name}</h3>
         <p class="prp-lc">${city}</p>
-        ${details ? `<div class="prp-details">${details}</div>` : ''}
-        ${desc ? `<p class="prp-ds">${desc}${desc.length===130?'…':''}</p>` : ''}
-        ${price ? `<p class="prp-pr">${price}</p>` : ''}
-        ${tour ? `<a href="${tour}" target="_blank" class="prp-lk">VIRTUAL TOUR &rarr;</a>` : `<span class="prp-lk" style="opacity:.35">${cta} &rarr;</span>`}
+        ${details?`<div class="prp-details">${details}</div>`:''}
+        ${desc?`<p class="prp-ds">${desc}${desc.length===130?'…':''}</p>`:''}
+        ${price?`<p class="prp-pr">${price}</p>`:''}
+        ${tour?`<a href="${tour}" target="_blank" class="prp-lk">VIRTUAL TOUR &rarr;</a>`:''}
       </div>
     </div>`;
   }).join('');
-
   observe();
 }
 
-function loadProps(){
-  const grid = g('prpG');
-  if(propsData.length){
-    renderPropsFromData(propsData);
-    return;
+// ── Filtrado ──
+function getFiltered(){
+  return allFetched.filter(p=>{
+    const city    = (p['Ciudad']||'').trim().toLowerCase();
+    const type    = (p['Tipo propiedad']||'').trim().toLowerCase();
+    const listing = (p['listing_type']||'').trim().toLowerCase();
+    return (
+      (!filterState.city    || city    === filterState.city) &&
+      (!filterState.type    || type    === filterState.type) &&
+      (!filterState.listing || listing === filterState.listing)
+    );
+  });
+}
+
+// ── Ver más ──
+function loadMore(){
+  visibleCount += 5;
+  renderFiltered();
+  // scroll suave al primer card nuevo
+  const cards = document.querySelectorAll('#prpG .prp-c');
+  if(cards[visibleCount-5]) cards[visibleCount-5].scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// ── Render filtrado + paginado ──
+function renderFiltered(){
+  const filtered  = getFiltered();
+  const visible   = filtered.slice(0, visibleCount);
+  renderPropsFromData(visible);
+
+  const remaining = filtered.length - visibleCount;
+  const moreWrap  = g('prpMore');
+  if(remaining > 0){
+    moreWrap.innerHTML = `
+      <div class="prp-more-wrap">
+        <p class="prp-count">${visible.length} DE ${filtered.length} PROPIEDADES</p>
+        <button class="btn-more" onclick="loadMore()">VER ${Math.min(remaining,5)} MÁS</button>
+      </div>`;
+  } else {
+    moreWrap.innerHTML = filtered.length > 0
+      ? `<div class="prp-more-wrap"><p class="prp-count">${filtered.length} PROPIEDADES</p></div>`
+      : '';
   }
-  grid.innerHTML = '<div class="prp-loading">CARGANDO PROPIEDADES</div>';
+}
+
+// ── Construir filtros dinámicos del sheet ──
+function buildFilters(){
+  const allLabel = {fr:'Tous',en:'All',es:'Todos'}[lang];
+  const uniq = col => [...new Set(allFetched.map(p=>(p[col]||'').trim()).filter(Boolean))].sort();
+
+  const cities   = uniq('Ciudad');
+  const types    = uniq('Tipo propiedad');
+  const listings = uniq('listing_type');
+
+  const sel = (id, opts, val) =>
+    `<select class="filter-sel" id="${id}">
+      <option value="">${allLabel}</option>
+      ${opts.map(o=>`<option value="${o.toLowerCase()}"${val===o.toLowerCase()?'selected':''}>${o}</option>`).join('')}
+    </select>`;
+
+  g('prpFilters').innerHTML = `
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-lbl">Ciudad</span>
+        ${sel('fCity', cities, filterState.city)}
+      </div>
+      <div class="filter-group">
+        <span class="filter-lbl">Tipo de Propiedad</span>
+        ${sel('fType', types, filterState.type)}
+      </div>
+      <div class="filter-group">
+        <span class="filter-lbl">Oferta</span>
+        ${sel('fListing', listings, filterState.listing)}
+      </div>
+    </div>`;
+
+  ['fCity','fType','fListing'].forEach(id=>{
+    document.getElementById(id).addEventListener('change', e=>{
+      const key = {fCity:'city',fType:'type',fListing:'listing'}[id];
+      filterState[key] = e.target.value;
+      visibleCount = 5;
+      renderFiltered();
+    });
+  });
+}
+
+// ── Fetch principal ──
+function loadProps(){
+  if(allFetched.length){ buildFilters(); renderFiltered(); return; }
+  g('prpG').innerHTML = '<div class="prp-loading">CARGANDO PROPIEDADES</div>';
   Papa.parse(SHEET_CSV,{
     download: true,
     header:   true,
     skipEmptyLines: true,
     complete(res){
-      // Encontrar la columna "publicacion" sin importar mayúsculas/acentos/espacios
-      const cols = res.meta.fields || [];
-      const pubCol = cols.find(c => 
-        c.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'') === 'publicacion'
-      );
-
-      propsData = res.data.filter(r => {
-        const hasImg = IMG_COLS.some(c => r[c] && r[c].trim());
-        const pubVal = pubCol ? (r[pubCol]||'').trim().toLowerCase() : '';
-        return hasImg && pubVal === 'signature';
-      });
-
-      if(!propsData.length){
-        // Debug: mostrar columnas detectadas en consola
-        console.warn('Columnas en el sheet:', cols);
-        console.warn('Columna publicacion encontrada:', pubCol);
-        console.warn('Total filas:', res.data.length);
-        console.warn('Valores en publicacion:', res.data.map(r=>pubCol?r[pubCol]:'N/A').slice(0,10));
-        grid.innerHTML = '<div class="prp-loading" style="color:rgba(196,163,90,.4)">SIN PROPIEDADES DESTACADAS</div>';
-        return;
-      }
-      renderPropsFromData(propsData);
+      allFetched = res.data.filter(r => IMG_COLS.some(c=>r[c]&&r[c].trim()));
+      buildFilters();
+      renderFiltered();
     },
     error(){
-      grid.innerHTML = '<div class="prp-loading" style="color:rgba(196,163,90,.4)">ERROR AL CARGAR — INTENTA RECARGAR</div>';
+      g('prpG').innerHTML = '<div class="prp-loading" style="color:rgba(196,163,90,.4)">ERROR AL CARGAR</div>';
     }
   });
-}
 
 // ── i18n ──
 const L = {
