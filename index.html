@@ -559,40 +559,43 @@ function observe(){
   document.querySelectorAll('.rev').forEach(el=>ob.observe(el));
 }
 
-// ── FLOATING LOGO ANIMATION ──
-const fLogo = document.getElementById('fLogo');
-function lerp(a,b,t){return a+(b-a)*t}
-function eio(t){return t<.5?2*t*t:-1+(4-2*t)*t}
-
-function updateLogo(){
-  const sy  = window.scrollY;
-  const vw  = window.innerWidth;
-  const vh  = window.innerHeight;
-  const p   = eio(Math.min(sy / (vh * 0.42), 1));
-
-  // START — large, centered, upper hero
-  const startW = Math.min(200, vw * 0.32);
-  const startX = (vw - startW) / 2;
-  const startY = vh * 0.10;
-
-  // END — matches hidden navLogoRef position exactly
-  const ref = document.getElementById('navLogoRef');
-  const nr  = ref.getBoundingClientRect();
-  const endW = 44;
-  const endX = nr.left;
-  const endY = nr.top;
-
-  fLogo.style.left  = lerp(startX, endX, p) + 'px';
-  fLogo.style.top   = lerp(startY, endY, p) + 'px';
-  fLogo.style.width = lerp(startW, endW, p) + 'px';
-}
-
-window.addEventListener('scroll', updateLogo, {passive:true});
-window.addEventListener('resize', updateLogo);
-setTimeout(updateLogo, 120);
-
 render();
+
+// ── FLOATING LOGO (después de render para que DOM esté listo) ──
+window.addEventListener('load', function(){
+  const fLogo = document.getElementById('fLogo');
+  if(!fLogo) return;
+
+  function lerp(a,b,t){return a+(b-a)*t}
+  function eio(t){return t<.5?2*t*t:-1+(4-2*t)*t}
+
+  function updateLogo(){
+    const sy  = window.scrollY;
+    const vw  = window.innerWidth;
+    const vh  = window.innerHeight;
+    const p   = eio(Math.min(sy / (vh * 0.42), 1));
+
+    const startW = Math.min(200, vw * 0.32);
+    const startX = (vw - startW) / 2;
+    const startY = vh * 0.10;
+
+    const ref = document.getElementById('navLogoRef');
+    const nr  = ref.getBoundingClientRect();
+    const endW = 44;
+    const endX = nr.left;
+    const endY = nr.top;
+
+    fLogo.style.left  = lerp(startX, endX, p) + 'px';
+    fLogo.style.top   = lerp(startY, endY, p) + 'px';
+    fLogo.style.width = lerp(startW, endW, p) + 'px';
+  }
+
+  window.addEventListener('scroll', updateLogo, {passive:true});
+  window.addEventListener('resize', updateLogo);
+  updateLogo();
+});
 </script>
+
 <img id="fLogo" src="https://cdn.shopify.com/s/files/1/0602/2417/6173/files/Luxury_Signture.png?v=1779266683" alt="Luxury Real Estate Signature" onclick="window.scrollTo({top:0,behavior:'smooth'})">
 
 </body>
