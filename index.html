@@ -171,6 +171,21 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
 .ft-links a:hover{color:var(--gold)}
 .ft-cp{font-size:10px;color:var(--dim);opacity:.4;letter-spacing:.5px}
 
+/* ── FORM OVERLAY ── */
+#formOverlay{position:fixed;inset:0;z-index:800;background:rgba(8,8,6,.97);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s ease;backdrop-filter:blur(8px)}
+#formOverlay.open{opacity:1;pointer-events:auto}
+.fo-inner{text-align:center;padding:48px 32px;max-width:480px;width:90%}
+.fo-icon{font-size:40px;margin-bottom:28px;animation:foIconIn .6s .1s both}
+@keyframes foIconIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+.fo-ornament{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:28px;opacity:0;animation:up .7s .3s forwards}
+.fo-line{flex:1;max-width:60px;height:1px;background:linear-gradient(to right,transparent,var(--gold))}
+.fo-ornament .fo-line:last-child{background:linear-gradient(to left,transparent,var(--gold))}
+.fo-dot{width:5px;height:5px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
+.fo-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,42px);font-weight:300;font-style:italic;color:var(--text);margin-bottom:16px;opacity:0;animation:up .7s .4s forwards}
+.fo-sub{font-size:13px;font-weight:300;letter-spacing:.04em;line-height:1.8;color:var(--dim);margin-bottom:40px;opacity:0;animation:up .7s .5s forwards}
+.fo-btn{background:none;border:1px solid rgba(196,163,90,.35);color:var(--gold);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:4px;text-transform:uppercase;padding:13px 36px;cursor:pointer;transition:border-color .25s,color .25s;opacity:0;animation:up .7s .65s forwards}
+.fo-btn:hover{border-color:var(--gold);color:var(--gold-lt)}
+
 /* ── DETAIL VIEW ── */
 #detailView{position:fixed;inset:0;z-index:500;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .4s ease;overflow-y:auto;overflow-x:hidden}
 #detailView.open{opacity:1;pointer-events:auto}
@@ -942,6 +957,25 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDetail(); });
 // ── CONTACT FORM → n8n ──
 const WEBHOOK = 'https://n8n-production-3be9.up.railway.app/webhook/822a51cd-42c4-4f6c-a7f1-5d902b5d4830';
 
+function showFormOverlay(type, title, sub, btnTxt){
+  document.getElementById('foIcon').textContent  = type === 'success' ? '✦' : '◇';
+  document.getElementById('foIcon').style.color  = type === 'success' ? 'var(--gold)' : '#c47a5a';
+  document.getElementById('foTitle').textContent = title;
+  document.getElementById('foSub').textContent   = sub;
+  document.getElementById('foBtn').textContent   = btnTxt;
+  // Reset animations
+  ['foIcon','fo-ornament','foTitle','foSub','foBtn'].forEach(id=>{
+    const el = document.getElementById(id) || document.querySelector('.'+id);
+    if(el){ el.style.animation='none'; el.offsetHeight; el.style.animation=''; }
+  });
+  document.getElementById('formOverlay').classList.add('open');
+  if(type==='success') setTimeout(closeFormOverlay, 5000);
+}
+
+function closeFormOverlay(){
+  document.getElementById('formOverlay').classList.remove('open');
+}
+
 function submitContactForm(){
   const name     = (document.getElementById('cf-name')?.value||'').trim();
   const email    = (document.getElementById('cf-email')?.value||'').trim();
@@ -949,26 +983,23 @@ function submitContactForm(){
   const interest = (document.getElementById('cf-interest')?.value||'').trim();
   const message  = (document.getElementById('cf-message')?.value||'').trim();
   const btn      = document.getElementById('cf-submit');
-  const feedback = document.getElementById('cf-feedback');
-
-  const errMsg = {fr:'Veuillez remplir nom et e-mail.',en:'Please fill in name and email.',es:'Por favor completa nombre y correo.'}[lang];
-  const loadMsg= {fr:'ENVOI EN COURS…',en:'SENDING…',es:'ENVIANDO…'}[lang];
-  const okMsg  = {fr:'MESSAGE ENVOYÉ — MERCI!',en:'MESSAGE SENT — THANK YOU!',es:'MENSAJE ENVIADO — GRACIAS!'}[lang];
-  const failMsg= {fr:'ERREUR — RÉESSAYEZ.',en:'ERROR — PLEASE RETRY.',es:'ERROR — INTENTA DE NUEVO.'}[lang];
 
   // Validation
   if(!name || !email || !email.includes('@')){
-    feedback.style.display = 'block';
-    feedback.style.color   = 'var(--gold)';
-    feedback.textContent   = errMsg;
+    const errMsg = {fr:'Veuillez remplir nom et e-mail.',en:'Please fill in name and email.',es:'Por favor completa nombre y correo.'}[lang];
+    showFormOverlay('error',
+      {fr:'Informations manquantes',en:'Missing information',es:'Faltan datos'}[lang],
+      errMsg,
+      {fr:'RÉESSAYER',en:'TRY AGAIN',es:'REINTENTAR'}[lang]
+    );
     return;
   }
 
-  // Loading state
-  btn.disabled    = true;
-  btn.textContent = loadMsg;
-  btn.style.background  = 'var(--gold-dk)';
-  feedback.style.display = 'none';
+  // Loading
+  const loadTxt = {fr:'ENVOI EN COURS…',en:'SENDING…',es:'ENVIANDO…'}[lang];
+  btn.disabled = true;
+  btn.textContent = loadTxt;
+  btn.style.background = 'var(--gold-dk)';
 
   fetch(WEBHOOK, {
     method: 'POST',
@@ -983,26 +1014,36 @@ function submitContactForm(){
   })
   .then(r => {
     if(!r.ok) throw new Error('HTTP '+r.status);
-    feedback.style.display = 'block';
-    feedback.style.color   = 'var(--gold-lt)';
-    feedback.textContent   = okMsg;
-    btn.textContent = okMsg;
-    btn.style.background = '#3a6b3a';
+    // Reset button
+    btn.disabled = false;
+    btn.textContent = L[lang].fS;
+    btn.style.background = 'var(--gold)';
     // Clear form
     ['cf-name','cf-email','cf-phone','cf-message'].forEach(id=>{
-      const el = document.getElementById(id);
-      if(el) el.value='';
+      const el = document.getElementById(id); if(el) el.value='';
     });
     const sel = document.getElementById('cf-interest');
     if(sel) sel.selectedIndex=0;
+    // Success overlay
+    showFormOverlay('success',
+      {fr:'Message envoyé',en:'Message sent',es:'Mensaje enviado'}[lang],
+      {fr:'Merci pour votre intérêt. Notre équipe vous contactera dans les plus brefs délais.',
+       en:'Thank you for your interest. Our team will be in touch with you shortly.',
+       es:'Gracias por su interés. Nuestro equipo se pondrá en contacto con usted en breve.'}[lang],
+      {fr:'FERMER',en:'CLOSE',es:'CERRAR'}[lang]
+    );
   })
-  .catch(() => {
-    feedback.style.display = 'block';
-    feedback.style.color   = '#c47a5a';
-    feedback.textContent   = failMsg;
-    btn.disabled    = false;
+  .catch(()=>{
+    btn.disabled = false;
     btn.textContent = L[lang].fS;
     btn.style.background = 'var(--gold)';
+    showFormOverlay('error',
+      {fr:'Erreur d\'envoi',en:'Something went wrong',es:'Error al enviar'}[lang],
+      {fr:'Veuillez réessayer ou nous contacter directement par téléphone.',
+       en:'Please try again or contact us directly by phone.',
+       es:'Por favor intenta de nuevo o contáctanos directamente por teléfono.'}[lang],
+      {fr:'RÉESSAYER',en:'TRY AGAIN',es:'REINTENTAR'}[lang]
+    );
   });
 }
 
@@ -1040,6 +1081,17 @@ window.addEventListener('load', function(){
   updateLogo();
 });
 </script>
+
+<!-- FORM FEEDBACK OVERLAY -->
+<div id="formOverlay">
+  <div class="fo-inner">
+    <div class="fo-icon" id="foIcon"></div>
+    <div class="fo-ornament"><div class="fo-line"></div><div class="fo-dot"></div><div class="fo-line"></div></div>
+    <h2 class="fo-title" id="foTitle"></h2>
+    <p class="fo-sub" id="foSub"></p>
+    <button class="fo-btn" id="foBtn" onclick="closeFormOverlay()"></button>
+  </div>
+</div>
 
 <!-- DETAIL VIEW -->
 <div id="detailView">
