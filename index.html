@@ -727,17 +727,18 @@ function render(){
     <p class="cnt-val"><a href="mailto:info@luxuryrealestatesignature.com">info@luxuryrealestatesignature.com</a></p>`;
   g('cntForm').innerHTML = `
     <div class="frm-2">
-      <div class="frm-r"><label>${t.fN}</label><input type="text" placeholder="${t.fN}"></div>
-      <div class="frm-r"><label>${t.fE}</label><input type="email" placeholder="${t.fE}"></div>
+      <div class="frm-r"><label>${t.fN}</label><input id="cf-name" type="text" placeholder="${t.fN}"></div>
+      <div class="frm-r"><label>${t.fE}</label><input id="cf-email" type="email" placeholder="${t.fE}"></div>
     </div>
     <div class="frm-2">
-      <div class="frm-r"><label>${t.fP}</label><input type="tel" placeholder="${t.fP}"></div>
+      <div class="frm-r"><label>${t.fP}</label><input id="cf-phone" type="tel" placeholder="${t.fP}"></div>
       <div class="frm-r"><label>${t.fI}</label>
-        <select><option value="" disabled selected>${t.fI}</option>${t.fO.map(o=>`<option>${o}</option>`).join('')}</select>
+        <select id="cf-interest"><option value="" disabled selected>${t.fI}</option>${t.fO.map(o=>`<option>${o}</option>`).join('')}</select>
       </div>
     </div>
-    <div class="frm-r"><label>${t.fM}</label><textarea placeholder="${t.fM}"></textarea></div>
-    <button class="frm-sub">${t.fS}</button>`;
+    <div class="frm-r"><label>${t.fM}</label><textarea id="cf-message" placeholder="${t.fM}"></textarea></div>
+    <div id="cf-feedback" style="display:none;margin-bottom:16px;font-size:12px;letter-spacing:2px;text-transform:uppercase"></div>
+    <button class="frm-sub" id="cf-submit" onclick="submitContactForm()">${t.fS}</button>`;
   // Footer
   g('ftLk').innerHTML = `<a href="#">${t.ftL}</a><a href="#">${t.ftP}</a><a href="#">${t.ftC}</a>`;
   g('ftCp').textContent = t.ftCp;
@@ -937,6 +938,72 @@ function bindCardClicks(){
 
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDetail(); });
 
+
+// ── CONTACT FORM → n8n ──
+const WEBHOOK = 'https://n8n-production-3be9.up.railway.app/webhook/822a51cd-42c4-4f6c-a7f1-5d902b5d4830';
+
+function submitContactForm(){
+  const name     = (document.getElementById('cf-name')?.value||'').trim();
+  const email    = (document.getElementById('cf-email')?.value||'').trim();
+  const phone    = (document.getElementById('cf-phone')?.value||'').trim();
+  const interest = (document.getElementById('cf-interest')?.value||'').trim();
+  const message  = (document.getElementById('cf-message')?.value||'').trim();
+  const btn      = document.getElementById('cf-submit');
+  const feedback = document.getElementById('cf-feedback');
+
+  const errMsg = {fr:'Veuillez remplir nom et e-mail.',en:'Please fill in name and email.',es:'Por favor completa nombre y correo.'}[lang];
+  const loadMsg= {fr:'ENVOI EN COURS…',en:'SENDING…',es:'ENVIANDO…'}[lang];
+  const okMsg  = {fr:'MESSAGE ENVOYÉ — MERCI!',en:'MESSAGE SENT — THANK YOU!',es:'MENSAJE ENVIADO — GRACIAS!'}[lang];
+  const failMsg= {fr:'ERREUR — RÉESSAYEZ.',en:'ERROR — PLEASE RETRY.',es:'ERROR — INTENTA DE NUEVO.'}[lang];
+
+  // Validation
+  if(!name || !email || !email.includes('@')){
+    feedback.style.display = 'block';
+    feedback.style.color   = 'var(--gold)';
+    feedback.textContent   = errMsg;
+    return;
+  }
+
+  // Loading state
+  btn.disabled    = true;
+  btn.textContent = loadMsg;
+  btn.style.background  = 'var(--gold-dk)';
+  feedback.style.display = 'none';
+
+  fetch(WEBHOOK, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      name, email, phone, interest, message,
+      source: 'luxuryrealestatesignature.com',
+      lang,
+      timestamp: new Date().toISOString()
+    })
+  })
+  .then(r => {
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    feedback.style.display = 'block';
+    feedback.style.color   = 'var(--gold-lt)';
+    feedback.textContent   = okMsg;
+    btn.textContent = okMsg;
+    btn.style.background = '#3a6b3a';
+    // Clear form
+    ['cf-name','cf-email','cf-phone','cf-message'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.value='';
+    });
+    const sel = document.getElementById('cf-interest');
+    if(sel) sel.selectedIndex=0;
+  })
+  .catch(() => {
+    feedback.style.display = 'block';
+    feedback.style.color   = '#c47a5a';
+    feedback.textContent   = failMsg;
+    btn.disabled    = false;
+    btn.textContent = L[lang].fS;
+    btn.style.background = 'var(--gold)';
+  });
+}
 
 // ── FLOATING LOGO (después de render para que DOM esté listo) ──
 window.addEventListener('load', function(){
