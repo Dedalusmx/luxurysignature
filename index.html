@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -817,13 +817,14 @@ function renderDetail(p){
       '</div>' : '';
   const tourBtn = p['virtual_tour_url']
     ? '<a href="'+p['virtual_tour_url']+'" target="_blank" class="btn-g" onclick="event.stopPropagation()">'+tourLbl+'</a>' : '';
-  const waMsg = encodeURIComponent('Hola, me interesa la propiedad: '+(p['Nombre']||''));
+  const waUnit = p['Unidad'] && p['Unidad'].trim() ? ' — Unidad: '+p['Unidad'].trim() : '';
+  const waMsg = encodeURIComponent('Hola, me interesa la propiedad: '+(p['Nombre']||'')+waUnit);
   document.getElementById('dBody').innerHTML =
     '<div class="d-stats">'+stats.map(s=>'<div class="d-stat"><div class="d-stat-v">'+s.v+'</div><div class="d-stat-l">'+s.l+'</div></div>').join('')+'</div>'+
     (p['description']?'<span class="d-sec-ey">'+descLbl+'</span><p class="d-desc">'+p['description']+'</p>':'')+
     galHtml+
     '<div class="d-ctas">'+tourBtn+
-    '<a href="https://wa.me/529844106305?text='+waMsg+'" target="_blank" class="btn-o">'+waLbl+' &rarr;</a></div>';
+    '<a href="https://wa.me/529841343546?text='+waMsg+'" target="_blank" class="btn-o">'+waLbl+' &rarr;</a></div>';
 }
 
 function bindCardClicks(){
