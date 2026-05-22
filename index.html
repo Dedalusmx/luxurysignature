@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -203,6 +203,33 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
 .d-ctas{display:flex;gap:16px;flex-wrap:wrap}
 #flyImg{position:fixed;z-index:2000;object-fit:cover;pointer-events:none;margin:0}
 .prp-c{cursor:pointer}
+
+/* ── PARALLAX NARRATIVE ── */
+.d-panel{position:relative;height:85vh;min-height:500px;overflow:hidden;display:flex;align-items:center}
+.d-panel-img-wrap{position:absolute;inset:-18% 0;z-index:0;will-change:transform}
+.d-panel-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.d-panel-ov-l{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.65) 45%,rgba(8,8,6,.05) 100%);z-index:1}
+.d-panel-ov-r{position:absolute;inset:0;background:linear-gradient(270deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.65) 45%,rgba(8,8,6,.05) 100%);z-index:1}
+.d-panel-txt{position:relative;z-index:2;padding:0 8%;max-width:560px;opacity:0;transform:translateY(32px);transition:opacity .9s ease,transform .9s ease}
+.d-panel-txt.right{margin-left:auto;text-align:right}
+.d-panel-txt.visible{opacity:1;transform:none}
+.d-panel-num{font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:300;color:var(--gold);opacity:.12;line-height:1;margin-bottom:-16px;display:block}
+.d-panel-p{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.2vw,24px);font-style:italic;font-weight:300;line-height:1.75;color:rgba(240,235,225,.88)}
+.d-panel-div{width:32px;height:1px;background:var(--gold);margin:20px 0;opacity:.6}
+.d-panel-txt.right .d-panel-div{margin-left:auto}
+/* CTA CLOSING SECTION */
+.d-cta-panel{position:relative;min-height:60vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.d-cta-bg-img{position:absolute;inset:-15% 0;z-index:0}
+.d-cta-bg-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.35) saturate(.7)}
+.d-cta-content{position:relative;z-index:2;text-align:center;padding:60px 24px}
+.d-cta-eyebrow{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+.d-cta-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,52px);font-weight:300;font-style:italic;color:var(--text);margin-bottom:40px;line-height:1.2}
+.d-cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+@media(max-width:600px){
+  .d-panel-txt{max-width:100%;padding:0 6%}
+  .d-panel-txt.right{margin-left:0;text-align:left}
+  .d-panel-ov-r{background:linear-gradient(90deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.65) 45%,rgba(8,8,6,.05) 100%)}
+}
 
 /* ── ANIMATIONS ── */
 @keyframes bodyIn{to{opacity:1}}
@@ -777,15 +804,29 @@ function closeDetail(){
   setTimeout(()=>{ document.getElementById('detailView').scrollTop=0; },450);
 }
 
+function splitDesc(text, n){
+  if(!text||!text.trim()) return Array(n).fill('');
+  let chunks = text.split(/\n\n+/).map(s=>s.trim()).filter(Boolean);
+  if(chunks.length < 2){
+    const sents = text.match(/[^.!?]+[.!?]+\s*/g) || [text];
+    const per = Math.ceil(sents.length / n);
+    chunks = [];
+    for(let i=0;i<sents.length;i+=per) chunks.push(sents.slice(i,i+per).join('').trim());
+  }
+  while(chunks.length < n) chunks.push(chunks[chunks.length-1]||'');
+  return chunks.slice(0,n);
+}
+
 function renderDetail(p){
   const imgs    = IMG_COLS.map(c=>p[c]).filter(u=>u&&u.trim());
   const mainImg = imgs[0]||'';
   const gallery = imgs.slice(1).filter(Boolean);
+
   const backLbl = {fr:'RETOUR',en:'BACK',es:'VOLVER'}[lang];
-  const descLbl = {fr:'DESCRIPTION',en:'DESCRIPTION',es:'DESCRIPCI\u00d3N'}[lang];
   const tourLbl = {fr:'VISITE VIRTUELLE',en:'VIRTUAL TOUR',es:'TOUR VIRTUAL'}[lang];
   const waLbl   = {fr:'NOUS CONTACTER',en:'CONTACT US',es:'CONT\u00c1CTENOS'}[lang];
-  const galLbl  = {fr:'GALERIE',en:'GALLERY',es:'GALER\u00cdA'}[lang];
+  const intLbl  = {fr:'Vous \u00eates int\u00e9ress\u00e9?',en:'Interested in this property?',es:'\u00bfTe interesa esta propiedad?'}[lang];
+  const ctaEy   = {fr:'PROCHAINE \u00c9TAPE',en:'NEXT STEP',es:'SIGUIENTE PASO'}[lang];
   const sL = {
     rec:{fr:'Chambres',en:'Bedrooms',es:'Rec\u00e1maras'},
     ban:{fr:'Salles de bain',en:'Bathrooms',es:'Ba\u00f1os'},
@@ -794,38 +835,98 @@ function renderDetail(p){
     yr:{fr:'Ann\u00e9e',en:'Year built',es:'A\u00f1o'},
     tipo:{fr:'Type',en:'Type',es:'Tipo'}
   };
+
   const bg = document.getElementById('dHeroBg');
   bg.style.backgroundImage = "url('"+mainImg+"')";
   bg.classList.remove('ready');
   document.getElementById('detailBackTxt').textContent = backLbl;
+
   document.getElementById('dHeroCnt').innerHTML =
     '<p class="d-type">'+(p['listing_type']||'').toUpperCase()+'</p>'+
     '<h1 class="d-name">'+(p['Nombre']||'')+'</h1>'+
     '<p class="d-loc">'+[p['Colonia'],p['Ciudad'],p['Estado']].filter(Boolean).join(' \u00b7 ')+'</p>'+
     '<p class="d-price">'+formatPrice(p['Precio'])+'</p>';
+
   const stats = [
-    {v:p['Rec\u00e1maras']||p['Rec\u00e1maras'],l:sL.rec[lang]},
-    {v:p['Ba\u00f1os']||p['Ba\u00f1os'],        l:sL.ban[lang]},
-    {v:p['Area']?(p['Area']+' '+(p['area_unit']||'m\u00b2')):'',l:sL.area[lang]},
-    {v:p['Cajon de estacionamiento'],              l:sL.park[lang]},
-    {v:p['A\u00f1o construcci\u00f3n'],          l:sL.yr[lang]},
-    {v:p['Tipo propiedad'],                        l:sL.tipo[lang]}
+    {v:p['Rec\u00e1maras'], l:sL.rec[lang]},
+    {v:p['Ba\u00f1os'],     l:sL.ban[lang]},
+    {v:p['Area']?(p['Area']+' '+(p['area_unit']||'m\u00b2')):'', l:sL.area[lang]},
+    {v:p['Cajon de estacionamiento'], l:sL.park[lang]},
+    {v:p['A\u00f1o construcci\u00f3n'], l:sL.yr[lang]},
+    {v:p['Tipo propiedad'], l:sL.tipo[lang]}
   ].filter(s=>s.v&&String(s.v).trim());
-  const galHtml = gallery.length
-    ? '<span class="d-sec-ey">'+galLbl+'</span><div class="d-gallery">'+
-      gallery.map(u=>'<img src="'+u+'" loading="lazy" onerror="this.style.display=\'none\'">').join('')+
-      '</div>' : '';
+
+  document.getElementById('dBody').innerHTML =
+    '<div class="d-stats">'+
+    stats.map(s=>'<div class="d-stat"><div class="d-stat-v">'+s.v+'</div><div class="d-stat-l">'+s.l+'</div></div>').join('')+
+    '</div>';
+
+  const panelImgs  = gallery.length ? gallery : (mainImg?[mainImg]:[]);
+  const panelCount = Math.min(panelImgs.length, 6);
+  const textChunks = splitDesc(p['description']||'', panelCount);
+  const romans = ['I','II','III','IV','V','VI'];
+
+  document.getElementById('dNarrative').innerHTML = panelImgs.slice(0,panelCount).map(function(img,i){
+    const side = i%2===0?'left':'right';
+    const ov   = side==='left'?'d-panel-ov-l':'d-panel-ov-r';
+    return '<div class="d-panel">'+
+      '<div class="d-panel-img-wrap" data-parallax>'+
+        '<img src="'+img+'" loading="lazy" onerror="this.closest(\'.d-panel\').style.display=\'none\'">'+
+      '</div>'+
+      '<div class="'+ov+'"></div>'+
+      '<div class="d-panel-txt '+side+'" data-txt>'+
+        '<span class="d-panel-num">'+romans[i]+'</span>'+
+        '<div class="d-panel-div"></div>'+
+        '<p class="d-panel-p">'+textChunks[i]+'</p>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+
+  const waUnit = p['Unidad']&&p['Unidad'].trim()?' \u2014 Unidad: '+p['Unidad'].trim():'';
+  const waMsg  = encodeURIComponent('Hola, me interesa la propiedad: '+(p['Nombre']||'')+waUnit);
   const tourBtn = p['virtual_tour_url']
     ? '<a href="'+p['virtual_tour_url']+'" target="_blank" class="btn-g" onclick="event.stopPropagation()">'+tourLbl+'</a>' : '';
-  const waUnit = p['Unidad'] && p['Unidad'].trim() ? ' — Unidad: '+p['Unidad'].trim() : '';
-  const waMsg = encodeURIComponent('Hola, me interesa la propiedad: '+(p['Nombre']||'')+waUnit);
-  document.getElementById('dBody').innerHTML =
-    '<div class="d-stats">'+stats.map(s=>'<div class="d-stat"><div class="d-stat-v">'+s.v+'</div><div class="d-stat-l">'+s.l+'</div></div>').join('')+'</div>'+
-    (p['description']?'<span class="d-sec-ey">'+descLbl+'</span><p class="d-desc">'+p['description']+'</p>':'')+
-    galHtml+
-    '<div class="d-ctas">'+tourBtn+
-    '<a href="https://wa.me/529841343546?text='+waMsg+'" target="_blank" class="btn-o">'+waLbl+' &rarr;</a></div>';
+
+  document.getElementById('dCtaSection').innerHTML =
+    '<div class="d-cta-panel">'+
+      '<div class="d-cta-bg-img"><img src="'+mainImg+'" loading="lazy"></div>'+
+      '<div class="d-cta-content">'+
+        '<span class="d-cta-eyebrow">'+ctaEy+'</span>'+
+        '<h2 class="d-cta-heading">'+intLbl+'</h2>'+
+        '<div class="d-cta-btns">'+
+          tourBtn+
+          '<a href="https://wa.me/529841343546?text='+waMsg+'" target="_blank" class="btn-o">'+waLbl+' \u2192</a>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+
+  setTimeout(initDetailParallax, 60);
 }
+
+function initDetailParallax(){
+  const dv     = document.getElementById('detailView');
+  const panels = dv.querySelectorAll('.d-panel');
+  const txts   = dv.querySelectorAll('[data-txt]');
+
+  const revObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{root:dv, threshold:0.25});
+  txts.forEach(function(t){ revObs.observe(t); });
+
+  function applyParallax(){
+    const dvRect = dv.getBoundingClientRect();
+    panels.forEach(function(panel){
+      const wrap = panel.querySelector('[data-parallax]');
+      if(!wrap) return;
+      const r = panel.getBoundingClientRect();
+      const relCenter = (r.top + r.height/2) - dvRect.top - dvRect.height/2;
+      wrap.style.transform = 'translateY('+(relCenter*0.18)+'px)';
+    });
+  }
+  dv.addEventListener('scroll', applyParallax, {passive:true});
+  applyParallax();
+}
+
 
 function bindCardClicks(){
   document.querySelectorAll('#prpG .prp-c').forEach((card,idx)=>{
@@ -884,6 +985,8 @@ window.addEventListener('load', function(){
     <div class="d-hero-cnt" id="dHeroCnt"></div>
   </div>
   <div class="d-body" id="dBody"></div>
+  <div id="dNarrative"></div>
+  <div id="dCtaSection"></div>
 </div>
 
 <img id="fLogo" src="https://cdn.shopify.com/s/files/1/0602/2417/6173/files/Luxury_Signture.png?v=1779266683" alt="Luxury Real Estate Signature" onclick="window.scrollTo({top:0,behavior:'smooth'})">
