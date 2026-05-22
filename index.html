@@ -747,6 +747,95 @@ function observe(){
 
 render();
 
+// ── PROPERTY DETAIL ──
+let renderedProps = [];
+
+function openProperty(data, cardEl){
+  renderDetail(data);
+  const img  = cardEl.querySelector('.prp-img img');
+  const rect = img.getBoundingClientRect();
+  const clone = document.createElement('img');
+  clone.id = 'flyImg';
+  clone.src = img.src;
+  clone.style.cssText = 'top:'+rect.top+'px;left:'+rect.left+'px;width:'+rect.width+'px;height:'+rect.height+'px;transition:top .65s cubic-bezier(.4,0,.2,1),left .65s cubic-bezier(.4,0,.2,1),width .65s cubic-bezier(.4,0,.2,1),height .65s cubic-bezier(.4,0,.2,1)';
+  document.body.appendChild(clone);
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    clone.style.top='0';clone.style.left='0';
+    clone.style.width='100vw';clone.style.height='100vh';
+  }));
+  setTimeout(()=>{
+    document.getElementById('detailView').classList.add('open');
+    clone.remove();
+    setTimeout(()=>document.getElementById('dHeroBg').classList.add('ready'),80);
+  },680);
+}
+
+function closeDetail(){
+  document.getElementById('detailView').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(()=>{ document.getElementById('detailView').scrollTop=0; },450);
+}
+
+function renderDetail(p){
+  const imgs    = IMG_COLS.map(c=>p[c]).filter(u=>u&&u.trim());
+  const mainImg = imgs[0]||'';
+  const gallery = imgs.slice(1).filter(Boolean);
+  const backLbl = {fr:'RETOUR',en:'BACK',es:'VOLVER'}[lang];
+  const descLbl = {fr:'DESCRIPTION',en:'DESCRIPTION',es:'DESCRIPCI\u00d3N'}[lang];
+  const tourLbl = {fr:'VISITE VIRTUELLE',en:'VIRTUAL TOUR',es:'TOUR VIRTUAL'}[lang];
+  const waLbl   = {fr:'NOUS CONTACTER',en:'CONTACT US',es:'CONT\u00c1CTENOS'}[lang];
+  const galLbl  = {fr:'GALERIE',en:'GALLERY',es:'GALER\u00cdA'}[lang];
+  const sL = {
+    rec:{fr:'Chambres',en:'Bedrooms',es:'Rec\u00e1maras'},
+    ban:{fr:'Salles de bain',en:'Bathrooms',es:'Ba\u00f1os'},
+    area:{fr:'Surface',en:'Area',es:'\u00c1rea'},
+    park:{fr:'Parking',en:'Parking',es:'Estacionamiento'},
+    yr:{fr:'Ann\u00e9e',en:'Year built',es:'A\u00f1o'},
+    tipo:{fr:'Type',en:'Type',es:'Tipo'}
+  };
+  const bg = document.getElementById('dHeroBg');
+  bg.style.backgroundImage = "url('"+mainImg+"')";
+  bg.classList.remove('ready');
+  document.getElementById('detailBackTxt').textContent = backLbl;
+  document.getElementById('dHeroCnt').innerHTML =
+    '<p class="d-type">'+(p['listing_type']||'').toUpperCase()+'</p>'+
+    '<h1 class="d-name">'+(p['Nombre']||'')+'</h1>'+
+    '<p class="d-loc">'+[p['Colonia'],p['Ciudad'],p['Estado']].filter(Boolean).join(' \u00b7 ')+'</p>'+
+    '<p class="d-price">'+formatPrice(p['Precio'])+'</p>';
+  const stats = [
+    {v:p['Rec\u00e1maras']||p['Rec\u00e1maras'],l:sL.rec[lang]},
+    {v:p['Ba\u00f1os']||p['Ba\u00f1os'],        l:sL.ban[lang]},
+    {v:p['Area']?(p['Area']+' '+(p['area_unit']||'m\u00b2')):'',l:sL.area[lang]},
+    {v:p['Cajon de estacionamiento'],              l:sL.park[lang]},
+    {v:p['A\u00f1o construcci\u00f3n'],          l:sL.yr[lang]},
+    {v:p['Tipo propiedad'],                        l:sL.tipo[lang]}
+  ].filter(s=>s.v&&String(s.v).trim());
+  const galHtml = gallery.length
+    ? '<span class="d-sec-ey">'+galLbl+'</span><div class="d-gallery">'+
+      gallery.map(u=>'<img src="'+u+'" loading="lazy" onerror="this.style.display=\'none\'">').join('')+
+      '</div>' : '';
+  const tourBtn = p['virtual_tour_url']
+    ? '<a href="'+p['virtual_tour_url']+'" target="_blank" class="btn-g" onclick="event.stopPropagation()">'+tourLbl+'</a>' : '';
+  const waMsg = encodeURIComponent('Hola, me interesa la propiedad: '+(p['Nombre']||''));
+  document.getElementById('dBody').innerHTML =
+    '<div class="d-stats">'+stats.map(s=>'<div class="d-stat"><div class="d-stat-v">'+s.v+'</div><div class="d-stat-l">'+s.l+'</div></div>').join('')+'</div>'+
+    (p['description']?'<span class="d-sec-ey">'+descLbl+'</span><p class="d-desc">'+p['description']+'</p>':'')+
+    galHtml+
+    '<div class="d-ctas">'+tourBtn+
+    '<a href="https://wa.me/529844106305?text='+waMsg+'" target="_blank" class="btn-o">'+waLbl+' &rarr;</a></div>';
+}
+
+function bindCardClicks(){
+  document.querySelectorAll('#prpG .prp-c').forEach((card,idx)=>{
+    card.onclick = ()=> openProperty(renderedProps[idx], card);
+  });
+  document.querySelectorAll('#prpG .prp-lk').forEach(a=>{ a.onclick = e=>e.stopPropagation(); });
+}
+
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDetail(); });
+
+
 // ── FLOATING LOGO (después de render para que DOM esté listo) ──
 window.addEventListener('load', function(){
   const fLogo = document.getElementById('fLogo');
