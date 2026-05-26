@@ -203,6 +203,10 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
 #detailView.open{opacity:1;pointer-events:auto}
 .detail-back{position:fixed;top:24px;left:5%;z-index:600;background:rgba(8,8,6,.75);backdrop-filter:blur(14px);border:1px solid var(--border);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:11px 22px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .25s,color .25s}
 .detail-back:hover{border-color:var(--gold);color:var(--gold)}
+.detail-share{position:fixed;top:24px;right:5%;z-index:600;background:rgba(8,8,6,.75);backdrop-filter:blur(14px);border:1px solid var(--border);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:11px 22px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .25s,color .25s}
+.detail-share:hover{border-color:var(--gold);color:var(--gold)}
+#shareToast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(20px);z-index:700;background:var(--bg2);border:1px solid var(--gold);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:12px 28px;opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s ease;white-space:nowrap}
+#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #detailHero{position:relative;height:100vh;min-height:600px;display:flex;align-items:flex-end;padding-bottom:72px;overflow:hidden}
 .d-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.06);transition:transform 10s ease}
 .d-hero-bg.ready{transform:scale(1)}
@@ -910,6 +914,8 @@ function renderDetail(p){
   bg.style.backgroundImage = "url('"+mainImg+"')";
   bg.classList.remove('ready');
   document.getElementById('detailBackTxt').textContent = backLbl;
+  document.getElementById('detailShareTxt').textContent = {fr:'PARTAGER',en:'SHARE',es:'COMPARTIR'}[lang];
+  _currentPropName = p['Nombre']||'';
 
   document.getElementById('dHeroCnt').innerHTML =
     '<p class="d-type">'+(p['listing_type']||'').toUpperCase()+'</p>'+
@@ -1020,6 +1026,46 @@ function initDetailParallax(){
   });
 }
 
+
+
+let _currentPropName = '';
+
+function shareProperty(){
+  const url  = window.location.href;
+  const name = _currentPropName;
+  const toast = document.getElementById('shareToast');
+  const copied = {fr:'LIEN COPIÉ',en:'LINK COPIED',es:'ENLACE COPIADO'}[lang];
+  const shared = {fr:'PARTAGÉ',en:'SHARED',es:'COMPARTIDO'}[lang];
+
+  function showToast(msg){
+    toast.textContent = '✦  '+msg+'  ✦';
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'), 2800);
+  }
+
+  if(navigator.share){
+    navigator.share({title:name, url})
+      .then(()=>showToast(shared)).catch(()=>{});
+    return;
+  }
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url)
+      .then(()=>showToast(copied))
+      .catch(()=>fallbackCopy(url,showToast,copied));
+  } else {
+    fallbackCopy(url,showToast,copied);
+  }
+}
+
+function fallbackCopy(url,showToast,msg){
+  const el = document.createElement('input');
+  el.value = url;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+  showToast(msg);
+}
 
 // Open property directly from URL (no fly animation)
 function openPropertyDirect(data){
@@ -1203,6 +1249,11 @@ window.addEventListener('load', function(){
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14" style="flex-shrink:0"><path d="M19 12H5M5 12l7-7M5 12l7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span id="detailBackTxt">BACK</span>
   </button>
+  <button class="detail-share" onclick="shareProperty()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14" style="flex-shrink:0"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke-linecap="round"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke-linecap="round"/></svg>
+    <span id="detailShareTxt">SHARE</span>
+  </button>
+  <div id="shareToast"></div>
   <div id="detailHero">
     <div class="d-hero-bg" id="dHeroBg"></div>
     <div class="d-hero-ov"></div>
