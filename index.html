@@ -171,6 +171,14 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
 .ft-links a:hover{color:var(--gold)}
 .ft-cp{font-size:10px;color:var(--dim);opacity:.4;letter-spacing:.5px}
 
+/* ── LIGHTBOX ── */
+#lightbox{position:fixed;inset:0;z-index:1500;background:rgba(8,8,6,.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;cursor:zoom-out;backdrop-filter:blur(6px)}
+#lightbox.open{opacity:1;pointer-events:auto}
+#lbImg{max-width:90vw;max-height:90vh;object-fit:contain;transform:scale(.96);transition:transform .35s ease;box-shadow:0 0 80px rgba(0,0,0,.8)}
+#lightbox.open #lbImg{transform:scale(1)}
+.lb-close{position:absolute;top:24px;right:24px;background:none;border:1px solid rgba(196,163,90,.35);color:var(--gold);font-size:14px;width:40px;height:40px;cursor:pointer;transition:border-color .2s,color .2s;display:flex;align-items:center;justify-content:center}
+.lb-close:hover{border-color:var(--gold);color:var(--gold-lt)}
+
 /* ── FORM OVERLAY ── */
 #formOverlay{position:fixed;inset:0;z-index:800;background:rgba(8,8,6,.97);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s ease;backdrop-filter:blur(8px)}
 #formOverlay.open{opacity:1;pointer-events:auto}
@@ -919,6 +927,17 @@ function renderDetail(p){
   setTimeout(initDetailParallax, 60);
 }
 
+function openLightbox(src){
+  document.getElementById('lbImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
+
 function initDetailParallax(){
   const dv     = document.getElementById('detailView');
   const panels = dv.querySelectorAll('.d-panel');
@@ -941,6 +960,15 @@ function initDetailParallax(){
   }
   dv.addEventListener('scroll', applyParallax, {passive:true});
   applyParallax();
+
+  // Click panel images to open lightbox
+  dv.querySelectorAll('.d-panel-img-wrap img').forEach(img=>{
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', e=>{
+      e.stopPropagation();
+      openLightbox(img.src);
+    });
+  });
 }
 
 
@@ -1081,6 +1109,12 @@ window.addEventListener('load', function(){
   updateLogo();
 });
 </script>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">&#x2715;</button>
+  <img id="lbImg" src="" alt="">
+</div>
 
 <!-- FORM FEEDBACK OVERLAY -->
 <div id="formOverlay">
