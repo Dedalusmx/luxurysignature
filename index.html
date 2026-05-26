@@ -229,10 +229,10 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
 
 /* ── PARALLAX NARRATIVE ── */
 .d-panel{position:relative;height:85vh;min-height:500px;overflow:hidden;display:flex;align-items:center}
-.d-panel-img-wrap{position:absolute;inset:-18% 0;z-index:0;will-change:transform}
+.d-panel-img-wrap{position:absolute;inset:-18% 0;z-index:0;will-change:transform;cursor:zoom-in}
 .d-panel-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
-.d-panel-ov-l{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.65) 45%,rgba(8,8,6,.05) 100%);z-index:1}
-.d-panel-ov-r{position:absolute;inset:0;background:linear-gradient(270deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.65) 45%,rgba(8,8,6,.05) 100%);z-index:1}
+.d-panel-ov-l{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.65) 45%,rgba(8,8,6,.05) 100%);z-index:1;pointer-events:none}
+.d-panel-ov-r{position:absolute;inset:0;background:linear-gradient(270deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.65) 45%,rgba(8,8,6,.05) 100%);z-index:1;pointer-events:none}
 .d-panel-txt{position:relative;z-index:2;padding:0 8%;max-width:560px;opacity:0;transform:translateY(32px);transition:opacity .9s ease,transform .9s ease}
 .d-panel-txt.right{margin-left:auto;text-align:right}
 .d-panel-txt.visible{opacity:1;transform:none}
@@ -961,13 +961,14 @@ function initDetailParallax(){
   dv.addEventListener('scroll', applyParallax, {passive:true});
   applyParallax();
 
-  // Click panel images to open lightbox
-  dv.querySelectorAll('.d-panel-img-wrap img').forEach(img=>{
-    img.style.cursor = 'zoom-in';
-    img.addEventListener('click', e=>{
-      e.stopPropagation();
-      openLightbox(img.src);
-    });
+  // Click panel image area to open lightbox
+  dv.querySelectorAll('.d-panel').forEach(panel=>{
+    const img = panel.querySelector('.d-panel-img-wrap img');
+    if(!img) return;
+    // Prevent text area from triggering lightbox
+    const txt = panel.querySelector('.d-panel-txt');
+    if(txt) txt.addEventListener('click', e=>e.stopPropagation());
+    panel.addEventListener('click', ()=>openLightbox(img.src));
   });
 }
 
