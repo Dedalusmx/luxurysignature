@@ -462,6 +462,18 @@ function formatPrice(val){
 }
 
 // ── Render tarjetas (recibe slice ya filtrado/paginado) ──
+
+function imgUrl(url, w, h){
+  if(!url) return '';
+  if(url.includes('cloudinary')){
+    const t = 'w_'+w+',q_auto,f_auto,c_fill'+(h?',h_'+h:'');
+    // avoid double-transforming
+    if(url.includes('/upload/'+t)) return url;
+    return url.replace('/upload/', '/upload/'+t+'/');
+  }
+  return url;
+}
+
 function renderPropsFromData(data){
   renderedProps = data;
   const grid = g('prpG');
@@ -474,7 +486,7 @@ function renderPropsFromData(data){
   }
 
   grid.innerHTML = data.map(p=>{
-    const img    = IMG_COLS.map(c=>p[c]).find(u=>u&&u.trim()) || '';
+    const img    = imgUrl(IMG_COLS.map(c=>p[c]).find(u=>u&&u.trim()) || '', 800, 600);
     const name   = p['Nombre'] || '';
     const price  = formatPrice(p['Precio']);
     const city   = [p['Colonia'], p['Ciudad']].filter(Boolean).join(', ');
@@ -911,7 +923,7 @@ function renderDetail(p){
   };
 
   const bg = document.getElementById('dHeroBg');
-  bg.style.backgroundImage = "url('"+mainImg+"')";
+  bg.style.backgroundImage = "url('"+imgUrl(mainImg,1920)+"')";
   bg.classList.remove('ready');
   document.getElementById('detailBackTxt').textContent = backLbl;
   document.getElementById('detailShareTxt').textContent = {fr:'PARTAGER',en:'SHARE',es:'COMPARTIR'}[lang];
@@ -947,7 +959,7 @@ function renderDetail(p){
     const ov   = side==='left'?'d-panel-ov-l':'d-panel-ov-r';
     return '<div class="d-panel">'+
       '<div class="d-panel-img-wrap" data-parallax>'+
-        '<img src="'+img+'" loading="lazy" onerror="this.closest(\'.d-panel\').style.display=\'none\'">'+
+        '<img src="'+imgUrl(img,1920)+'" loading="lazy" onerror="this.closest(\'.d-panel\').style.display=\'none\'">'+
       '</div>'+
       '<div class="'+ov+'"></div>'+
       '<div class="d-panel-txt '+side+'" data-txt>'+
@@ -965,7 +977,7 @@ function renderDetail(p){
 
   document.getElementById('dCtaSection').innerHTML =
     '<div class="d-cta-panel">'+
-      '<div class="d-cta-bg-img"><img src="'+mainImg+'" loading="lazy"></div>'+
+      '<div class="d-cta-bg-img"><img src="'+imgUrl(mainImg,1920)+'" loading="lazy"></div>'+
       '<div class="d-cta-content">'+
         '<span class="d-cta-eyebrow">'+ctaEy+'</span>'+
         '<h2 class="d-cta-heading">'+intLbl+'</h2>'+
