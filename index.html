@@ -606,6 +606,15 @@ function loadProps(){
       allFetched = res.data.filter(r => IMG_COLS.some(c=>r[c]&&r[c].trim()));
       buildFilters();
       renderFiltered();
+      // Open property from URL hash if present
+      const hash = decodeURIComponent(window.location.hash);
+      if(hash.startsWith('#prop-')){
+        const id = hash.slice(6);
+        const match = allFetched.find(r=>
+          (r['home_listing_id']||r['Nombre']||'') === id
+        );
+        if(match) openPropertyDirect(match);
+      }
     },
     error(){
       g('prpG').innerHTML = '<div class="prp-loading" style="color:rgba(196,163,90,.4)">ERROR AL CARGAR</div>';
@@ -836,6 +845,8 @@ render();
 let renderedProps = [];
 
 function openProperty(data, cardEl){
+  const id = data['home_listing_id'] || data['Nombre'] || '';
+  history.replaceState(null,'','#prop-'+encodeURIComponent(id));
   renderDetail(data);
   const img  = cardEl.querySelector('.prp-img img');
   const rect = img.getBoundingClientRect();
@@ -857,6 +868,7 @@ function openProperty(data, cardEl){
 }
 
 function closeDetail(){
+  history.replaceState(null,'',window.location.pathname + window.location.search);
   document.getElementById('detailView').classList.remove('open');
   document.body.style.overflow = '';
   setTimeout(()=>{ document.getElementById('detailView').scrollTop=0; },450);
@@ -1008,6 +1020,27 @@ function initDetailParallax(){
   });
 }
 
+
+// Open property directly from URL (no fly animation)
+function openPropertyDirect(data){
+  renderDetail(data);
+  document.getElementById('detailView').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(()=>document.getElementById('dHeroBg').classList.add('ready'),80);
+}
+
+// Browser back/forward button support
+window.addEventListener('popstate', ()=>{
+  const hash = decodeURIComponent(window.location.hash);
+  if(hash.startsWith('#prop-')){
+    const id = hash.slice(6);
+    const match = allFetched.find(r=>(r['home_listing_id']||r['Nombre']||'')===id);
+    if(match) openPropertyDirect(match);
+  } else {
+    document.getElementById('detailView').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
 
 function bindCardClicks(){
   document.querySelectorAll('#prpG .prp-c').forEach((card,idx)=>{
