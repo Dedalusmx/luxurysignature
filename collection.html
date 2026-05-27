@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Collection | Luxury Real Estate Signature</title>
+<meta name="description" content="Browse our complete portfolio of luxury properties in Playa del Carmen, Tulum & Quintana Roo.">
+<link rel="icon" type="image/png" sizes="32x32" href="https://res.cloudinary.com/dphbptped/image/upload/w_32,h_32,c_fill,f_png/v1779854304/file_00000000181071fdb75c1bcfb5823568_detuve.png">
+<meta name="theme-color" content="#080806">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#080806;color:#F0EBE1;font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+
+:root{
+  --gold:#C4A35A;--gold-lt:#E8D5A3;--gold-dk:#7A6535;
+  --bg:#080806;--bg2:#0F0E0C;--bg3:#151310;
+  --text:#F0EBE1;--dim:#8A8478;--border:rgba(196,163,90,0.12)
+}
+
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;background:rgba(8,8,6,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4%;gap:24px}
+.nav-logo img{height:36px;object-fit:contain;filter:brightness(1.15)}
+.nav-back{font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:var(--dim);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .2s;white-space:nowrap}
+.nav-back:hover{color:var(--gold)}
+.nav-back svg{width:12px;height:12px}
+.nav-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;font-style:italic;color:var(--text);flex:1;text-align:center}
+.nav-controls{display:flex;align-items:center;gap:16px;margin-left:auto}
+.currency-sw{display:flex;align-items:center;gap:2px;background:var(--bg2);border:1px solid var(--border);padding:4px}
+.cur-btn{background:none;border:none;font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;color:var(--dim);cursor:pointer;padding:4px 8px;transition:color .2s,background .2s}
+.cur-btn.active{background:var(--gold);color:var(--bg);font-weight:500}
+.cur-btn:hover:not(.active){color:var(--gold)}
+.lang-sw{display:flex;align-items:center;gap:6px}
+.lang-btn{background:none;border:none;font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;color:var(--dim);cursor:pointer;padding:3px;transition:color .2s}
+.lang-btn.active,.lang-btn:hover{color:var(--gold)}
+.lang-sep{color:var(--dim);opacity:.3;font-size:7px}
+
+/* ── FILTER BAR ── */
+#filterBar{position:fixed;top:60px;left:0;right:0;z-index:190;background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 4%;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filter-search{display:flex;align-items:center;gap:8px;flex:1;min-width:200px;background:var(--bg3);border:1px solid var(--border);padding:8px 14px;transition:border-color .3s}
+.filter-search:focus-within{border-color:var(--gold)}
+.filter-search svg{width:14px;height:14px;color:var(--dim);flex-shrink:0}
+.filter-search input{background:none;border:none;outline:none;color:var(--text);font-family:'Raleway',sans-serif;font-size:12px;font-weight:300;width:100%}
+.filter-search input::placeholder{color:var(--dim)}
+.fsel{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Raleway',sans-serif;font-size:10px;font-weight:300;letter-spacing:1px;padding:8px 28px 8px 12px;appearance:none;-webkit-appearance:none;cursor:pointer;outline:none;transition:border-color .3s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8478' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.fsel:focus{border-color:var(--gold)}
+.fsel option{background:var(--bg2);color:var(--text)}
+.price-range{display:flex;align-items:center;gap:6px}
+.price-range span{font-size:9px;letter-spacing:2px;color:var(--dim);white-space:nowrap}
+.price-inp{width:100px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Raleway',sans-serif;font-size:10px;padding:8px 10px;outline:none;transition:border-color .3s}
+.price-inp:focus{border-color:var(--gold)}
+.filter-clear{background:none;border:1px solid rgba(196,163,90,.2);color:var(--dim);font-family:'Raleway',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:border-color .2s,color .2s;white-space:nowrap}
+.filter-clear:hover{border-color:var(--gold);color:var(--gold)}
+.map-toggle-btn{background:none;border:1px solid var(--border);color:var(--dim);font-family:'Raleway',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.map-toggle-btn.active,.map-toggle-btn:hover{border-color:var(--gold);color:var(--gold)}
+.map-toggle-btn svg{width:13px;height:13px}
+
+/* ── MAIN LAYOUT ── */
+#main{display:grid;grid-template-columns:400px 1fr;margin-top:112px;height:calc(100vh - 112px)}
+
+/* ── MAP PANEL ── */
+#mapPanel{position:sticky;top:112px;height:calc(100vh - 112px);overflow:hidden;border-right:1px solid var(--border)}
+#map{width:100%;height:100%}
+.mapboxgl-popup-content{background:var(--bg2)!important;border:1px solid var(--border)!important;color:var(--text)!important;padding:0!important;border-radius:0!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important}
+.mapboxgl-popup-tip{border-top-color:var(--bg2)!important}
+.map-popup-img{width:200px;height:120px;object-fit:cover;display:block}
+.map-popup-body{padding:12px 14px}
+.map-popup-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:4px}
+.map-popup-loc{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.map-popup-price{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:300;color:var(--gold-lt)}
+.map-marker{cursor:pointer;z-index:1}
+.marker-pin{width:14px;height:14px;background:var(--gold);border-radius:50%;border:2px solid rgba(232,213,163,.4);transition:transform .2s,background .2s;box-shadow:0 0 12px rgba(196,163,90,.4)}
+.map-marker:hover .marker-pin,.map-marker.active .marker-pin{transform:scale(1.6);background:var(--gold-lt)}
+
+/* ── RESULTS PANEL ── */
+#resultsPanel{overflow-y:auto;background:var(--bg)}
+.results-header{padding:20px 28px 16px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10}
+.results-count{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);flex:1}
+.results-count span{color:var(--gold);font-weight:400}
+.view-toggle{display:flex;gap:2px}
+.view-btn{background:none;border:1px solid var(--border);color:var(--dim);padding:7px 10px;cursor:pointer;transition:all .2s;display:flex;align-items:center}
+.view-btn.active,.view-btn:hover{border-color:var(--gold);color:var(--gold)}
+.view-btn svg{width:14px;height:14px}
+.sort-sel{background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:'Raleway',sans-serif;font-size:9px;letter-spacing:1px;padding:7px 24px 7px 10px;appearance:none;-webkit-appearance:none;cursor:pointer;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8478' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.sort-sel option{background:var(--bg2)}
+
+/* ── GRID VIEW ── */
+.props-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(196,163,90,.05);padding:1px}
+.prop-card{background:var(--bg2);cursor:pointer;transition:transform .25s;position:relative}
+.prop-card:hover{transform:translateY(-3px);z-index:2}
+.prop-card.highlighted{box-shadow:0 0 0 2px var(--gold)}
+.card-img{position:relative;height:200px;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.prop-card:hover .card-img img{transform:scale(1.05)}
+.card-img-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(8,8,6,.7) 100%)}
+.card-badges{position:absolute;top:10px;left:10px;display:flex;gap:4px;flex-wrap:wrap}
+.badge{font-size:7px;font-weight:500;letter-spacing:2px;padding:3px 8px;text-transform:uppercase}
+.badge-type{background:var(--gold);color:var(--bg)}
+.badge-sold{background:rgba(8,8,6,.8);border:1px solid rgba(196,163,90,.4);color:var(--gold)}
+.card-gallery-nav{position:absolute;bottom:10px;right:10px;display:flex;gap:4px;opacity:0;transition:opacity .2s}
+.prop-card:hover .card-gallery-nav{opacity:1}
+.gall-btn{background:rgba(8,8,6,.7);border:1px solid var(--border);color:var(--gold-lt);font-size:11px;width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.gall-btn:hover{background:var(--gold);color:var(--bg)}
+.card-body{padding:14px 16px 18px}
+.card-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-loc{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.card-stats{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.card-stat{font-size:9px;letter-spacing:1.5px;color:var(--dim);display:flex;align-items:center;gap:3px}
+.card-stat svg{width:10px;height:10px;opacity:.6}
+.card-price{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:var(--gold-lt)}
+.card-price-m2{font-size:8px;letter-spacing:1px;color:var(--dim);margin-top:2px}
+
+/* ── LIST VIEW ── */
+.props-list{display:flex;flex-direction:column;gap:1px;background:rgba(196,163,90,.05)}
+.list-item{background:var(--bg2);display:grid;grid-template-columns:180px 1fr auto;gap:0;cursor:pointer;transition:background .2s;position:relative}
+.list-item:hover{background:var(--bg3)}
+.list-item.highlighted{box-shadow:inset 2px 0 0 var(--gold)}
+.list-img{height:140px;overflow:hidden;position:relative}
+.list-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.list-item:hover .list-img img{transform:scale(1.05)}
+.list-body{padding:16px 20px;display:flex;flex-direction:column;justify-content:center}
+.list-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:4px}
+.list-loc{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.list-stats{display:flex;gap:14px;flex-wrap:wrap}
+.list-stat{font-size:9px;letter-spacing:1.5px;color:var(--dim)}
+.list-price-col{padding:16px 20px;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;border-left:1px solid var(--border);min-width:140px}
+.list-price{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--gold-lt);margin-bottom:4px}
+.list-price-m2{font-size:8px;letter-spacing:1px;color:var(--dim);margin-bottom:12px}
+.list-badge{font-size:7px;font-weight:500;letter-spacing:2px;padding:3px 8px;text-transform:uppercase;background:var(--gold);color:var(--bg)}
+
+/* ── LOAD MORE ── */
+.load-more-wrap{text-align:center;padding:40px 20px}
+.btn-load{background:none;border:1px solid rgba(196,163,90,.3);color:var(--dim);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:4px;text-transform:uppercase;padding:13px 44px;cursor:pointer;transition:border-color .25s,color .25s}
+.btn-load:hover{border-color:var(--gold);color:var(--gold-lt)}
+.results-count-wrap{text-align:center;padding:16px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+
+/* ── SKELETON ── */
+.skeleton{background:linear-gradient(90deg,var(--bg2) 25%,var(--bg3) 50%,var(--bg2) 75%);background-size:200% 100%;animation:shimmer 1.6s infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{height:280px}
+
+/* ── NO RESULTS ── */
+.no-results{text-align:center;padding:80px 40px;grid-column:1/-1}
+.no-results h3{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:12px}
+.no-results p{font-size:12px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:28px}
+.no-results a{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(196,163,90,.3);padding-bottom:2px}
+
+/* ── DETAIL VIEW ── */
+#detailView{position:fixed;inset:0;z-index:500;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .4s ease;overflow-y:auto;overflow-x:hidden}
+#detailView.open{opacity:1;pointer-events:auto}
+.detail-back{position:fixed;top:20px;left:4%;z-index:600;background:rgba(8,8,6,.75);backdrop-filter:blur(14px);border:1px solid var(--border);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:10px 20px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .25s,color .25s}
+.detail-back:hover{border-color:var(--gold);color:var(--gold)}
+.detail-share{position:fixed;top:20px;right:4%;z-index:600;background:rgba(8,8,6,.75);backdrop-filter:blur(14px);border:1px solid var(--border);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:10px 20px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .25s,color .25s}
+.detail-share:hover{border-color:var(--gold);color:var(--gold)}
+#detailHero{position:relative;height:100vh;min-height:500px;display:flex;align-items:flex-end;padding-bottom:64px;overflow:hidden}
+.d-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.06);transition:transform 10s ease}
+.d-hero-bg.ready{transform:scale(1)}
+.d-hero-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,6,.96) 0%,rgba(8,8,6,.3) 60%,rgba(8,8,6,.08) 100%)}
+.d-hero-cnt{position:relative;z-index:2;padding:0 6%;width:100%;opacity:0;transform:translateY(20px);transition:opacity .5s .2s,transform .5s .2s}
+#detailView.open .d-hero-cnt{opacity:1;transform:none}
+.d-type{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.d-name{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5.5vw,72px);font-weight:300;line-height:1.02;color:var(--text);margin-bottom:12px}
+.d-loc{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(240,235,225,.55);margin-bottom:18px}
+.d-price{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--gold-lt)}
+.d-body{max-width:1200px;margin:0 auto;padding:72px 6% 100px}
+.d-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1px;background:var(--border);margin-bottom:56px}
+.d-stat{padding:24px 20px;background:var(--bg2);opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+#detailView.open .d-stat{opacity:1;transform:none}
+.d-stat:nth-child(1){transition-delay:.1s}.d-stat:nth-child(2){transition-delay:.17s}.d-stat:nth-child(3){transition-delay:.24s}
+.d-stat:nth-child(4){transition-delay:.31s}.d-stat:nth-child(5){transition-delay:.38s}.d-stat:nth-child(6){transition-delay:.45s}
+.d-stat-v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);margin-bottom:4px}
+.d-stat-l{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--dim)}
+.d-sec-ey{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:block}
+.d-desc{font-size:15px;line-height:2;color:rgba(240,235,225,.68);font-weight:300;max-width:740px;margin-bottom:64px}
+.d-panel{position:relative;height:80vh;min-height:480px;overflow:hidden;display:flex;align-items:center}
+.d-panel-img-wrap{position:absolute;inset:-18% 0;z-index:0;will-change:transform;cursor:zoom-in}
+.d-panel-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.d-panel-ov-l{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.6) 45%,rgba(8,8,6,.05) 100%);z-index:1;pointer-events:none}
+.d-panel-ov-r{position:absolute;inset:0;background:linear-gradient(270deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.6) 45%,rgba(8,8,6,.05) 100%);z-index:1;pointer-events:none}
+.d-panel-txt{position:relative;z-index:2;padding:0 8%;max-width:560px;opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease}
+.d-panel-txt.right{margin-left:auto;text-align:right}
+.d-panel-txt.visible{opacity:1;transform:none}
+.d-panel-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--gold);opacity:.1;line-height:1;margin-bottom:-12px;display:block}
+.d-panel-p{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,22px);font-style:italic;font-weight:300;line-height:1.8;color:rgba(240,235,225,.88)}
+.d-panel-div{width:28px;height:1px;background:var(--gold);margin:16px 0;opacity:.6}
+.d-panel-txt.right .d-panel-div{margin-left:auto}
+.d-cta-panel{position:relative;min-height:55vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.d-cta-bg-img{position:absolute;inset:-15% 0;z-index:0}
+.d-cta-bg-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.3) saturate(.6)}
+.d-cta-content{position:relative;z-index:2;text-align:center;padding:56px 24px}
+.d-cta-eyebrow{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:block}
+.d-cta-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.5vw,46px);font-weight:300;font-style:italic;color:var(--text);margin-bottom:36px;line-height:1.25}
+.d-cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.d-cta-email{margin-top:24px;font-size:11px;font-weight:300;letter-spacing:2px}
+.d-cta-email a{color:rgba(240,235,225,.45);text-decoration:none;transition:color .2s}
+.d-cta-email a:hover{color:var(--gold-lt)}
+.d-cta-social{display:flex;gap:16px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.d-cta-social-link{color:rgba(240,235,225,.3);transition:color .25s,transform .2s;display:flex;align-items:center}
+.d-cta-social-link:hover{color:var(--gold);transform:translateY(-2px)}
+.d-cta-social-link svg{width:16px;height:16px}
+.btn-g{display:inline-block;padding:14px 34px;background:var(--gold);color:var(--bg);text-decoration:none;font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;transition:background .25s;cursor:pointer;border:none}
+.btn-g:hover{background:var(--gold-lt)}
+.btn-o{display:inline-block;padding:13px 34px;border:1px solid rgba(196,163,90,.42);color:rgba(240,235,225,.82);text-decoration:none;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;transition:border-color .25s,color .25s;cursor:pointer;background:none}
+.btn-o:hover{border-color:var(--gold);color:var(--gold-lt)}
+
+/* ── LIGHTBOX ── */
+#lightbox{position:fixed;inset:0;z-index:1500;background:rgba(8,8,6,.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;cursor:zoom-out;backdrop-filter:blur(6px)}
+#lightbox.open{opacity:1;pointer-events:auto}
+#lbImg{max-width:90vw;max-height:90vh;object-fit:contain;transform:scale(.96);transition:transform .35s ease;box-shadow:0 0 80px rgba(0,0,0,.8)}
+#lightbox.open #lbImg{transform:scale(1)}
+.lb-close{position:absolute;top:24px;right:24px;background:none;border:1px solid rgba(196,163,90,.35);color:var(--gold);font-size:14px;width:40px;height:40px;cursor:pointer;transition:border-color .2s;display:flex;align-items:center;justify-content:center}
+.lb-close:hover{border-color:var(--gold)}
+
+/* ── SHARE TOAST ── */
+#shareToast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%) translateY(16px);z-index:700;background:var(--bg2);border:1px solid var(--gold);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:12px 28px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;white-space:nowrap}
+#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── WA FLOAT ── */
+#waFloat{position:fixed;bottom:28px;right:28px;z-index:400;width:48px;height:48px;background:var(--bg2);border:1px solid rgba(196,163,90,.35);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease,border-color .25s}
+#waFloat.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
+#waFloat:hover{border-color:var(--gold)}
+#waFloat svg{width:22px;height:22px;fill:var(--gold)}
+
+/* ── MAP HIDDEN ON MOBILE ── */
+@media(max-width:900px){
+  #main{grid-template-columns:1fr;margin-top:60px;height:auto}
+  #filterBar{top:60px;flex-wrap:wrap}
+  #mapPanel{position:relative;top:auto;height:320px;display:none}
+  #mapPanel.show{display:block}
+  #resultsPanel{height:auto;overflow-y:visible}
+  .props-grid{grid-template-columns:repeat(2,1fr)}
+  .list-item{grid-template-columns:130px 1fr}
+  .list-price-col{display:none}
+}
+@media(max-width:600px){
+  .props-grid{grid-template-columns:1fr}
+  .list-item{grid-template-columns:1fr}
+  .list-img{height:180px}
+  #main{margin-top:60px}
+}
+
+/* ── ANIMATIONS ── */
+@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+    <span id="navBackTxt">BACK</span>
+  </a>
+  <a href="index.html" class="nav-logo"><img src="https://res.cloudinary.com/dphbptped/image/upload/v1779854302/20260526_225431_0000_lgxhla.png" alt="Luxury Real Estate Signature"></a>
+  <p class="nav-title" id="navTitle">The Collection</p>
+  <div class="nav-controls">
+    <div class="currency-sw">
+      <button class="cur-btn active" data-cur="MXN">MXN</button>
+      <button class="cur-btn" data-cur="USD">USD</button>
+      <button class="cur-btn" data-cur="CAD">CAD</button>
+    </div>
+    <div class="lang-sw">
+      <button class="lang-btn" data-lang="fr">FR</button>
+      <span class="lang-sep">◆</span>
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <span class="lang-sep">◆</span>
+      <button class="lang-btn" data-lang="es">ES</button>
+    </div>
+  </div>
+</nav>
+
+<!-- FILTER BAR -->
+<div id="filterBar">
+  <div class="filter-search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="fSearch" placeholder="Search properties...">
+  </div>
+  <select class="fsel" id="fCity"><option value="">All cities</option></select>
+  <select class="fsel" id="fTipo"><option value="">All types</option></select>
+  <select class="fsel" id="fOferta"><option value="">Sale & Rent</option></select>
+  <select class="fsel" id="fRooms"><option value="">Bedrooms</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option></select>
+  <div class="price-range">
+    <span id="priceLabel">MIN</span>
+    <input class="price-inp" type="number" id="fMin" placeholder="0">
+    <span>—</span>
+    <input class="price-inp" type="number" id="fMax" placeholder="MAX">
+  </div>
+  <select class="sort-sel" id="fSort">
+    <option value="default" id="sortDef">Sort</option>
+    <option value="price-asc" id="sortPA">Price ↑</option>
+    <option value="price-desc" id="sortPD">Price ↓</option>
+    <option value="area-desc" id="sortAD">Largest</option>
+    <option value="rooms-desc" id="sortRD">Most rooms</option>
+  </select>
+  <button class="map-toggle-btn" id="mapToggle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+    <span id="mapToggleTxt">MAP</span>
+  </button>
+  <button class="filter-clear" id="clearFilters" onclick="clearAllFilters()" id="clearBtn">CLEAR</button>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div id="main">
+  <!-- MAP -->
+  <div id="mapPanel">
+    <div id="map"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="resultsPanel">
+    <div class="results-header">
+      <p class="results-count" id="resultsCount"></p>
+      <div class="view-toggle">
+        <button class="view-btn active" id="gridBtn" onclick="setView('grid')" title="Grid">
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="0" width="7" height="7"/><rect x="9" y="0" width="7" height="7"/><rect x="0" y="9" width="7" height="7"/><rect x="9" y="9" width="7" height="7"/></svg>
+        </button>
+        <button class="view-btn" id="listBtn" onclick="setView('list')" title="List">
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="1" width="16" height="3"/><rect x="0" y="7" width="16" height="3"/><rect x="0" y="13" width="16" height="3"/></svg>
+        </button>
+      </div>
+      <select class="sort-sel" id="sortSel" onchange="handleSort(this.value)">
+        <option value="default" id="sortDef2">Sort</option>
+        <option value="price-asc" id="sortPA2">Price ↑</option>
+        <option value="price-desc" id="sortPD2">Price ↓</option>
+        <option value="area-desc" id="sortAD2">Largest</option>
+        <option value="rooms-desc" id="sortRD2">Most rooms</option>
+      </select>
+    </div>
+    <div id="propContainer"></div>
+    <div id="loadMoreWrap"></div>
+  </div>
+</div>
+
+<!-- DETAIL VIEW -->
+<div id="detailView">
+  <button class="detail-back" onclick="closeDetail()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13" style="flex-shrink:0"><path d="M19 12H5M5 12l7-7M5 12l7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span id="detailBackTxt">BACK</span>
+  </button>
+  <button class="detail-share" onclick="shareProperty()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13" style="flex-shrink:0"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke-linecap="round"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke-linecap="round"/></svg>
+    <span id="detailShareTxt">SHARE</span>
+  </button>
+  <div id="shareToast"></div>
+  <div id="detailHero">
+    <div class="d-hero-bg" id="dHeroBg"></div>
+    <div class="d-hero-ov"></div>
+    <div class="d-hero-cnt" id="dHeroCnt"></div>
+  </div>
+  <div class="d-body" id="dBody"></div>
+  <div id="dNarrative"></div>
+  <div id="dCtaSection"></div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">&#x2715;</button>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<!-- WA FLOAT -->
+<a id="waFloat" href="https://wa.me/529841343546?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20sus%20propiedades." target="_blank" title="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+</a>
+
+<script>
+// ── CONFIG ──
+const MAPBOX_TOKEN = 'pk.eyJ1IjoibWV0YWNvbXByYXMiLCJhIjoiY21tc3Z0Njg1MDN1eDJ5cHQ5eWIwZG4zciJ9.jzsj45V8slnFVBaTWO_ZSw';
+const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdEUO8SD2sTqn38dXV8VCzCddB5caiUUKpcbu6ufFsGYvdqEDadT67S88ltOsQamnVQ6itfSIMnv8r/pub?gid=0&single=true&output=csv';
+const IMG_COLS = ['image[0].url','image[1].url','image[2].url','image[3].url','image[4].url','image[5].url','image[6].url','image[7].url','image[8].url','image[9].url'];
+
+// ── STATE ──
+let allProps = [], filtered = [], visibleCount = 9;
+let currentView = 'grid', currency = 'MXN', lang = 'en';
+let rates = {USD: 0.058, CAD: 0.079};
+let mapInstance = null, mapMarkers = [];
+let mapVisible = window.innerWidth > 900;
+let filters = {search:'',city:'',tipo:'',oferta:'',rooms:'',minPrice:'',maxPrice:'',sort:'default'};
+let _currentPropName = '', renderedProps = [];
+let currentGalleryIdx = {};
+
+// ── i18n ──
+const L = {
+  fr:{
+    back:'RETOUR',title:'La Collection',
+    searchPh:'Rechercher des propriétés...',allCities:'Toutes les villes',allTypes:'Tous les types',allOffers:'Vente & Location',
+    sort:'Trier',sortPA:'Prix ↑',sortPD:'Prix ↓',sortAD:'Plus grand',sortRD:'Plus de chambres',
+    mapBtn:'CARTE',clear:'EFFACER',rooms:'Chambres',
+    results:n=>`<span>${n}</span> propriété${n!==1?'s':''}`,
+    noResults:'Aucun résultat',noResultsSub:'Modifier vos filtres pour voir plus de propriétés',
+    loadMore:n=>`VOIR ${n} DE PLUS`,
+    detailBack:'RETOUR',share:'PARTAGER',
+    descLbl:'DESCRIPTION',galLbl:'GALERIE',tourLbl:'VISITE VIRTUELLE',waLbl:'NOUS CONTACTER',
+    intLbl:'Vous êtes intéressé?',ctaEy:'PROCHAINE ÉTAPE',
+    rec:'Chambres',ban:'Salles de bain',area:'Surface',park:'Parking',yr:'Année',tipo:'Type',
+    toast:{copied:'LIEN COPIÉ',shared:'PARTAGÉ'}
+  },
+  en:{
+    back:'BACK',title:'The Collection',
+    searchPh:'Search properties...',allCities:'All cities',allTypes:'All types',allOffers:'Sale & Rent',
+    sort:'Sort',sortPA:'Price ↑',sortPD:'Price ↓',sortAD:'Largest',sortRD:'Most rooms',
+    mapBtn:'MAP',clear:'CLEAR',rooms:'Bedrooms',
+    results:n=>`<span>${n}</span> propert${n!==1?'ies':'y'}`,
+    noResults:'No results found',noResultsSub:'Adjust your filters to see more properties',
+    loadMore:n=>`LOAD ${n} MORE`,
+    detailBack:'BACK',share:'SHARE',
+    descLbl:'DESCRIPTION',galLbl:'GALLERY',tourLbl:'VIRTUAL TOUR',waLbl:'CONTACT US',
+    intLbl:'Interested in this property?',ctaEy:'NEXT STEP',
+    rec:'Bedrooms',ban:'Bathrooms',area:'Area',park:'Parking',yr:'Year built',tipo:'Type',
+    toast:{copied:'LINK COPIED',shared:'SHARED'}
+  },
+  es:{
+    back:'VOLVER',title:'La Colección',
+    searchPh:'Buscar propiedades...',allCities:'Todas las ciudades',allTypes:'Todos los tipos',allOffers:'Venta & Renta',
+    sort:'Ordenar',sortPA:'Precio ↑',sortPD:'Precio ↓',sortAD:'Más grande',sortRD:'Más recámaras',
+    mapBtn:'MAPA',clear:'LIMPIAR',rooms:'Recámaras',
+    results:n=>`<span>${n}</span> propiedad${n!==1?'es':''}`,
+    noResults:'Sin resultados',noResultsSub:'Ajusta los filtros para ver más propiedades',
+    loadMore:n=>`VER ${n} MÁS`,
+    detailBack:'VOLVER',share:'COMPARTIR',
+    descLbl:'DESCRIPCIÓN',galLbl:'GALERÍA',tourLbl:'TOUR VIRTUAL',waLbl:'CONTÁCTENOS',
+    intLbl:'¿Te interesa esta propiedad?',ctaEy:'SIGUIENTE PASO',
+    rec:'Recámaras',ban:'Baños',area:'Área',park:'Estacionamiento',yr:'Año',tipo:'Tipo',
+    toast:{copied:'ENLACE COPIADO',shared:'COMPARTIDO'}
+  }
+};
+
+const g = id => document.getElementById(id);
+
+// ── UTILS ──
+function imgUrl(url, w, h){
+  if(!url) return '';
+  if(url.includes('cloudinary')){
+    const t = 'w_'+w+',q_auto,f_auto,c_fill'+(h?',h_'+h:'');
+    if(url.includes('/upload/'+t)) return url;
+    return url.replace('/upload/', '/upload/'+t+'/');
+  }
+  return url;
+}
+
+function parsePrice(val){
+  if(!val) return 0;
+  return parseFloat(String(val).replace(/[^0-9.]/g,'')) || 0;
+}
+
+function formatCurrency(mxnPrice){
+  const n = parsePrice(mxnPrice);
+  if(!n) return '';
+  let amount, sym;
+  if(currency==='USD'){ amount=n*rates.USD; sym='USD'; }
+  else if(currency==='CAD'){ amount=n*rates.CAD; sym='CAD'; }
+  else { amount=n; sym='MXN'; }
+  return sym+' $'+Math.round(amount).toLocaleString('en-US');
+}
+
+function parseLocation(locStr){
+  if(!locStr) return null;
+  const parts = locStr.split(',').map(s=>parseFloat(s.trim()));
+  if(parts.length===2 && !isNaN(parts[0]) && !isNaN(parts[1])) return {lat:parts[0],lng:parts[1]};
+  return null;
+}
+
+function getMainImg(p){ return IMG_COLS.map(c=>p[c]).find(u=>u&&u.trim())||''; }
+function getAllImgs(p){ return IMG_COLS.map(c=>p[c]).filter(u=>u&&u.trim()); }
+
+function pricePerM2(p){
+  const price = parsePrice(p['Precio']);
+  const area  = parseFloat(p['Area'])||0;
+  if(!price||!area) return '';
+  let rate = currency==='USD'?rates.USD:currency==='CAD'?rates.CAD:1;
+  return (currency==='MXN'?'MXN':currency)+' $'+Math.round(price*rate/area).toLocaleString('en-US')+'/m²';
+}
+
+// ── EXCHANGE RATES ──
+async function fetchRates(){
+  try{
+    const r = await fetch('https://open.er-api.com/v6/latest/MXN');
+    const d = await r.json();
+    if(d.rates){ rates.USD=d.rates.USD; rates.CAD=d.rates.CAD; }
+  }catch(e){}
+}
+
+// ── RENDER i18n ──
+function applyLang(){
+  const t = L[lang];
+  g('navBackTxt').textContent = t.back;
+  g('navTitle').textContent = t.title;
+  g('fSearch').placeholder = t.searchPh;
+  g('mapToggleTxt').textContent = t.mapBtn;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+  // Rebuild selects
+  buildFilterSelects();
+  renderResults();
+}
+
+// ── FILTERS ──
+function buildFilterSelects(){
+  const t = L[lang];
+  const uniq = col => [...new Set(allProps.map(p=>(p[col]||'').trim()).filter(Boolean))].sort();
+
+  function buildSel(id, defaultLabel, opts){
+    const el = g(id);
+    const cur = el.value;
+    el.innerHTML = `<option value="">${defaultLabel}</option>`+
+      opts.map(o=>`<option value="${o.toLowerCase()}"${cur===o.toLowerCase()?'selected':''}>${o}</option>`).join('');
+  }
+
+  buildSel('fCity', t.allCities, uniq('Ciudad'));
+  buildSel('fTipo', t.allTypes, uniq('Tipo propiedad'));
+  buildSel('fOferta', t.allOffers, uniq('listing_type'));
+}
+
+function getFiltered(){
+  let res = allProps.filter(p=>{
+    const img = getMainImg(p);
+    if(!img) return false;
+    const name  = (p['Nombre']||'').toLowerCase();
+    const city  = (p['Ciudad']||'').toLowerCase();
+    const col   = (p['Colonia']||'').toLowerCase();
+    const tipo  = (p['Tipo propiedad']||'').toLowerCase();
+    const of    = (p['listing_type']||'').toLowerCase();
+    const price = parsePrice(p['Precio']);
+    const rooms = parseInt(p['Recámaras']||p['Recámaras'])||0;
+    const s = filters.search.toLowerCase();
+
+    if(s && !name.includes(s) && !city.includes(s) && !col.includes(s)) return false;
+    if(filters.city    && city !== filters.city) return false;
+    if(filters.tipo    && tipo !== filters.tipo) return false;
+    if(filters.oferta  && of   !== filters.oferta) return false;
+    if(filters.rooms   && rooms < parseInt(filters.rooms)) return false;
+    if(filters.minPrice && price < parseFloat(filters.minPrice)) return false;
+    if(filters.maxPrice && price > parseFloat(filters.maxPrice)) return false;
+    return true;
+  });
+
+  // Sort
+  switch(filters.sort){
+    case 'price-asc':  res.sort((a,b)=>parsePrice(a['Precio'])-parsePrice(b['Precio'])); break;
+    case 'price-desc': res.sort((a,b)=>parsePrice(b['Precio'])-parsePrice(a['Precio'])); break;
+    case 'area-desc':  res.sort((a,b)=>(parseFloat(b['Area'])||0)-(parseFloat(a['Area'])||0)); break;
+    case 'rooms-desc': res.sort((a,b)=>(parseInt(b['Recámaras'])||0)-(parseInt(a['Recámaras'])||0)); break;
+  }
+  return res;
+}
+
+function clearAllFilters(){
+  filters = {search:'',city:'',tipo:'',oferta:'',rooms:'',minPrice:'',maxPrice:'',sort:'default'};
+  g('fSearch').value=''; g('fCity').value=''; g('fTipo').value='';
+  g('fOferta').value=''; g('fRooms').value=''; g('fMin').value=''; g('fMax').value='';
+  g('sortSel').value='default';
+  visibleCount=9;
+  renderResults();
+  updateURL();
+}
+
+function handleSort(val){ filters.sort=val; renderResults(); updateURL(); }
+function setView(v){
+  currentView=v;
+  g('gridBtn').classList.toggle('active',v==='grid');
+  g('listBtn').classList.toggle('active',v==='list');
+  renderResults();
+}
+
+// ── URL STATE ──
+function updateURL(){
+  const p = new URLSearchParams();
+  Object.entries(filters).forEach(([k,v])=>{ if(v&&v!=='default') p.set(k,v); });
+  if(lang!=='en') p.set('lang',lang);
+  if(currency!=='MXN') p.set('cur',currency);
+  const str = p.toString();
+  history.replaceState(null,'',str?'?'+str:window.location.pathname);
+}
+
+function readURL(){
+  const p = new URLSearchParams(window.location.search);
+  filters.search  = p.get('search')||'';
+  filters.city    = p.get('city')||'';
+  filters.tipo    = p.get('tipo')||'';
+  filters.oferta  = p.get('oferta')||'';
+  filters.rooms   = p.get('rooms')||'';
+  filters.minPrice= p.get('minPrice')||'';
+  filters.maxPrice= p.get('maxPrice')||'';
+  filters.sort    = p.get('sort')||'default';
+  lang    = p.get('lang')||'en';
+  currency= p.get('cur')||'MXN';
+  if(g('fSearch'))  g('fSearch').value  = filters.search;
+  if(g('fMin'))     g('fMin').value     = filters.minPrice;
+  if(g('fMax'))     g('fMax').value     = filters.maxPrice;
+  document.querySelectorAll('.cur-btn').forEach(b=>b.classList.toggle('active',b.dataset.cur===currency));
+}
+
+// ── RENDER RESULTS ──
+function renderResults(){
+  filtered = getFiltered();
+  const t = L[lang];
+  const vis = filtered.slice(0, visibleCount);
+  renderedProps = vis;
+
+  // Count
+  g('resultsCount').innerHTML = filtered.length+' '+t.results(filtered.length).replace('<span>','').replace('</span>','');
+  g('resultsCount').innerHTML = t.results(filtered.length);
+
+  // Container
+  const container = g('propContainer');
+  if(!filtered.length){
+    container.innerHTML = `<div class="no-results"><h3>${t.noResults}</h3><p>${t.noResultsSub}</p></div>`;
+    g('loadMoreWrap').innerHTML='';
+    updateMapMarkers([]);
+    return;
+  }
+
+  if(currentView==='grid'){
+    container.className='props-grid';
+    container.innerHTML = vis.map((p,i)=>renderCard(p,i)).join('');
+  } else {
+    container.className='props-list';
+    container.innerHTML = vis.map((p,i)=>renderListItem(p,i)).join('');
+  }
+
+  // Bind clicks
+  container.querySelectorAll('[data-idx]').forEach(el=>{
+    el.addEventListener('click', e=>{
+      if(e.target.classList.contains('gall-btn')) return;
+      const idx = parseInt(el.dataset.idx);
+      openProperty(renderedProps[idx], el);
+    });
+  });
+
+  // Gallery nav
+  container.querySelectorAll('.gall-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.stopPropagation();
+      const idx = parseInt(btn.dataset.card);
+      const dir = btn.dataset.dir;
+      const p = renderedProps[idx];
+      const imgs = getAllImgs(p);
+      if(!currentGalleryIdx[idx]) currentGalleryIdx[idx]=0;
+      currentGalleryIdx[idx] = dir==='next'
+        ? (currentGalleryIdx[idx]+1) % imgs.length
+        : (currentGalleryIdx[idx]-1+imgs.length) % imgs.length;
+      const imgEl = container.querySelector(`[data-idx="${idx}"] .card-img img`)||container.querySelector(`[data-idx="${idx}"] .list-img img`);
+      if(imgEl) imgEl.src = imgUrl(imgs[currentGalleryIdx[idx]], 800, 600);
+    });
+  });
+
+  // Load more
+  const remaining = filtered.length - visibleCount;
+  if(remaining > 0){
+    g('loadMoreWrap').innerHTML = `<div class="load-more-wrap"><button class="btn-load" onclick="loadMore()">${t.loadMore(Math.min(remaining,9))}</button></div>`;
+  } else {
+    g('loadMoreWrap').innerHTML = '';
+  }
+
+  updateMapMarkers(filtered);
+}
+
+function renderCard(p, i){
+  const imgs = getAllImgs(p);
+  const img  = imgUrl(imgs[0]||'', 800, 600);
+  const name = p['Nombre']||'';
+  const loc  = [p['Colonia'],p['Ciudad']].filter(Boolean).join(', ');
+  const beds = p['Recámaras']||p['Recámaras']||'';
+  const baths= p['Baños']||p['Baños']||'';
+  const area = p['Area'] ? p['Area']+' '+(p['area_unit']||'m²') : '';
+  const tipo = p['listing_type']||'';
+  const sold = ['sold','vendido','inactive'].includes((p['status']||'').toLowerCase());
+  const pm2  = pricePerM2(p);
+
+  return `<div class="prop-card" data-idx="${i}">
+    <div class="card-img">
+      <img src="${img}" alt="${name}" loading="lazy" onerror="this.style.opacity='.1'">
+      <div class="card-img-ov"></div>
+      <div class="card-badges">
+        ${tipo?`<span class="badge badge-type">${tipo.toUpperCase()}</span>`:''}
+        ${sold?`<span class="badge badge-sold">SOLD</span>`:''}
+      </div>
+      ${imgs.length>1?`<div class="card-gallery-nav">
+        <button class="gall-btn" data-card="${i}" data-dir="prev">&#8592;</button>
+        <button class="gall-btn" data-card="${i}" data-dir="next">&#8594;</button>
+      </div>`:''}
+    </div>
+    <div class="card-body">
+      <h3 class="card-name">${name}</h3>
+      <p class="card-loc">${loc}</p>
+      <div class="card-stats">
+        ${beds?`<span class="card-stat">${beds} rec.</span>`:''}
+        ${baths?`<span class="card-stat">${baths} ba.</span>`:''}
+        ${area?`<span class="card-stat">${area}</span>`:''}
+      </div>
+      <p class="card-price">${formatCurrency(p['Precio'])}</p>
+      ${pm2?`<p class="card-price-m2">${pm2}</p>`:''}
+    </div>
+  </div>`;
+}
+
+function renderListItem(p, i){
+  const imgs = getAllImgs(p);
+  const img  = imgUrl(imgs[0]||'', 400, 280);
+  const name = p['Nombre']||'';
+  const loc  = [p['Colonia'],p['Ciudad']].filter(Boolean).join(', ');
+  const beds = p['Recámaras']||p['Recámaras']||'';
+  const baths= p['Baños']||p['Baños']||'';
+  const area = p['Area'] ? p['Area']+' '+(p['area_unit']||'m²') : '';
+  const tipo = p['listing_type']||'';
+  const pm2  = pricePerM2(p);
+
+  return `<div class="list-item" data-idx="${i}">
+    <div class="list-img">
+      <img src="${img}" alt="${name}" loading="lazy" onerror="this.style.opacity='.1'">
+    </div>
+    <div class="list-body">
+      <h3 class="list-name">${name}</h3>
+      <p class="list-loc">${loc}</p>
+      <div class="list-stats">
+        ${beds?`<span class="list-stat">${beds} rec.</span>`:''}
+        ${baths?`<span class="list-stat">${baths} ba.</span>`:''}
+        ${area?`<span class="list-stat">${area}</span>`:''}
+      </div>
+    </div>
+    <div class="list-price-col">
+      <p class="list-price">${formatCurrency(p['Precio'])}</p>
+      ${pm2?`<p class="list-price-m2">${pm2}</p>`:''}
+      ${tipo?`<span class="list-badge">${tipo.toUpperCase()}</span>`:''}
+    </div>
+  </div>`;
+}
+
+function loadMore(){
+  visibleCount += 9;
+  renderResults();
+}
+
+// ── MAP ──
+function initMap(){
+  mapboxgl.accessToken = MAPBOX_TOKEN;
+  mapInstance = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/dark-v11',
+    center: [-87.2, 20.55],
+    zoom: 9,
+    attributionControl: false
+  });
+  mapInstance.addControl(new mapboxgl.NavigationControl({showCompass:false}), 'bottom-right');
+  mapInstance.addControl(new mapboxgl.AttributionControl({compact:true}));
+}
+
+function updateMapMarkers(props){
+  if(!mapInstance) return;
+  // Remove old markers
+  mapMarkers.forEach(m=>m.marker.remove());
+  mapMarkers = [];
+
+  const bounds = new mapboxgl.LngLatBounds();
+  let hasCoords = false;
+
+  props.forEach((p,i)=>{
+    const loc = parseLocation(p['Location']||p['location']);
+    if(!loc) return;
+    hasCoords = true;
+    bounds.extend([loc.lng, loc.lat]);
+
+    const el = document.createElement('div');
+    el.className = 'map-marker';
+    el.innerHTML = '<div class="marker-pin"></div>';
+
+    const imgs = getAllImgs(p);
+    const imgSrc = imgUrl(imgs[0]||'', 200, 120);
+    const popup = new mapboxgl.Popup({offset:20, closeButton:false, maxWidth:'220px'})
+      .setHTML(`<img class="map-popup-img" src="${imgSrc}" onerror="this.style.display='none'">
+        <div class="map-popup-body">
+          <p class="map-popup-name">${p['Nombre']||''}</p>
+          <p class="map-popup-loc">${[p['Colonia'],p['Ciudad']].filter(Boolean).join(' · ')}</p>
+          <p class="map-popup-price">${formatCurrency(p['Precio'])}</p>
+        </div>`);
+
+    const marker = new mapboxgl.Marker(el)
+      .setLngLat([loc.lng, loc.lat])
+      .setPopup(popup)
+      .addTo(mapInstance);
+
+    el.addEventListener('click', ()=>{
+      // Highlight card
+      document.querySelectorAll('.prop-card,.list-item').forEach(c=>c.classList.remove('highlighted'));
+      const card = document.querySelector(`[data-idx="${mapMarkers.findIndex(m=>m.prop===p)}"]`);
+      if(card){ card.classList.add('highlighted'); card.scrollIntoView({behavior:'smooth',block:'center'}); }
+    });
+
+    mapMarkers.push({marker, prop:p});
+  });
+
+  if(hasCoords && mapMarkers.length > 0){
+    try{ mapInstance.fitBounds(bounds, {padding:60, maxZoom:13, duration:1000}); }catch(e){}
+  }
+}
+
+// ── DETAIL VIEW ──
+function openProperty(data, cardEl){
+  renderDetail(data);
+  const img  = cardEl.querySelector('.card-img img') || cardEl.querySelector('.list-img img');
+  const rect = img ? img.getBoundingClientRect() : {top:0,left:0,width:0,height:0};
+
+  const clone = document.createElement('img');
+  clone.id = 'flyImg';
+  clone.src = img ? img.src : '';
+  clone.style.cssText = `position:fixed;top:${rect.top}px;left:${rect.left}px;width:${rect.width}px;height:${rect.height}px;object-fit:cover;z-index:2000;pointer-events:none;transition:top .65s cubic-bezier(.4,0,.2,1),left .65s cubic-bezier(.4,0,.2,1),width .65s cubic-bezier(.4,0,.2,1),height .65s cubic-bezier(.4,0,.2,1)`;
+  document.body.appendChild(clone);
+  document.body.style.overflow='hidden';
+
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    clone.style.top='0';clone.style.left='0';clone.style.width='100vw';clone.style.height='100vh';
+  }));
+
+  const id = data['home_listing_id']||data['Nombre']||'';
+  history.replaceState(null,'','#prop-'+encodeURIComponent(id));
+
+  setTimeout(()=>{
+    g('detailView').classList.add('open');
+    clone.remove();
+    const wa = g('waFloat');
+    if(wa){wa.dataset.hidden='1';wa.classList.remove('visible');}
+    setTimeout(()=>g('dHeroBg').classList.add('ready'),80);
+  },680);
+}
+
+function closeDetail(){
+  g('detailView').classList.remove('open');
+  document.body.style.overflow='';
+  history.replaceState(null,'',window.location.pathname+window.location.search);
+  const wa = g('waFloat');
+  if(wa){delete wa.dataset.hidden; wa.classList.add('visible');}
+  setTimeout(()=>{g('detailView').scrollTop=0;},450);
+}
+
+function splitDesc(text,n){
+  if(!text||!text.trim()) return Array(n).fill('');
+  let chunks = text.split(/\n\n+/).map(s=>s.trim()).filter(Boolean);
+  if(chunks.length<2){
+    const sents = text.match(/[^.!?]+[.!?]+\s*/g)||[text];
+    const per = Math.ceil(sents.length/n);
+    chunks=[];
+    for(let i=0;i<sents.length;i+=per) chunks.push(sents.slice(i,i+per).join('').trim());
+  }
+  while(chunks.length<n) chunks.push(chunks[chunks.length-1]||'');
+  return chunks.slice(0,n);
+}
+
+function renderDetail(p){
+  const t = L[lang];
+  const imgs    = getAllImgs(p);
+  const mainImg = imgUrl(imgs[0]||'', 1920);
+  const gallery = imgs.slice(1).filter(Boolean);
+
+  const sL={rec:t.rec,ban:t.ban,area:t.area,park:t.park,yr:t.yr,tipo:t.tipo};
+
+  const bg = g('dHeroBg');
+  bg.style.backgroundImage = "url('"+mainImg+"')";
+  bg.classList.remove('ready');
+  g('detailBackTxt').textContent = t.detailBack;
+  g('detailShareTxt').textContent = t.share;
+  _currentPropName = p['Nombre']||'';
+
+  document.title = _currentPropName+' | Luxury Real Estate Signature — The Collection';
+
+  g('dHeroCnt').innerHTML =
+    '<p class="d-type">'+(p['listing_type']||'').toUpperCase()+'</p>'+
+    '<h1 class="d-name">'+(p['Nombre']||'')+'</h1>'+
+    '<p class="d-loc">'+[p['Colonia'],p['Ciudad'],p['Estado']].filter(Boolean).join(' · ')+'</p>'+
+    '<p class="d-price">'+formatCurrency(p['Precio'])+'</p>';
+
+  const stats=[
+    {v:p['Recámaras'],l:sL.rec},
+    {v:p['Baños'],    l:sL.ban},
+    {v:p['Area']?(p['Area']+' '+(p['area_unit']||'m²')):'',l:sL.area},
+    {v:p['Cajon de estacionamiento'],l:sL.park},
+    {v:p['Año construcción'],l:sL.yr},
+    {v:p['Tipo propiedad'],l:sL.tipo}
+  ].filter(s=>s.v&&String(s.v).trim());
+
+  g('dBody').innerHTML='<div class="d-stats">'+
+    stats.map(s=>'<div class="d-stat"><div class="d-stat-v">'+s.v+'</div><div class="d-stat-l">'+s.l+'</div></div>').join('')+
+    '</div>';
+
+  const panelImgs  = gallery.length?gallery:(imgs[0]?[imgs[0]]:[]);
+  const panelCount = Math.min(panelImgs.length,6);
+  const textChunks = splitDesc(p['description']||'',panelCount);
+  const romans=['I','II','III','IV','V','VI'];
+
+  g('dNarrative').innerHTML = panelImgs.slice(0,panelCount).map(function(img,i){
+    const side=i%2===0?'left':'right';
+    const ov=side==='left'?'d-panel-ov-l':'d-panel-ov-r';
+    return '<div class="d-panel">'+
+      '<div class="d-panel-img-wrap" data-parallax>'+
+        '<img src="'+imgUrl(img,1920)+'" loading="lazy" onerror="this.style.opacity=0.15">'+
+      '</div>'+
+      '<div class="'+ov+'"></div>'+
+      '<div class="d-panel-txt '+side+'" data-txt>'+
+        '<span class="d-panel-num">'+romans[i]+'</span>'+
+        '<div class="d-panel-div"></div>'+
+        '<p class="d-panel-p">'+textChunks[i]+'</p>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+
+  const waUnit = p['Unidad']&&p['Unidad'].trim()?' — Unidad: '+p['Unidad'].trim():'';
+  const waMsg  = encodeURIComponent('Hola, me interesa la propiedad: '+(p['Nombre']||'')+waUnit);
+  const tourBtn = p['virtual_tour_url']
+    ? '<a href="'+p['virtual_tour_url']+'" target="_blank" class="btn-g" onclick="event.stopPropagation()">'+t.tourLbl+'</a>':'' ;
+
+  const socialIcons = '<div class="d-cta-social">'+
+    '<a href="mailto:info@luxuryrealestatesignature.com" class="d-cta-social-link" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="16" height="16"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></a>'+
+    '<a href="https://www.instagram.com/luxury_real_estate_signature" target="_blank" class="d-cta-social-link" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>'+
+    '<a href="https://www.facebook.com/share/1JVgqwCeRr/" target="_blank" class="d-cta-social-link" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>'+
+    '<a href="https://whatsapp.com/channel/0029VbCqGtq1nozEEVcWul3l" target="_blank" class="d-cta-social-link" title="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></a>'+
+  '</div>';
+
+  g('dCtaSection').innerHTML=
+    '<div class="d-cta-panel">'+
+      '<div class="d-cta-bg-img"><img src="'+mainImg+'" loading="lazy"></div>'+
+      '<div class="d-cta-content">'+
+        '<span class="d-cta-eyebrow">'+t.ctaEy+'</span>'+
+        '<h2 class="d-cta-heading">'+t.intLbl+'</h2>'+
+        '<div class="d-cta-btns">'+
+          tourBtn+
+          '<a href="https://wa.me/529841343546?text='+waMsg+'" target="_blank" class="btn-o">'+t.waLbl+' →</a>'+
+        '</div>'+
+        '<p class="d-cta-email"><a href="mailto:info@luxuryrealestatesignature.com">info@luxuryrealestatesignature.com</a></p>'+
+        socialIcons+
+      '</div>'+
+    '</div>';
+
+  setTimeout(initDetailParallax, 60);
+}
+
+function initDetailParallax(){
+  const dv  = g('detailView');
+  const txts= dv.querySelectorAll('[data-txt]');
+  const obs = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{root:dv,threshold:0.25});
+  txts.forEach(t=>obs.observe(t));
+
+  function parallax(){
+    const dvR = dv.getBoundingClientRect();
+    dv.querySelectorAll('[data-parallax]').forEach(wrap=>{
+      const r = wrap.getBoundingClientRect();
+      const rel = (r.top+r.height/2)-dvR.top-dvR.height/2;
+      wrap.style.transform='translateY('+(rel*0.18)+'px)';
+    });
+  }
+  dv.addEventListener('scroll',parallax,{passive:true});
+  parallax();
+
+  // Click panel to lightbox
+  dv.querySelectorAll('.d-panel').forEach(panel=>{
+    const img = panel.querySelector('.d-panel-img-wrap img');
+    if(!img) return;
+    const txt = panel.querySelector('.d-panel-txt');
+    if(txt) txt.addEventListener('click',e=>e.stopPropagation());
+    panel.addEventListener('click',()=>openLightbox(img.src));
+  });
+}
+
+// ── LIGHTBOX ──
+function openLightbox(src){
+  g('lbImg').src=src;
+  g('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  g('lightbox').classList.remove('open');
+  if(!g('detailView').classList.contains('open')) document.body.style.overflow='';
+}
+
+// ── SHARE ──
+let _shareCurrentPropName='';
+function shareProperty(){
+  const url = window.location.href;
+  const toast = g('shareToast');
+  const t = L[lang];
+  function showToast(msg){
+    toast.textContent='✦  '+msg+'  ✦';
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),2800);
+  }
+  if(navigator.share){
+    navigator.share({title:_currentPropName,url}).then(()=>showToast(t.toast.shared)).catch(()=>{});
+    return;
+  }
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>showToast(t.toast.copied)).catch(()=>fallbackCopy(url,showToast,t.toast.copied));
+  } else { fallbackCopy(url,showToast,t.toast.copied); }
+}
+function fallbackCopy(url,showToast,msg){
+  const el=document.createElement('input');el.value=url;
+  document.body.appendChild(el);el.select();document.execCommand('copy');
+  document.body.removeChild(el);showToast(msg);
+}
+
+// ── HASH ROUTING ──
+function openPropertyDirect(data){
+  renderDetail(data);
+  g('detailView').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>g('dHeroBg').classList.add('ready'),80);
+}
+
+window.addEventListener('popstate',()=>{
+  const hash = decodeURIComponent(window.location.hash);
+  if(hash.startsWith('#prop-')){
+    const id = hash.slice(6);
+    const match = allProps.find(r=>(r['home_listing_id']||r['Nombre']||'')===id);
+    if(match) openPropertyDirect(match);
+  } else {
+    g('detailView').classList.remove('open');
+    document.body.style.overflow='';
+  }
+});
+
+// ── WA FLOAT ──
+window.addEventListener('scroll',()=>{
+  const wa = g('waFloat');
+  if(wa&&!wa.dataset.hidden) wa.classList.toggle('visible', window.scrollY > 200);
+},{passive:true});
+
+// ── KEYBOARD ──
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeLightbox(); if(g('detailView').classList.contains('open')) closeDetail(); }
+});
+
+// ── MAP TOGGLE ──
+g('mapToggle').addEventListener('click',()=>{
+  mapVisible = !mapVisible;
+  const panel = g('mapPanel');
+  const btn   = g('mapToggle');
+  panel.classList.toggle('show', mapVisible);
+  g('main').style.gridTemplateColumns = mapVisible ? '400px 1fr' : '1fr';
+  btn.classList.toggle('active', mapVisible);
+  if(mapVisible && mapInstance) setTimeout(()=>mapInstance.resize(),300);
+});
+
+// ── FILTER EVENTS ──
+function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; }
+
+g('fSearch').addEventListener('input', debounce(e=>{ filters.search=e.target.value; visibleCount=9; renderResults(); updateURL(); },300));
+g('fCity').addEventListener('change',  e=>{ filters.city=e.target.value; visibleCount=9; renderResults(); updateURL(); });
+g('fTipo').addEventListener('change',  e=>{ filters.tipo=e.target.value; visibleCount=9; renderResults(); updateURL(); });
+g('fOferta').addEventListener('change',e=>{ filters.oferta=e.target.value; visibleCount=9; renderResults(); updateURL(); });
+g('fRooms').addEventListener('change', e=>{ filters.rooms=e.target.value; visibleCount=9; renderResults(); updateURL(); });
+g('fMin').addEventListener('change',   e=>{ filters.minPrice=e.target.value; visibleCount=9; renderResults(); updateURL(); });
+g('fMax').addEventListener('change',   e=>{ filters.maxPrice=e.target.value; visibleCount=9; renderResults(); updateURL(); });
+g('sortSel').addEventListener('change',e=>handleSort(e.target.value));
+
+// ── CURRENCY ──
+document.querySelectorAll('.cur-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    currency = b.dataset.cur;
+    document.querySelectorAll('.cur-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderResults();
+    updateURL();
+  });
+});
+
+// ── LANG ──
+document.querySelectorAll('.lang-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    lang = b.dataset.lang;
+    document.documentElement.lang = lang;
+    applyLang();
+    updateURL();
+  });
+});
+
+// ── INIT ──
+async function init(){
+  readURL();
+  await fetchRates();
+  initMap();
+
+  // Skeleton
+  g('propContainer').className='props-grid';
+  g('propContainer').innerHTML = Array(9).fill('<div class="prop-card"><div class="skel-card skeleton"></div></div>').join('');
+
+  Papa.parse(SHEET_CSV,{
+    download:true, header:true, skipEmptyLines:true,
+    complete(res){
+      allProps = res.data.filter(r=>IMG_COLS.some(c=>r[c]&&r[c].trim()));
+      buildFilterSelects();
+      applyLang();
+
+      // Hash routing on load
+      const hash = decodeURIComponent(window.location.hash);
+      if(hash.startsWith('#prop-')){
+        const id = hash.slice(6);
+        const match = allProps.find(r=>(r['home_listing_id']||r['Nombre']||'')===id);
+        if(match) openPropertyDirect(match);
+      }
+    },
+    error(){ g('propContainer').innerHTML='<div class="no-results"><h3>Error loading</h3><p>Please reload the page</p></div>'; }
+  });
+}
+
+init();
+</script>
+</body>
+</html>
