@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- ── GOOGLE ANALYTICS 4 ── -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3W7EMQBPC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Q3W7EMQBPC', {
+    page_title: document.title,
+    page_location: window.location.href
+  });
+</script>
+
 <!-- ── SEO ── -->
 <title>Luxury Real Estate Signature | Riviera Maya — Playa del Carmen & Tulum</title>
 
@@ -962,6 +974,7 @@ let renderedProps = [];
 function openProperty(data, cardEl){
   const id = data['home_listing_id'] || data['Nombre'] || '';
   history.replaceState(null,'','#prop-'+encodeURIComponent(id));
+  if(typeof gtag!=='undefined') gtag('event','view_property',{property_name:data['Nombre']||id,property_city:data['Ciudad']||''});
   // Update title + OG for sharing this property
   const propName = data['Nombre']||id;
   const propCity = [data['Colonia'],data['Ciudad']].filter(Boolean).join(', ');
@@ -1165,6 +1178,7 @@ function initDetailParallax(){
 let _currentPropName = '';
 
 function shareProperty(){
+  if(typeof gtag!=='undefined') gtag('event','share',{method:navigator.share?'native':'clipboard',content_type:'property',item_id:_currentPropName});
   const url  = window.location.href;
   const name = _currentPropName;
   const toast = document.getElementById('shareToast');
@@ -1302,6 +1316,7 @@ function submitContactForm(){
     });
     const sel = document.getElementById('cf-interest');
     if(sel) sel.selectedIndex=0;
+    if(typeof gtag!=='undefined') gtag('event','generate_lead',{method:'contact_form'});
     // Success overlay
     showFormOverlay('success',
       {fr:'Message envoyé',en:'Message sent',es:'Mensaje enviado'}[lang],
