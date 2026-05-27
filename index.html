@@ -1295,7 +1295,10 @@ function submitContactForm(){
 
   fetch(WEBHOOK, {
     method: 'POST',
-    headers: {'Content-Type':'application/json'},
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Source-Token': 'LRS-2025-xK9mP2qR7nJ4wT8v'
+    },
     body: JSON.stringify({
       uid: crypto.randomUUID(),
       name, email, phone, interest, message,
