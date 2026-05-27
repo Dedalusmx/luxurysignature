@@ -595,6 +595,12 @@ function readURL(){
 }
 
 // ── RENDER RESULTS ──
+
+function getDesc(p){
+  if(lang==='fr' && p['description FR'] && p['description FR'].trim()) return p['description FR'];
+  if(lang==='en' && p['description EN'] && p['description EN'].trim()) return p['description EN'];
+  return p['description']||'';
+}
 function renderResults(){
   filtered = getFiltered();
   const t = L[lang];
@@ -887,7 +893,7 @@ function renderDetail(p){
 
   const panelImgs  = gallery.length?gallery:(imgs[0]?[imgs[0]]:[]);
   const panelCount = Math.min(panelImgs.length,6);
-  const textChunks = splitDesc(p['description']||'',panelCount);
+  const textChunks = splitDesc(getDesc(p),panelCount);
   const romans=['I','II','III','IV','V','VI'];
 
   g('dNarrative').innerHTML = panelImgs.slice(0,panelCount).map(function(img,i){
