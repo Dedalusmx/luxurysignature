@@ -582,6 +582,12 @@ function imgUrl(url, w, h){
   return url;
 }
 
+
+function getDesc(p){
+  if(lang==='fr' && p['description FR'] && p['description FR'].trim()) return p['description FR'];
+  if(lang==='en' && p['description EN'] && p['description EN'].trim()) return p['description EN'];
+  return p['description']||'';
+}
 function renderPropsFromData(data){
   renderedProps = data;
   const grid = g('prpG');
@@ -602,7 +608,7 @@ function renderPropsFromData(data){
     const baths  = p['Ba\u00f1os'] || p['Baños'] || '';
     const area   = p['Area'] ? `${p['Area']} ${p['area_unit']||'m²'}` : '';
     const type   = p['listing_type'] || '';
-    const desc   = (p['description']||'').substring(0,130).trim();
+    const desc   = getDesc(p).substring(0,130).trim();
     const tour   = p['virtual_tour_url'] || '';
     const status = (p['status']||'').toLowerCase();
     const sold   = status==='sold'||status==='vendido'||status==='inactive';
@@ -1086,7 +1092,7 @@ function renderDetail(p){
 
   const panelImgs  = gallery.length ? gallery : (mainImg?[mainImg]:[]);
   const panelCount = Math.min(panelImgs.length, 6);
-  const textChunks = splitDesc(p['description']||'', panelCount);
+  const textChunks = splitDesc(getDesc(p), panelCount);
   const romans = ['I','II','III','IV','V','VI'];
 
   document.getElementById('dNarrative').innerHTML = panelImgs.slice(0,panelCount).map(function(img,i){
