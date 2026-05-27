@@ -3,6 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ── SEO ── -->
+<title>Luxury Real Estate Signature | Riviera Maya — Playa del Carmen & Tulum</title>
+<meta name="description" content="Premium real estate and luxury concierge services in Playa del Carmen, Tulum & Quintana Roo. Helicopter flights, VIP transport, immigration assistance and exceptional properties for sale and rent.">
+<meta name="keywords" content="luxury real estate Playa del Carmen, Tulum properties for sale, Riviera Maya real estate, luxury concierge Mexico, investment Quintana Roo, helicopter tours Tulum, VIP transport Riviera Maya">
+<meta name="author" content="Luxury Real Estate Signature">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://luxuryrealestatesignature.com/">
+
+<!-- ── OPEN GRAPH (WhatsApp · Facebook · LinkedIn) ── -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://luxuryrealestatesignature.com/">
+<meta property="og:site_name" content="Luxury Real Estate Signature">
+<meta property="og:title" content="Luxury Real Estate Signature | Riviera Maya">
+<meta property="og:description" content="Your passport to an exceptional life at the heart of the Riviera Maya. Premium properties, helicopter flights, VIP transport & concierge services.">
+<meta property="og:image" content="https://images.pexels.com/photos/60217/pexels-photo-60217.jpeg?auto=compress&cs=tinysrgb&w=1200&h=630&fit=crop">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Luxury Real Estate Signature — Riviera Maya">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="es_MX">
+
+<!-- ── TWITTER CARD ── -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Luxury Real Estate Signature | Riviera Maya">
+<meta name="twitter:description" content="Premium real estate & concierge services in Playa del Carmen, Tulum & Quintana Roo.">
+<meta name="twitter:image" content="https://images.pexels.com/photos/60217/pexels-photo-60217.jpeg?auto=compress&cs=tinysrgb&w=1200&h=630&fit=crop">
+
+<!-- ── SCHEMA.ORG — LOCAL BUSINESS ── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "Luxury Real Estate Signature",
+  "description": "Premium real estate and luxury concierge services in Playa del Carmen, Tulum & Quintana Roo, Mexico.",
+  "url": "https://luxuryrealestatesignature.com",
+  "logo": "https://cdn.shopify.com/s/files/1/0602/2417/6173/files/Luxury_Signture.png?v=1779266683",
+  "image": "https://images.pexels.com/photos/60217/pexels-photo-60217.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "telephone": ["+52-984-410-6305", "+1-819-808-9333"],
+  "email": "info@luxuryrealestatesignature.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Calle 6 Norte Bis., Centro",
+    "addressLocality": "Playa del Carmen",
+    "addressRegion": "Quintana Roo",
+    "postalCode": "77710",
+    "addressCountry": "MX"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "20.6274",
+    "longitude": "-87.0793"
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    "opens": "09:00",
+    "closes": "18:00"
+  },
+  "sameAs": [
+    "https://www.facebook.com/share/1JVgqwCeRr/",
+    "https://www.instagram.com/luxury_real_estate_signature",
+    "https://www.tiktok.com/@luxury.real.estat71",
+    "https://whatsapp.com/channel/0029VbCqGtq1nozEEVcWul3l",
+    "https://www.youtube.com/@LuxuryRealEstateSignature",
+    "https://www.linkedin.com/company/luxury-real-estate-signature"
+  ],
+  "areaServed": ["Playa del Carmen","Tulum","Quintana Roo","Riviera Maya"],
+  "priceRange": "$$$",
+  "foundingDate": "2018",
+  "currenciesAccepted": "MXN, USD",
+  "paymentAccepted": "Cash, Credit Card, Wire Transfer"
+}
+</script>
 <title>Luxury Real Estate Signature</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -863,6 +938,22 @@ let renderedProps = [];
 function openProperty(data, cardEl){
   const id = data['home_listing_id'] || data['Nombre'] || '';
   history.replaceState(null,'','#prop-'+encodeURIComponent(id));
+  // Update title + OG for sharing this property
+  const propName = data['Nombre']||id;
+  const propCity = [data['Colonia'],data['Ciudad']].filter(Boolean).join(', ');
+  document.title = propName + (propCity?' — '+propCity:'') + ' | Luxury Real Estate Signature';
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  const ogDesc  = document.querySelector('meta[property="og:description"]');
+  const ogImg   = document.querySelector('meta[property="og:image"]');
+  const twTitle = document.querySelector('meta[name="twitter:title"]');
+  const twImg   = document.querySelector('meta[name="twitter:image"]');
+  const propImg = IMG_COLS.map(c=>data[c]).find(u=>u&&u.trim())||'';
+  const ogImgUrl = propImg ? imgUrl(propImg,1200,630) : '';
+  if(ogTitle) ogTitle.content = propName + ' | Luxury Real Estate Signature';
+  if(ogDesc)  ogDesc.content  = (data['description']||'').substring(0,160)||'Premium property in the Riviera Maya.';
+  if(ogImg && ogImgUrl)   ogImg.content  = ogImgUrl;
+  if(twTitle) twTitle.content = propName + ' | Luxury Real Estate Signature';
+  if(twImg && ogImgUrl)   twImg.content  = ogImgUrl;
   renderDetail(data);
   const img  = cardEl.querySelector('.prp-img img');
   const rect = img.getBoundingClientRect();
@@ -885,6 +976,11 @@ function openProperty(data, cardEl){
 
 function closeDetail(){
   history.replaceState(null,'',window.location.pathname + window.location.search);
+  document.title = 'Luxury Real Estate Signature | Riviera Maya — Playa del Carmen & Tulum';
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  const ogDesc  = document.querySelector('meta[property="og:description"]');
+  if(ogTitle) ogTitle.content = 'Luxury Real Estate Signature | Riviera Maya';
+  if(ogDesc)  ogDesc.content  = 'Your passport to an exceptional life at the heart of the Riviera Maya.';
   document.getElementById('detailView').classList.remove('open');
   document.body.style.overflow = '';
   setTimeout(()=>{ document.getElementById('detailView').scrollTop=0; },450);
