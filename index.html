@@ -291,7 +291,7 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
 .d-gallery-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
 .d-gallery-count{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold)}
 .d-gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.d-gallery-thumb{aspect-ratio:4/3;overflow:hidden;cursor:zoom-in;position:relative}
+.d-gallery-thumb{aspect-ratio:4/3;overflow:hidden;cursor:zoom-in;position:relative;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .d-gallery-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s,filter .3s;filter:brightness(.85)}
 .d-gallery-thumb:hover img{transform:scale(1.05);filter:brightness(1.05)}
 .d-gallery-thumb:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:unset}
@@ -1186,15 +1186,31 @@ function renderDetail(p){
   // Gallery: all images as thumbnails
   const galLbl2 = {fr:'GALERIE · ',en:'GALLERY · ',es:'GALERÍA · '}[lang];
   const allImgsFull = imgs.map(u=>imgUrl(u,1920));
+  const fullImgs = imgs.map(u=>imgUrl(u,1920));
   g('dGallery').innerHTML = imgs.length > 1 ? `
     <div class="d-gallery-wrap">
       <div class="d-gallery-header">
         <span class="d-gallery-count">${galLbl2}${imgs.length} PHOTOS</span>
       </div>
       <div class="d-gallery-grid">
-        ${imgs.map((u,i)=>`<div class="d-gallery-thumb"><img src="${imgUrl(u,600,450)}" loading="lazy" onerror="this.parentElement.style.display='none'" data-full="${imgUrl(u,1920)}" data-idx="${i}"></div>`).join('')}
+        ${imgs.map((u,i)=>`<div class="d-gallery-thumb" data-idx="${i}"><img src="${imgUrl(u,600,450)}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`).join('')}
       </div>
     </div>` : '';
+
+  // Bind gallery thumb clicks here where fullImgs is in scope
+  setTimeout(()=>{
+    document.querySelectorAll('#dGallery .d-gallery-thumb').forEach(thumb=>{
+      const idx = parseInt(thumb.dataset.idx)||0;
+      // Both click and touchend for mobile reliability
+      function openThumb(e){
+        e.preventDefault();
+        e.stopPropagation();
+        openLightbox(fullImgs[idx], fullImgs, idx);
+      }
+      thumb.addEventListener('click', openThumb);
+      thumb.addEventListener('touchend', openThumb, {passive:false});
+    });
+  }, 80);
 
   setTimeout(initDetailParallax, 60);
 }
@@ -1256,16 +1272,13 @@ function initDetailParallax(){
     if(!img) return;
     const txt = panel.querySelector('.d-panel-txt');
     if(txt) txt.addEventListener('click', e=>e.stopPropagation());
-    panel.addEventListener('click', ()=>openLightbox(img.src, _allGallImgs, _allGallImgs.indexOf(img.src)));
+    function openPanel(e){
+      e.preventDefault();
+      openLightbox(img.src, _allGallImgs, _allGallImgs.indexOf(img.src));
+    }
+    panel.addEventListener('click', openPanel);
   });
-  // Gallery thumbnails
-  dv.querySelectorAll('.d-gallery-thumb').forEach(thumb=>{
-    const img = thumb.querySelector('img');
-    if(!img) return;
-    const fullSrc = img.dataset.full || img.src;
-    const idx = parseInt(img.dataset.idx)||0;
-    thumb.addEventListener('click', ()=>openLightbox(fullSrc, imgs.map(u=>imgUrl(u,1920)), idx));
-  });
+
 }
 
 
