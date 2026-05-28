@@ -583,6 +583,32 @@ function imgUrl(url, w, h){
 }
 
 
+
+function parseListingType(val){
+  const v = (val||'').toUpperCase().trim();
+  const map = {
+    fr:{FOR_SALE:'À Vendre',FOR_SALE_BY_AGENT:'À Vendre',FOR_RENT:'À Louer',FOR_RENT_BY_AGENT:'À Louer',SOLD:'Vendu'},
+    en:{FOR_SALE:'For Sale',FOR_SALE_BY_AGENT:'For Sale',FOR_RENT:'For Rent',FOR_RENT_BY_AGENT:'For Rent',SOLD:'Sold'},
+    es:{FOR_SALE:'Venta',FOR_SALE_BY_AGENT:'Venta',FOR_RENT:'Renta',FOR_RENT_BY_AGENT:'Renta',SOLD:'Vendido'}
+  };
+  return (map[lang]&&map[lang][v]) || v.replace(/_/g,' ');
+}
+
+function statLabels(){
+  return {
+    rec: {fr:'Ch.',en:'Beds',es:'Rec.'}[lang],
+    ban: {fr:'SDB',en:'Baths',es:'Baños'}[lang]
+  };
+}
+
+function formatArea(area, unit){
+  if(!area) return '';
+  const m2 = parseFloat(area);
+  if(isNaN(m2)) return area + ' ' + (unit||'m²');
+  const sqft = Math.round(m2 * 10.764);
+  return m2 + ' m² · ' + sqft.toLocaleString('en-US') + ' sq ft';
+}
+
 function getDesc(p){
   if(lang==='fr' && p['description FR'] && p['description FR'].trim()) return p['description FR'];
   if(lang==='en' && p['description EN'] && p['description EN'].trim()) return p['description EN'];
@@ -613,16 +639,16 @@ function renderPropsFromData(data){
     const status = (p['status']||'').toLowerCase();
     const sold   = status==='sold'||status==='vendido'||status==='inactive';
     const details = [
-      beds  ? `<span class="prp-detail">${beds} rec.</span>`:'',
-      baths ? `<span class="prp-detail">${baths} baños</span>`:'',
-      area  ? `<span class="prp-detail">${area}</span>`:''
+      beds  ? `<span class="prp-detail">${beds} ${statLabels().rec}</span>`:'',
+      baths ? `<span class="prp-detail">${baths} ${statLabels().ban}</span>`:'',
+      area  ? `<span class="prp-detail">${formatArea(p['Area'],p['area_unit'])}</span>`:''
     ].join('');
 
     return `<div class="prp-c rev">
       <div class="prp-img">
         <img src="${img}" alt="${name}" loading="lazy" onerror="this.style.opacity='.15'">
         <div class="prp-ov"></div>
-        ${type?`<span class="prp-badge">${type.toUpperCase()}</span>`:''}
+        ${type?`<span class="prp-badge">${parseListingType(type)}</span>`:''}
         ${sold?`<span class="prp-sold">VENDIDO</span>`:''}
       </div>
       <div class="prp-body">
@@ -664,6 +690,7 @@ function loadMore(){
 
 // ── Render filtrado + paginado ──
 function renderFiltered(){
+  const t = L[lang];
   const filtered  = getFiltered();
   const visible   = filtered.slice(0, visibleCount);
   renderPropsFromData(visible);
@@ -678,39 +705,43 @@ function renderFiltered(){
       </div>`;
   } else {
     moreWrap.innerHTML = filtered.length > 0
-      ? `<div class="prp-more-wrap"><p class="prp-count">${filtered.length} PROPIEDADES</p></div>`
+      ? `<div class="prp-more-wrap"><p class="prp-count">${filtered.length} ${L[lang].prpLbl}</p></div>`
       : '';
   }
 }
 
 // ── Construir filtros dinámicos del sheet ──
 function buildFilters(){
+  const t = L[lang];
   const allLabel = {fr:'Tous',en:'All',es:'Todos'}[lang];
+  const cityLbl  = {fr:'Ville',en:'City',es:'Ciudad'}[lang];
+  const tipoLbl  = {fr:'Type de bien',en:'Property Type',es:'Tipo de Propiedad'}[lang];
+  const ofertaLbl= {fr:'Offre',en:'Offer',es:'Oferta'}[lang];
   const uniq = col => [...new Set(allFetched.map(p=>(p[col]||'').trim()).filter(Boolean))].sort();
 
   const cities   = uniq('Ciudad');
   const types    = uniq('Tipo propiedad');
   const listings = uniq('listing_type');
 
-  const sel = (id, opts, val) =>
+  const sel = (id, opts, val, parse) =>
     `<select class="filter-sel" id="${id}">
       <option value="">${allLabel}</option>
-      ${opts.map(o=>`<option value="${o.toLowerCase()}"${val===o.toLowerCase()?'selected':''}>${o}</option>`).join('')}
+      ${opts.map(o=>`<option value="${o.toLowerCase()}"${val===o.toLowerCase()?'selected':''}>${parse?parseListingType(o):o}</option>`).join('')}
     </select>`;
 
   g('prpFilters').innerHTML = `
     <div class="filter-bar">
       <div class="filter-group">
-        <span class="filter-lbl">Ciudad</span>
-        ${sel('fCity', cities, filterState.city)}
+        <span class="filter-lbl">${cityLbl}</span>
+        ${sel('fCity', cities, filterState.city, false)}
       </div>
       <div class="filter-group">
-        <span class="filter-lbl">Tipo de Propiedad</span>
-        ${sel('fType', types, filterState.type)}
+        <span class="filter-lbl">${tipoLbl}</span>
+        ${sel('fType', types, filterState.type, false)}
       </div>
       <div class="filter-group">
-        <span class="filter-lbl">Oferta</span>
-        ${sel('fListing', listings, filterState.listing)}
+        <span class="filter-lbl">${ofertaLbl}</span>
+        ${sel('fListing', listings, filterState.listing, true)}
       </div>
     </div>`;
 
@@ -727,7 +758,7 @@ function buildFilters(){
 // ── Fetch principal ──
 function loadProps(){
   if(allFetched.length){ buildFilters(); renderFiltered(); return; }
-  g('prpG').innerHTML = '<div class="prp-loading">CARGANDO PROPIEDADES</div>';
+  g('prpG').innerHTML = '<div class="prp-loading">'+L[lang].prpLoading+'</div>';
   Papa.parse(SHEET_CSV,{
     download: true,
     header:   true,
@@ -772,6 +803,7 @@ const L = {
       {ti:'Conciergerie Deluxe',de:"Service sur mesure disponible 24h/24 pour répondre à toutes vos exigences."}
     ],
     pEy:'II · IMMOBILIER',pTi:'PROPRIÉTÉS SIGNATURE',
+    prpOf:'DE',prpLbl:'PROPRIÉTÉ(S)',prpLoad:'VOIR',prpMore:'DE PLUS',prpLoading:'CHARGEMENT...',
     iEy:'III · INVESTISSEMENT',iTi:'POURQUOI INVESTIR',
     iTx:"Le Quintana Roo figure parmi les marchés immobiliers les plus dynamiques d'Amérique latine. Avec une demande locative croissante et un afflux constant d'investisseurs nord-américains et européens, la Riviera Maya représente une opportunité d'investissement unique.",
     st:[{n:'526+',l:'Propriétés\nen portefeuille'},{n:'12%',l:'Rendement\nlocatif moyen'},{n:'15+',l:"Années\nd'expertise"},{n:'98%',l:'Clients\nsatisfaits'}],
@@ -807,6 +839,7 @@ const L = {
       {ti:'Deluxe Concierge',de:"Bespoke service available 24/7 to meet your every requirement."}
     ],
     pEy:'II · REAL ESTATE',pTi:'SIGNATURE PROPERTIES',
+    prpOf:'OF',prpLbl:'PROPERTIES',prpLoad:'LOAD',prpMore:'MORE',prpLoading:'LOADING...',
     iEy:'III · INVESTMENT',iTi:'WHY INVEST',
     iTx:"Quintana Roo ranks among the most dynamic real estate markets in Latin America. With growing rental demand and a constant influx of North American and European investors, the Riviera Maya represents a unique investment opportunity.",
     st:[{n:'526+',l:'Properties\nin portfolio'},{n:'12%',l:'Average\nrental yield'},{n:'15+',l:'Years of\nexpertise'},{n:'98%',l:'Satisfied\nclients'}],
@@ -842,6 +875,7 @@ const L = {
       {ti:'Concierge Deluxe',de:"Servicio a medida disponible las 24 horas para atender todas sus exigencias."}
     ],
     pEy:'II · INMOBILIARIA',pTi:'PROPIEDADES SIGNATURE',
+    prpOf:'DE',prpLbl:'PROPIEDADES',prpLoad:'VER',prpMore:'MÁS',prpLoading:'CARGANDO...',
     iEy:'III · INVERSIÓN',iTi:'POR QUÉ INVERTIR',
     iTx:"Quintana Roo figura entre los mercados inmobiliarios más dinámicos de América Latina. Con una demanda de renta en crecimiento y un flujo constante de inversionistas norteamericanos y europeos, la Riviera Maya representa una oportunidad única.",
     st:[{n:'526+',l:'Propiedades\nen portafolio'},{n:'12%',l:'Rendimiento\nde renta promedio'},{n:'15+',l:'Años de\nexperiencia'},{n:'98%',l:'Clientes\nsatisfechos'}],
