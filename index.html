@@ -1431,7 +1431,11 @@ window.addEventListener('popstate', ()=>{
 
 function bindCardClicks(){
   document.querySelectorAll('#prpG .prp-c').forEach((card,idx)=>{
-    card.onclick = ()=> openProperty(renderedProps[idx], card);
+    const p = renderedProps[idx];
+    card.onclick = ()=>{
+      if(p && p._unitCount > 1) openUnitPanel(p._units);
+      else openProperty(p, card);
+    };
   });
   document.querySelectorAll('#prpG .prp-lk').forEach(a=>{ a.onclick = e=>e.stopPropagation(); });
 }
