@@ -804,7 +804,14 @@ function loadProps(){
     complete(res){
       allFetched = res.data.filter(r => IMG_COLS.some(c=>r[c]&&r[c].trim()));
       buildFilters();
-      renderFiltered();
+      try {
+        renderFiltered();
+      } catch(e) {
+        console.error('renderFiltered error:', e.message, e.stack);
+        // Fallback — render without grouping
+        renderedProps = allFetched.slice(0, visibleCount);
+        renderPropsFromData(renderedProps);
+      }
       // Open property from URL hash if present
       const hash = decodeURIComponent(window.location.hash);
       if(hash.startsWith('#prop-')){
@@ -824,15 +831,15 @@ function loadProps(){
 
 // ── GROUP BY NAME ──
 function groupByName(data){
+  const parseNum = v => parseFloat(String(v||0).replace(/[^0-9.]/g,''))||0;
   const groups = {};
   data.forEach(p=>{
     const name = (p['Nombre']||'').trim();
     if(!groups[name]) groups[name] = [];
     groups[name].push(p);
   });
-  // Return one representative per group (cheapest) — non-mutating
   return Object.values(groups).map(units=>{
-    const sorted = [...units].sort((a,b)=>parsePrice(a['Precio'])-parsePrice(b['Precio']));
+    const sorted = [...units].sort((a,b)=>parseNum(a['Precio'])-parseNum(b['Precio']));
     return Object.assign({}, sorted[0], {_units: units, _unitCount: units.length});
   });
 }
