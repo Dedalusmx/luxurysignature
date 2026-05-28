@@ -848,8 +848,11 @@ function groupByName(data){
 }
 
 // ── UNIT PANEL ──
+// Store current units for click binding
+let _unitPanelUnits = [];
+
 function openUnitPanel(units){
-  const t = L[lang];
+  _unitPanelUnits = units;
   const rep = units[0];
   const selLbl = {fr:'Sélectionner une unité',en:'Select a unit',es:'Selecciona una unidad'}[lang];
 
@@ -857,10 +860,10 @@ function openUnitPanel(units){
   g('unitPanelLoc').textContent  = [rep['Colonia'],rep['Ciudad']].filter(Boolean).join(', ');
   g('unitPanelLbl').textContent  = selLbl;
 
-  g('unitList').innerHTML = units.map(p=>{
+  g('unitList').innerHTML = units.map((p,i)=>{
     const unit  = p['Unidad']||'';
-    const beds  = p['Rec\u00e1maras']||p['Rec\u00e1maras']||'';
-    const baths = p['Ba\u00f1os']||p['Ba\u00f1os']||'';
+    const beds  = p['Rec\u00e1maras']||'';
+    const baths = p['Ba\u00f1os']||'';
     const area  = p['Area']?formatArea(p['Area'],p['area_unit']):'';
     const stats = [
       beds  ? beds+' '+statLabels().rec :'',
@@ -868,7 +871,7 @@ function openUnitPanel(units){
       area  ? area :''
     ].filter(Boolean).join(' · ');
 
-    return `<div class="unit-item" onclick="closeUnitPanel();openPropertyDirect(allProps.find(x=>x['Unidad']==='${unit.replace(/'/g,"\'")}' && x['Nombre']==='${(rep['Nombre']||'').replace(/'/g,"\'")}'))">
+    return `<div class="unit-item" data-unit-idx="${i}">
       <div class="unit-item-left">
         <p class="unit-item-name">${unit ? 'Unidad '+unit : (p['Nombre']||'')}</p>
         ${stats?`<p class="unit-item-stats">${stats}</p>`:''}
@@ -876,6 +879,15 @@ function openUnitPanel(units){
       <p class="unit-item-price">${formatPrice(p['Precio'])}</p>
     </div>`;
   }).join('');
+
+  // Bind clicks after render
+  g('unitList').querySelectorAll('.unit-item').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const idx = parseInt(el.dataset.unitIdx)||0;
+      closeUnitPanel();
+      openPropertyDirect(_unitPanelUnits[idx]);
+    });
+  });
 
   g('unitPanel').classList.add('open');
   document.body.style.overflow='hidden';
