@@ -830,13 +830,10 @@ function groupByName(data){
     if(!groups[name]) groups[name] = [];
     groups[name].push(p);
   });
-  // Return one representative per group (cheapest available)
+  // Return one representative per group (cheapest) — non-mutating
   return Object.values(groups).map(units=>{
     const sorted = [...units].sort((a,b)=>parsePrice(a['Precio'])-parsePrice(b['Precio']));
-    const rep = sorted[0];
-    rep._units = units;
-    rep._unitCount = units.length;
-    return rep;
+    return Object.assign({}, sorted[0], {_units: units, _unitCount: units.length});
   });
 }
 
@@ -866,7 +863,7 @@ function openUnitPanel(units){
         <p class="unit-item-name">${unit ? 'Unidad '+unit : (p['Nombre']||'')}</p>
         ${stats?`<p class="unit-item-stats">${stats}</p>`:''}
       </div>
-      <p class="unit-item-price">${formatCurrency(p['Precio'])}</p>
+      <p class="unit-item-price">${formatPrice(p['Precio'])}</p>
     </div>`;
   }).join('');
 
