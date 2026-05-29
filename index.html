@@ -1220,7 +1220,7 @@ function splitDesc(text, n){
 }
 
 function renderDetail(p){
-  const imgs    = IMG_COLS.map(c=>p[c]).filter(u=>u&&u.trim());
+  const imgs    = IMG_COLS.map(c=>p[c]).filter(u=>u&&String(u).trim().match(/^https?:\/\//));
   const mainImg = imgs[0]||'';
   const gallery = imgs.slice(1).filter(Boolean);
 
@@ -1310,25 +1310,30 @@ function renderDetail(p){
   const galLbl2 = {fr:'GALERIE · ',en:'GALLERY · ',es:'GALERÍA · '}[lang];
   const allImgsFull = imgs.map(u=>imgUrl(u,1920));
   const fullImgs = imgs.map(u=>imgUrl(u,1920));
-  g('dGallery').innerHTML = imgs.length > 1 ? `
+  // Gallery — all validated images, placeholder on error (never hides)
+  const galImgs = imgs.filter(u => u && String(u).trim().match(/^https?:\/\//));
+  g('dGallery').innerHTML = galImgs.length > 1 ? `
     <div class="d-gallery-wrap">
       <div class="d-gallery-header">
-        <span class="d-gallery-count">${galLbl2}${imgs.length} PHOTOS</span>
+        <span class="d-gallery-count">${galLbl2}${galImgs.length} PHOTOS</span>
       </div>
       <div class="d-gallery-grid">
-        ${imgs.map((u,i)=>`<div class="d-gallery-thumb" data-idx="${i}"><img src="${imgUrl(u,600,450)}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`).join('')}
+        ${galImgs.map((u,i)=>`<div class="d-gallery-thumb" data-idx="${i}">
+          <img src="${imgUrl(u,800,600)}" loading="${i<6?'eager':'lazy'}"
+            onerror="this.style.opacity='0.08';this.removeAttribute('onerror')">
+        </div>`).join('')}
       </div>
     </div>` : '';
 
-  // Bind gallery thumb clicks here where fullImgs is in scope
+  // Bind gallery thumb clicks — galImgs so index matches rendered thumbs
+  const _galFullImgs = galImgs.map(u=>imgUrl(u,1920));
   setTimeout(()=>{
     document.querySelectorAll('#dGallery .d-gallery-thumb').forEach(thumb=>{
       const idx = parseInt(thumb.dataset.idx)||0;
-      // Both click and touchend for mobile reliability
       function openThumb(e){
         e.preventDefault();
         e.stopPropagation();
-        openLightbox(fullImgs[idx], fullImgs, idx);
+        openLightbox(_galFullImgs[idx], _galFullImgs, idx);
       }
       thumb.addEventListener('click', openThumb);
       thumb.addEventListener('touchend', openThumb, {passive:false});
