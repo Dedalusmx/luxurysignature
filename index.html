@@ -611,15 +611,44 @@ function formatPrice(val){
 function imgUrl(url, w, h){
   if(!url) return '';
   const s = String(url).trim();
-  // Google Drive: convert share/view URL to direct image URL
+  if(!s.match(/^https?:\/\//)) return s;
+
+  // Google Drive — convert to direct image URL
   const gdrive = s.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?.*id=)([a-zA-Z0-9_-]{10,})/);
   if(gdrive) return 'https://drive.google.com/uc?export=view&id=' + gdrive[1];
-  // Cloudinary: insert transformations
-  if(s.includes('cloudinary')){
+
+  // Cloudinary — strip any existing transformations and apply fresh
+  if(s.includes('res.cloudinary.com')){
     const t = 'w_'+w+',q_auto,f_auto,c_fill'+(h?',h_'+h:'');
-    if(s.includes('/upload/'+t)) return s;
-    return s.replace('/upload/', '/upload/'+t+'/');
+    const uploadIdx = s.indexOf('/upload/');
+    if(uploadIdx === -1) return s;
+    const base = s.slice(0, uploadIdx + 8); // "https://.../upload/"
+    let rest   = s.slice(uploadIdx + 8);    // everything after /upload/
+
+    // Brackets [ ] in public_id are special in Cloudinary delivery URLs —
+    // skip transformation for these images to avoid 400 errors
+    if(rest.includes('%5B') || rest.includes('%5b') || rest.includes('[') || rest.includes(']')){
+      return s;
+    }
+
+    // Strip leading transformation segments (they contain param_ patterns)
+    // A segment is a transformation if it matches known Cloudinary param prefixes
+    const isTransformSeg = seg => /^(?:w|h|c|f|q|e|g|l|b|a|o|r|t|x|y|z|dpr|ar|bo|co|d|delay|dn|du|fl|fps|if|ki|pg|so|sp|vc|vs|zoom)_/.test(seg);
+    while(true){
+      const slash = rest.indexOf('/');
+      if(slash === -1) break;
+      const seg = rest.slice(0, slash);
+      // Check each comma-separated part of the segment
+      const parts = seg.split(',');
+      if(parts.every(p => isTransformSeg(p) || p === 'auto' || p==='fill' || p==='scale')){
+        rest = rest.slice(slash + 1);
+      } else {
+        break;
+      }
+    }
+    return base + t + '/' + rest;
   }
+
   return s;
 }
 
