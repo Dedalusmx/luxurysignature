@@ -610,13 +610,17 @@ function formatPrice(val){
 
 function imgUrl(url, w, h){
   if(!url) return '';
-  if(url.includes('cloudinary')){
+  const s = String(url).trim();
+  // Google Drive: convert share/view URL to direct image URL
+  const gdrive = s.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?.*id=)([a-zA-Z0-9_-]{10,})/);
+  if(gdrive) return 'https://drive.google.com/uc?export=view&id=' + gdrive[1];
+  // Cloudinary: insert transformations
+  if(s.includes('cloudinary')){
     const t = 'w_'+w+',q_auto,f_auto,c_fill'+(h?',h_'+h:'');
-    // avoid double-transforming
-    if(url.includes('/upload/'+t)) return url;
-    return url.replace('/upload/', '/upload/'+t+'/');
+    if(s.includes('/upload/'+t)) return s;
+    return s.replace('/upload/', '/upload/'+t+'/');
   }
-  return url;
+  return s;
 }
 
 
@@ -1353,7 +1357,9 @@ function openLightbox(src, images, startIndex){
   document.body.style.overflow = 'hidden';
 }
 function updateLightbox(){
-  document.getElementById('lbImg').src = _lbImages[_lbIndex];
+  const img = document.getElementById('lbImg');
+  img.style.opacity = '1';
+  img.src = _lbImages[_lbIndex];
   document.getElementById('lbCounter').textContent = (_lbIndex+1) + ' / ' + _lbImages.length;
   const show = _lbImages.length > 1 ? '1' : '0';
   document.getElementById('lbPrev').style.opacity = show;
@@ -1660,7 +1666,7 @@ window.addEventListener('load', function(){
 <div id="lightbox" onclick="closeLightbox()">
   <button class="lb-close" onclick="closeLightbox()">&#x2715;</button>
   <button class="lb-nav" id="lbPrev" onclick="event.stopPropagation();lbNavigate(-1)">&#8592;</button>
-  <img id="lbImg" src="" alt="">
+  <img id="lbImg" src="" alt="" onerror="this.style.opacity='.15';this.removeAttribute('onerror')">
   <button class="lb-nav" id="lbNext" onclick="event.stopPropagation();lbNavigate(1)">&#8594;</button>
   <span id="lbCounter"></span>
 </div>
