@@ -611,6 +611,8 @@ function formatPrice(val){
 function imgUrl(url, w, h){
   if(!url) return '';
   if(url.includes('cloudinary')){
+    // URLs con brackets en el public_id fallan con transformaciones — servir original
+    if(url.includes('%5B') || url.includes('%5b') || url.includes('%5D') || url.includes('%5d')) return url;
     const t = 'w_'+w+',q_auto,f_auto,c_fill'+(h?',h_'+h:'');
     if(url.includes('/upload/'+t)) return url;
     return url.replace('/upload/', '/upload/'+t+'/');
