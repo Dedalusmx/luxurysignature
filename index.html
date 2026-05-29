@@ -1343,7 +1343,7 @@ function renderDetail(p){
   const galLbl2 = {fr:'GALERIE · ',en:'GALLERY · ',es:'GALERÍA · '}[lang];
   const allImgsFull = imgs.map(u=>imgUrl(u,1920));
   const fullImgs = imgs.map(u=>imgUrl(u,1920));
-  // Gallery — all validated images, placeholder on error (never hides)
+  // Gallery — all validated images
   const galImgs = imgs.filter(u => u && String(u).trim().match(/^https?:\/\//));
   g('dGallery').innerHTML = galImgs.length > 1 ? `
     <div class="d-gallery-wrap">
@@ -1352,8 +1352,8 @@ function renderDetail(p){
       </div>
       <div class="d-gallery-grid">
         ${galImgs.map((u,i)=>`<div class="d-gallery-thumb" data-idx="${i}">
-          <img src="${imgUrl(u,800,600)}" loading="${i<6?'eager':'lazy'}"
-            onerror="this.style.opacity='0.08';this.removeAttribute('onerror')">
+          <img src="${imgUrl(u,800,600)}" loading="eager"
+            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22100%25%22%3E%3Crect fill=%22%230f0e0c%22 width=%22100%25%22 height=%22100%25%22/%3E%3C/svg%3E';this.style.opacity='.3';this.removeAttribute('onerror')">
         </div>`).join('')}
       </div>
     </div>` : '';
