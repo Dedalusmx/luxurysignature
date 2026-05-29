@@ -1543,6 +1543,7 @@ function submitContactForm(){
 
   fetch(WEBHOOK, {
     method: 'POST',
+    mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
       'X-Source-Token': 'LRS-2025-xK9mP2qR7nJ4wT8v'
@@ -1577,17 +1578,26 @@ function submitContactForm(){
       {fr:'FERMER',en:'CLOSE',es:'CERRAR'}[lang]
     );
   })
-  .catch(()=>{
+  .catch(err=>{
+    console.error('Form submit error:', err.message || err);
     btn.disabled = false;
     btn.textContent = L[lang].fS;
     btn.style.background = 'var(--gold)';
+    // Fallback: pre-fill mailto with form data
+    const subj = encodeURIComponent('Contacto LRS — '+name);
+    const body = encodeURIComponent('Nombre: '+name+'\nEmail: '+email+'\nTeléfono: '+phone+'\nInterés: '+interest+'\n\n'+message);
+    const mailto = 'mailto:info@luxuryrealestatesignature.com?subject='+subj+'&body='+body;
     showFormOverlay('error',
-      {fr:'Erreur d\'envoi',en:'Something went wrong',es:'Error al enviar'}[lang],
-      {fr:'Veuillez réessayer ou nous contacter directement par téléphone.',
-       en:'Please try again or contact us directly by phone.',
-       es:'Por favor intenta de nuevo o contáctanos directamente por teléfono.'}[lang],
-      {fr:'RÉESSAYER',en:'TRY AGAIN',es:'REINTENTAR'}[lang]
+      {fr:"Erreur d'envoi",en:'Something went wrong',es:'Error al enviar'}[lang],
+      {fr:'Cliquez ci-dessous pour nous écrire directement par e-mail.',
+       en:'Click below to reach us directly by email.',
+       es:'Haga clic abajo para contactarnos directamente por correo.'}[lang],
+      {fr:'ENVOYER PAR EMAIL',en:'SEND BY EMAIL',es:'ENVIAR POR EMAIL'}[lang]
     );
+    setTimeout(()=>{
+      const foBtn = document.getElementById('foBtn');
+      if(foBtn) foBtn.onclick = ()=>{ window.location.href = mailto; closeFormOverlay(); };
+    }, 50);
   });
 }
 
