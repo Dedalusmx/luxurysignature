@@ -206,15 +206,14 @@ img{max-width:100%;display:block}
 .srv-c:first-child{grid-column:1/3}
 .srv-c{background:var(--bg2);padding:56px 52px;position:relative;overflow:hidden;transition:background .5s;cursor:default}
 /* Imagen de fondo — solo en primera tarjeta */
-.srv-bg-img{position:absolute;inset:0;background-image:url('https://res.cloudinary.com/dphbptped/image/upload/w_1400,q_auto,f_auto/v1779853245/Hero-luxury_xjrqqm.jpg');background-size:cover;background-position:center;opacity:0;transition:opacity .7s ease,transform .7s ease;transform:scale(1.04);z-index:0}
+.srv-bg-img{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .7s ease,transform .7s ease;transform:scale(1.04);z-index:0}
 .srv-bg-dim{position:absolute;inset:0;background:linear-gradient(110deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.75) 60%,rgba(8,8,6,.55) 100%);z-index:1;opacity:0;transition:opacity .7s ease}
-.srv-c:first-child:hover .srv-bg-img{opacity:1;transform:scale(1)}
-.srv-c:first-child:hover .srv-bg-dim{opacity:1}
-.srv-c:first-child:hover{background:var(--bg2)}
+.srv-c:hover .srv-bg-img{opacity:1;transform:scale(1)}
+.srv-c:hover .srv-bg-dim{opacity:1}
+.srv-c:hover{background:var(--bg2)}
 /* Contenido siempre encima */
 .srv-inner{position:relative;z-index:2}
-/* Hover oscuro en tarjetas normales */
-.srv-c:hover{background:#111008}
+/* Hover oscuro en tarjetas normales — desactivado, usa imagen */
 /* Número romano decorativo */
 .srv-num{font-family:'Cormorant Garamond',serif;font-size:96px;font-weight:300;color:var(--gold);opacity:.05;line-height:1;position:absolute;top:12px;right:28px;pointer-events:none;transition:opacity .5s;z-index:2}
 .srv-c:hover .srv-num{opacity:.13}
@@ -226,7 +225,7 @@ img{max-width:100%;display:block}
 .srv-c:hover .srv-ic{opacity:1;transform:translateY(-3px)}
 /* Título */
 .srv-ti{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,2vw,26px);font-weight:400;font-style:italic;color:var(--text);margin-bottom:12px;line-height:1.2;transition:color .4s}
-.srv-c:first-child:hover .srv-ti{color:var(--gold-lt)}
+.srv-c:hover .srv-ti{color:var(--gold-lt)}
 /* Descripción */
 .srv-de{font-size:12.5px;line-height:1.9;color:var(--dim);font-weight:300;max-width:640px}
 /* Flecha */
@@ -1196,6 +1195,7 @@ function render(){
       </div>
       <div class="srv-arr">${arrow}</div>
     </div>`).join('');
+  observe();
   // Properties
   g('pEy').textContent = t.pEy;
   g('pTi').textContent = t.pTi;
