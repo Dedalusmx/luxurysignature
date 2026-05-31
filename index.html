@@ -156,7 +156,8 @@ img{max-width:100%;display:block}
 .h-orn-txt{font-size:8px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);font-weight:400}
 .h-title{font-family:'Cormorant Garamond',serif;font-size:clamp(50px,8.5vw,105px);font-weight:300;font-style:normal;line-height:1.02;color:var(--text);letter-spacing:-.02em;opacity:0;animation:up .9s .42s forwards}
 .h-title em{font-style:italic;color:var(--gold-lt)}
-.h-loc{font-size:10px;font-weight:300;letter-spacing:5px;text-transform:uppercase;color:rgba(232,213,163,.65);margin:26px 0 48px;opacity:0;animation:up .9s .6s forwards}
+.h-slogan{font-family:'Cormorant Garamond',serif;font-size:clamp(14px,1.6vw,20px);font-weight:300;font-style:italic;color:rgba(232,213,163,.78);margin:18px 0 8px;letter-spacing:.04em;opacity:0;animation:up .9s .52s forwards}
+.h-loc{font-size:10px;font-weight:300;letter-spacing:5px;text-transform:uppercase;color:rgba(232,213,163,.65);margin:16px 0 48px;opacity:0;animation:up .9s .6s forwards}
 .h-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;opacity:0;animation:up .9s .78s forwards}
 .btn-g{display:inline-block;padding:16px 38px;background:var(--gold);color:var(--bg);text-decoration:none;font-size:9px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;transition:background .25s,transform .2s;white-space:nowrap}
 .btn-g:hover{background:var(--gold-lt);transform:translateY(-2px)}
@@ -183,6 +184,23 @@ img{max-width:100%;display:block}
 .s-ti{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,2.8vw,32px);font-weight:300;letter-spacing:5px;text-transform:uppercase;color:var(--text)}
 .s-div{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px}
 .s-div::before,.s-div::after{content:'';width:28px;height:1px;background:var(--gold);opacity:.38}
+
+/* ── ABOUT ── */
+#about{background:var(--bg3)}
+.ab-intro{max-width:800px;margin:0 auto 72px;text-align:center;font-size:15px;line-height:2;color:rgba(240,235,225,.62);font-weight:300}
+.ab-cols{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-bottom:72px}
+.ab-col-txt{font-size:14px;line-height:2;color:rgba(240,235,225,.6);font-weight:300}
+.ab-col-txt p{margin-bottom:20px}
+.ab-block-ti{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;font-style:italic;color:var(--gold-lt);margin-bottom:14px}
+.ab-mvv{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(196,163,90,.06);margin-bottom:72px}
+.ab-mvv-c{padding:44px 36px;background:var(--bg2)}
+.ab-mvv-ti{font-size:9px;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.ab-mvv-tx{font-size:13.5px;line-height:1.9;color:rgba(240,235,225,.6);font-weight:300}
+.ab-vals{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.ab-val{font-size:11px;font-weight:300;letter-spacing:1.5px;color:rgba(240,235,225,.5);padding:7px 18px;border:1px solid rgba(196,163,90,.15);white-space:nowrap}
+.ab-closing{max-width:760px;margin:0 auto;text-align:center;font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.2vw,26px);font-weight:300;font-style:italic;line-height:1.7;color:rgba(240,235,225,.75)}
+@media(max-width:1024px){.ab-cols{grid-template-columns:1fr;gap:40px}.ab-mvv{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.ab-mvv{grid-template-columns:1fr}}
 
 /* ── SERVICES ── */
 #services{background:var(--bg)}
@@ -464,6 +482,7 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
   <div class="h-cnt">
     <div class="h-orn"><span class="h-orn-txt" id="hEy"></span></div>
     <h1 class="h-title" id="hTi"></h1>
+    <p class="h-slogan" id="hSlogan"></p>
     <p class="h-loc" id="hLoc"></p>
     <div class="h-btns">
       <a href="#properties" class="btn-g" id="hCta1"></a>
@@ -480,6 +499,24 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
     <h2 class="mf-ti rev" id="mfTi"></h2>
     <p class="mf-tx rev" id="mfTx"></p>
     <div class="gline"><div class="gdot"></div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="sec">
+  <div class="s-in">
+    <div class="s-hd rev">
+      <span class="s-ey" id="abEy"></span>
+      <h2 class="s-ti" id="abTi"></h2>
+      <div class="s-div"><div class="gdot"></div></div>
+    </div>
+    <p class="ab-intro rev" id="abIntro"></p>
+    <div class="ab-cols">
+      <div class="ab-col-txt rev" id="abCol1"></div>
+      <div class="ab-col-txt rev" id="abCol2"></div>
+    </div>
+    <div class="ab-mvv rev" id="abMvv"></div>
+    <p class="ab-closing rev" id="abClosing"></p>
   </div>
 </section>
 
@@ -928,13 +965,24 @@ function closeUnitPanel(){
 // ── i18n ──
 const L = {
   fr:{
-    nav:['SERVICES','PROPRIÉTÉS','INVESTIR','CONTACT'],href:['#services','#properties','#invest','#contact'],
+    nav:['SERVICES','PROPRIÉTÉS','À PROPOS','INVESTIR','CONTACT'],href:['#services','#properties','#about','#invest','#contact'],
     hEy:'EST. 2018 · RIVIERA MAYA',
     hTi:"L'Art de<br><em>Vivre Exceptionnel</em>",
+    hSlogan:'Là où les opportunités deviennent des projets de vie',
     hLoc:'Playa del Carmen · Tulum · Quintana Roo',
     c1:'VOIR LES PROPRIÉTÉS',c2:'NOS SERVICES',
     mfTi:"Plus qu'une agence.",
     mfTx:"Luxury Real Estate Signature est votre passeport vers une vie d'exception au cœur de la Riviera Maya. Nous orchestrons chaque détail de votre parcours — du premier vol en hélicoptère au-dessus de Tulum jusqu'à la signature de votre propriété de rêve.",
+    abEy:'· À PROPOS DE NOUS',abTi:'QUI SOMMES-NOUS',
+    abIntro:"Luxury Real Estate Signature est une entreprise spécialisée dans l'immobilier et les services d'accompagnement pour les investisseurs, les familles et les personnes souhaitant s'établir sur la Riviera Maya. Notre engagement est d'offrir une expérience professionnelle, transparente et personnalisée à chaque étape du processus d'achat, de vente ou d'investissement immobilier.",
+    abCol1p:["Grâce à une connaissance approfondie du marché immobilier de la région, nous aidons nos clients à trouver des propriétés adaptées à leurs besoins, leurs objectifs et leur style de vie — que ce soit pour y vivre, passer des vacances, générer des revenus locatifs ou diversifier leur patrimoine.","Nous nous distinguons par une attention de proximité, un conseil intégral et des solutions sur mesure, accompagnant nos clients de la recherche de la propriété idéale jusqu'à la clôture réussie de l'opération."],
+    abCol2p:["Par ailleurs, nous proposons des services complémentaires d'orientation pour ceux qui souhaitent s'établir au Mexique et profiter des opportunités qu'offre la Riviera Maya.","Notre équipe est prête à vous accompagner à chaque étape de votre projet immobilier dans la Riviera Maya — avec professionnalisme, éthique et dévouement."],
+    abMvv:[
+      {ti:'NOTRE MISSION',tx:"Fournir des services immobiliers d'excellence, en connectant nos clients aux meilleures opportunités d'investissement et de logement sur la Riviera Maya, grâce à une attention professionnelle, éthique et personnalisée."},
+      {ti:'NOTRE VISION',tx:"Devenir une entreprise leader et référence sur le marché immobilier de la Riviera Maya, reconnue pour la confiance, la transparence et la qualité de nos services."},
+      {ti:'NOS VALEURS',vals:["Intégrité & transparence","Professionnalisme & excellence","Engagement envers nos clients","Attention personnalisée","Confiance & responsabilité","Innovation & amélioration continue"]}
+    ],
+    abClosing:"Chez Luxury Real Estate Signature, nous croyons que chaque propriété représente une opportunité unique de construire un patrimoine, de profiter d'un meilleur style de vie et d'atteindre de nouveaux objectifs.",
     sEy:'I · L\'EXPÉRIENCE',sTi:"L'EXPÉRIENCE SIGNATURE",
     srv:[
       {ti:'Vols en Hélicoptère',de:"Survolez la Riviera Maya et découvrez Tulum depuis les cieux dans le plus grand confort."},
@@ -964,13 +1012,24 @@ const L = {
     ftCp:'© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México'
   },
   en:{
-    nav:['SERVICES','PROPERTIES','INVEST','CONTACT'],href:['#services','#properties','#invest','#contact'],
+    nav:['SERVICES','PROPERTIES','ABOUT','INVEST','CONTACT'],href:['#services','#properties','#about','#invest','#contact'],
     hEy:'EST. 2018 · RIVIERA MAYA',
     hTi:"The Art of<br><em>Exceptional Living</em>",
+    hSlogan:'Where opportunities become life projects',
     hLoc:'Playa del Carmen · Tulum · Quintana Roo',
     c1:'EXPLORE PROPERTIES',c2:'OUR SERVICES',
     mfTi:"More than an agency.",
     mfTx:"Luxury Real Estate Signature is your passport to an exceptional life at the heart of the Riviera Maya. We orchestrate every detail of your journey — from your first helicopter flight above Tulum to signing the deed of your dream property.",
+    abEy:'· ABOUT US',abTi:'WHO WE ARE',
+    abIntro:"Luxury Real Estate Signature is a company specializing in real estate and advisory services for investors, families and individuals seeking to establish themselves on the Riviera Maya. Our commitment is to provide a professional, transparent, and personalized experience at every stage of the buying, selling, or investment process.",
+    abCol1p:["With extensive knowledge of the regional real estate market, we help our clients find properties that match their needs, goals, and lifestyle — whether to live in, vacation at, generate rental income from, or diversify their wealth portfolio.","We distinguish ourselves through close personal attention, comprehensive advisory, and tailored solutions, accompanying our clients from the search for the ideal property through to the successful closing of every transaction."],
+    abCol2p:["We also offer complementary orientation services for those looking to establish themselves in Mexico and take advantage of the opportunities the Riviera Maya has to offer.","Our team is ready to guide you at every step of your real estate journey in the Riviera Maya — with professionalism, integrity, and dedication."],
+    abMvv:[
+      {ti:'OUR MISSION',tx:"To provide excellent real estate services, connecting our clients with the best investment and housing opportunities in the Riviera Maya through professional, ethical, and personalized attention."},
+      {ti:'OUR VISION',tx:"To be a leading reference firm in the Riviera Maya real estate market, recognized for the trust, transparency, and quality of our services."},
+      {ti:'OUR VALUES',vals:["Integrity & transparency","Professionalism & excellence","Commitment to our clients","Personalized attention","Trust & responsibility","Innovation & continuous improvement"]}
+    ],
+    abClosing:"At Luxury Real Estate Signature, we believe every property represents a unique opportunity to build wealth, enjoy a better lifestyle, and reach new goals.",
     sEy:'I · EXPERIENCE',sTi:'THE SIGNATURE EXPERIENCE',
     srv:[
       {ti:'Helicopter Flights',de:"Soar above the Riviera Maya and discover Tulum from the sky in utmost comfort."},
@@ -1000,13 +1059,24 @@ const L = {
     ftCp:'© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México'
   },
   es:{
-    nav:['SERVICIOS','PROPIEDADES','INVERTIR','CONTACTO'],href:['#services','#properties','#invest','#contact'],
+    nav:['SERVICIOS','PROPIEDADES','NOSOTROS','INVERTIR','CONTACTO'],href:['#services','#properties','#about','#invest','#contact'],
     hEy:'EST. 2018 · RIVIERA MAYA',
     hTi:"El Arte de<br><em>Vivir Excepcional</em>",
+    hSlogan:'Donde las oportunidades se convierten en proyectos de vida',
     hLoc:'Playa del Carmen · Tulum · Quintana Roo',
     c1:'EXPLORAR PROPIEDADES',c2:'NUESTROS SERVICIOS',
     mfTi:"Más que una agencia.",
     mfTx:"Luxury Real Estate Signature es su pasaporte hacia una vida excepcional en el corazón de la Riviera Maya. Orquestamos cada detalle de su viaje — desde su primer vuelo en helicóptero sobre Tulum hasta la firma de su propiedad soñada.",
+    abEy:'· ACERCA DE NOSOTROS',abTi:'QUIÉNES SOMOS',
+    abIntro:"Luxury Real Estate Signature es una empresa especializada en bienes raíces y servicios de acompañamiento para inversionistas, familias y personas que desean establecerse en la Riviera Maya. Nuestro compromiso es brindar una experiencia profesional, transparente y personalizada en cada etapa del proceso de compra, venta o inversión inmobiliaria.",
+    abCol1p:["Con amplio conocimiento del mercado inmobiliario de la región, ayudamos a nuestros clientes a encontrar propiedades que se adapten a sus necesidades, objetivos y estilo de vida, ya sea para vivir, vacacionar, generar ingresos por rentas o diversificar su patrimonio.","Nos distinguimos por ofrecer atención cercana, asesoría integral y soluciones a la medida, acompañando a nuestros clientes desde la búsqueda de la propiedad ideal hasta el cierre exitoso de la operación."],
+    abCol2p:["Además, contamos con servicios complementarios de orientación para quienes buscan establecerse en México y aprovechar las oportunidades que ofrece la Riviera Maya.","Nuestro equipo está listo para acompañarle en cada paso del camino para hacer realidad sus proyectos inmobiliarios en la Riviera Maya."],
+    abMvv:[
+      {ti:'NUESTRA MISIÓN',tx:"Brindar servicios inmobiliarios de excelencia, conectando a nuestros clientes con las mejores oportunidades de inversión y vivienda en la Riviera Maya, mediante una atención profesional, ética y personalizada."},
+      {ti:'NUESTRA VISIÓN',tx:"Ser una empresa líder y referente en el mercado inmobiliario de la Riviera Maya, reconocida por la confianza, transparencia y calidad de nuestros servicios."},
+      {ti:'NUESTROS VALORES',vals:["Integridad y transparencia","Profesionalismo y excelencia","Compromiso con nuestros clientes","Atención personalizada","Confianza y responsabilidad","Innovación y mejora continua"]}
+    ],
+    abClosing:"En Luxury Real Estate Signature, creemos que cada propiedad representa una oportunidad única para construir patrimonio, disfrutar un mejor estilo de vida y alcanzar nuevos objetivos.",
     sEy:'I · EXPERIENCIA',sTi:'LA EXPERIENCIA SIGNATURE',
     srv:[
       {ti:'Vuelos en Helicóptero',de:"Sobrevuela la Riviera Maya y descubre Tulum desde los cielos con el mayor de los confortos."},
@@ -1047,12 +1117,28 @@ function render(){
   // Hero
   g('hEy').textContent = t.hEy;
   g('hTi').innerHTML = t.hTi;
+  g('hSlogan').textContent = t.hSlogan;
   g('hLoc').textContent = t.hLoc;
   g('hCta1').textContent = t.c1;
   g('hCta2').textContent = t.c2;
   // Manifesto
   g('mfTi').textContent = t.mfTi;
   g('mfTx').textContent = t.mfTx;
+  // About
+  g('abEy').textContent = t.abEy;
+  g('abTi').textContent = t.abTi;
+  g('abIntro').textContent = t.abIntro;
+  g('abCol1').innerHTML = t.abCol1p.map(p=>`<p>${p}</p>`).join('');
+  g('abCol2').innerHTML = t.abCol2p.map(p=>`<p>${p}</p>`).join('');
+  g('abMvv').innerHTML = t.abMvv.map(m=>`
+    <div class="ab-mvv-c">
+      <p class="ab-mvv-ti">${m.ti}</p>
+      ${m.vals
+        ? `<div class="ab-vals">${m.vals.map(v=>`<span class="ab-val">${v}</span>`).join('')}</div>`
+        : `<p class="ab-mvv-tx">${m.tx}</p>`
+      }
+    </div>`).join('');
+  g('abClosing').textContent = t.abClosing;
   // Services
   g('sEy').textContent = t.sEy;
   g('sTi').textContent = t.sTi;
