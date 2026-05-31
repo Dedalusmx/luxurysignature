@@ -204,7 +204,7 @@ img{max-width:100%;display:block}
 .srv-layout{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(196,163,90,.07)}
 /* Primera tarjeta — ancho completo */
 .srv-c:first-child{grid-column:1/3}
-.srv-c{background:var(--bg2);padding:56px 52px;position:relative;overflow:hidden;transition:background .5s;cursor:default}
+.srv-c{background:var(--bg2);padding:56px 52px;position:relative;overflow:hidden;transition:background .5s;cursor:default;min-height:320px;display:flex;flex-direction:column;justify-content:flex-end}
 /* Imagen de fondo — solo en primera tarjeta */
 .srv-bg-img{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .7s ease,transform .7s ease;transform:scale(1.04);z-index:0}
 .srv-bg-dim{position:absolute;inset:0;background:linear-gradient(110deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.75) 60%,rgba(8,8,6,.55) 100%);z-index:1;opacity:0;transition:opacity .7s ease}
@@ -233,6 +233,7 @@ img{max-width:100%;display:block}
 .srv-arr svg{width:100%;height:100%;color:var(--gold)}
 .srv-c:hover .srv-arr{opacity:.55;transform:none}
 /* Hero card ajustes */
+.srv-c:first-child{min-height:420px}
 .srv-c:first-child .srv-ti{font-size:clamp(24px,2.8vw,36px)}
 .srv-c:first-child .srv-ic{width:44px;height:44px}
 .srv-c:first-child .srv-num{font-size:150px;top:4px}
