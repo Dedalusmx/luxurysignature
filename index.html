@@ -569,7 +569,6 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
       <h2 class="s-ti" id="pTi"></h2>
       <div class="s-div"><div class="gdot"></div></div>
     </div>
-    <div id="prpFilters"></div>
     <div class="prp-g" id="prpG"></div>
     <div id="prpMore"></div>
   </div>
@@ -802,86 +801,34 @@ function getFiltered(){
                    parseTimestamp(a['timestamp']||a['Timestamp']||a['TIMESTAMP']));
 }
 
-// ── Ver más ──
-function loadMore(){
-  visibleCount += 6;
-  renderFiltered();
-  // scroll suave al primer card nuevo
-  const cards = document.querySelectorAll('#prpG .prp-c');
-  if(cards[visibleCount-6]) cards[visibleCount-6].scrollIntoView({behavior:'smooth',block:'center'});
-}
-
-// ── Render filtrado + paginado ──
+// ── Render filtrado — landing muestra solo 3 ──
 function renderFiltered(){
   const t = L[lang];
   const filtered  = getFiltered();
   const grouped   = groupByName(filtered);
-  const visible   = grouped.slice(0, visibleCount);
+  const visible   = grouped.slice(0, 3);
   renderPropsFromData(visible);
 
-  const remaining = grouped.length - visibleCount;
-  const moreWrap  = g('prpMore');
-  if(remaining > 0){
-    moreWrap.innerHTML = `
-      <div class="prp-more-wrap">
-        <p class="prp-count">${visible.length} DE ${filtered.length} PROPIEDADES</p>
-        <button class="btn-more" onclick="loadMore()">VER ${Math.min(remaining,5)} MÁS</button>
-      </div>`;
-  } else {
-    moreWrap.innerHTML = filtered.length > 0
-      ? `<div class="prp-more-wrap"><p class="prp-count">${grouped.length} ${L[lang].prpLbl}</p></div>`
-      : '';
-  }
-}
-
-// ── Construir filtros dinámicos del sheet ──
-function buildFilters(){
-  const t = L[lang];
-  const allLabel = {fr:'Tous',en:'All',es:'Todos'}[lang];
-  const cityLbl  = {fr:'Ville',en:'City',es:'Ciudad'}[lang];
-  const tipoLbl  = {fr:'Type de bien',en:'Property Type',es:'Tipo de Propiedad'}[lang];
-  const ofertaLbl= {fr:'Offre',en:'Offer',es:'Oferta'}[lang];
-  const uniq = col => [...new Set(allFetched.map(p=>(p[col]||'').trim()).filter(Boolean))].sort();
-
-  const cities   = uniq('Ciudad');
-  const types    = uniq('Tipo propiedad');
-  const listings = uniq('listing_type');
-
-  const sel = (id, opts, val, parse) =>
-    `<select class="filter-sel" id="${id}">
-      <option value="">${allLabel}</option>
-      ${opts.map(o=>`<option value="${o.toLowerCase()}"${val===o.toLowerCase()?'selected':''}>${parse?parseListingType(o):o}</option>`).join('')}
-    </select>`;
-
-  g('prpFilters').innerHTML = `
-    <div class="filter-bar">
-      <div class="filter-group">
-        <span class="filter-lbl">${cityLbl}</span>
-        ${sel('fCity', cities, filterState.city, false)}
-      </div>
-      <div class="filter-group">
-        <span class="filter-lbl">${tipoLbl}</span>
-        ${sel('fType', types, filterState.type, false)}
-      </div>
-      <div class="filter-group">
-        <span class="filter-lbl">${ofertaLbl}</span>
-        ${sel('fListing', listings, filterState.listing, true)}
-      </div>
+  const moreWrap = g('prpMore');
+  const labels = {
+    es:{btn:'VER CATÁLOGO COMPLETO', sub:'Explora todas nuestras propiedades disponibles'},
+    en:{btn:'VIEW FULL CATALOGUE',   sub:'Explore all our available properties'},
+    fr:{btn:'VOIR LE CATALOGUE',     sub:'Découvrez toutes nos propriétés disponibles'}
+  };
+  const lb = labels[lang] || labels.es;
+  moreWrap.innerHTML = `
+    <div class="prp-more-wrap">
+      <p class="prp-count">${lb.sub}</p>
+      <a href="collection.html" class="btn-more">${lb.btn} &rarr;</a>
     </div>`;
-
-  ['fCity','fType','fListing'].forEach(id=>{
-    document.getElementById(id).addEventListener('change', e=>{
-      const key = {fCity:'city',fType:'type',fListing:'listing'}[id];
-      filterState[key] = e.target.value;
-      visibleCount = 6;
-      renderFiltered();
-    });
-  });
 }
+
+// ── buildFilters — no aplica en landing (sin filtros) ──
+function buildFilters(){ /* filtros solo en collection.html */ }
 
 // ── Fetch principal ──
 function loadProps(){
-  if(allFetched.length){ buildFilters(); renderFiltered(); return; }
+  if(allFetched.length){ renderFiltered(); return; }
   g('prpG').innerHTML = '<div class="prp-loading">'+L[lang].prpLoading+'</div>';
   Papa.parse(SHEET_CSV,{
     download: true,
@@ -889,14 +836,11 @@ function loadProps(){
     skipEmptyLines: true,
     complete(res){
       allFetched = res.data.filter(r => IMG_COLS.some(c=>r[c]&&r[c].trim()));
-      buildFilters();
       try {
         renderFiltered();
       } catch(e) {
         console.error('renderFiltered error:', e.message, e.stack);
-        // Fallback — render without grouping
-        renderedProps = allFetched.slice(0, visibleCount);
-        renderPropsFromData(renderedProps);
+        renderPropsFromData(allFetched.slice(0, 3));
       }
       // Open property from URL hash if present
       const hash = decodeURIComponent(window.location.hash);
