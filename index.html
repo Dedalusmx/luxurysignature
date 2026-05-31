@@ -615,12 +615,12 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
 <script>
 // ── ICONS ──
 const IC = [
-  `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="44" y2="22"/><path d="M20 22 L23 13 L26 22"/><circle cx="24" cy="29" r="5.5"/><line x1="24" y1="34.5" x2="24" y2="41"/><line x1="19" y1="41" x2="29" y2="41"/><path d="M4 22 L6 29 H16"/><path d="M32 29 H42 L44 22"/></svg>`,
-  `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 27 L10 18 H38 L43 27 V36 H5 Z"/><circle cx="14" cy="36" r="4.5"/><circle cx="34" cy="36" r="4.5"/><line x1="5" y1="27" x2="43" y2="27"/><path d="M13 18 L16 27"/><path d="M35 18 L32 27"/><rect x="19" y="21" width="10" height="6" rx="1"/></svg>`,
-  `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="11" y="6" width="26" height="36" rx="2"/><line x1="17" y1="16" x2="31" y2="16"/><line x1="17" y1="22" x2="31" y2="22"/><line x1="17" y1="28" x2="25" y2="28"/><circle cx="24" cy="36" r="2.5"/></svg>`,
-  `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="2" fill="currentColor"/><line x1="24" y1="6" x2="24" y2="11"/><line x1="24" y1="37" x2="24" y2="42"/><line x1="6" y1="24" x2="11" y2="24"/><line x1="37" y1="24" x2="42" y2="24"/><polygon points="24,11 27.5,21 24,23 20.5,21" style="fill:currentColor;opacity:0.55"/><polygon points="24,37 20.5,27 24,25 27.5,27"/></svg>`,
   `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="8" y="12" width="20" height="32"/><rect x="28" y="22" width="12" height="22"/><line x1="4" y1="44" x2="44" y2="44"/><rect x="13" y="20" width="5" height="7"/><rect x="22" y="20" width="5" height="7"/><rect x="13" y="31" width="5" height="7"/><rect x="31" y="29" width="5" height="7"/><line x1="18" y1="12" x2="18" y2="6"/><line x1="10" y1="6" x2="26" y2="6"/></svg>`,
-  `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M24 8 C15 8 9 16.5 9 27 H39 C39 16.5 33 8 24 8Z"/><line x1="5" y1="33" x2="43" y2="33"/><line x1="20" y1="6" x2="28" y2="6"/><circle cx="24" cy="6" r="2.5"/><line x1="24" y1="33" x2="24" y2="40"/><path d="M20 40 Q24 44 28 40"/></svg>`
+  `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="11" y="6" width="26" height="36" rx="2"/><line x1="17" y1="16" x2="31" y2="16"/><line x1="17" y1="22" x2="31" y2="22"/><line x1="17" y1="28" x2="25" y2="28"/><circle cx="24" cy="36" r="2.5"/></svg>`,
+  `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M24 8 C15 8 9 16.5 9 27 H39 C39 16.5 33 8 24 8Z"/><line x1="5" y1="33" x2="43" y2="33"/><line x1="20" y1="6" x2="28" y2="6"/><circle cx="24" cy="6" r="2.5"/><line x1="24" y1="33" x2="24" y2="40"/><path d="M20 40 Q24 44 28 40"/></svg>`,
+  `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 27 L10 18 H38 L43 27 V36 H5 Z"/><circle cx="14" cy="36" r="4.5"/><circle cx="34" cy="36" r="4.5"/><line x1="5" y1="27" x2="43" y2="27"/><path d="M13 18 L16 27"/><path d="M35 18 L32 27"/><rect x="19" y="21" width="10" height="6" rx="1"/></svg>`,
+  `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="2" fill="currentColor"/><line x1="24" y1="6" x2="24" y2="11"/><line x1="24" y1="37" x2="24" y2="42"/><line x1="6" y1="24" x2="11" y2="24"/><line x1="37" y1="24" x2="42" y2="24"/><polygon points="24,11 27.5,21 24,23 20.5,21" style="fill:currentColor;opacity:0.55"/><polygon points="24,37 20.5,27 24,25 27.5,27"/></svg>`,
+  `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="22" x2="44" y2="22"/><path d="M20 22 L23 13 L26 22"/><circle cx="24" cy="29" r="5.5"/><line x1="24" y1="34.5" x2="24" y2="41"/><line x1="19" y1="41" x2="29" y2="41"/><path d="M4 22 L6 29 H16"/><path d="M32 29 H42 L44 22"/></svg>`
 ];
 
 // ── GOOGLE SHEETS — PROPIEDADES ──
@@ -981,12 +981,12 @@ const L = {
     abClosing:"Chez Luxury Real Estate Signature, nous croyons que chaque propriété représente une opportunité unique de construire un patrimoine, de profiter d'un meilleur style de vie et d'atteindre de nouveaux objectifs.",
     sEy:'I · L\'EXPÉRIENCE',sTi:"L'EXPÉRIENCE SIGNATURE",
     srv:[
-      {ti:'Vols en Hélicoptère',de:"Survolez la Riviera Maya et découvrez Tulum depuis les cieux dans le plus grand confort."},
-      {ti:'Transport VIP',de:"Véhicules de prestige et chauffeurs privés à votre disposition, 24h/24 et 7j/7."},
-      {ti:'Immigration & Résidence',de:"Accompagnement complet pour votre résidence temporaire ou permanente au Mexique."},
-      {ti:'Tours Privés',de:"Explorez cenotes secrets, ruines mayas et plages exclusives de la péninsule du Yucatán."},
       {ti:'Propriétés de Luxe',de:"Achat, vente et location de biens d'exception au cœur de la Riviera Maya."},
-      {ti:'Conciergerie Deluxe',de:"Service sur mesure disponible 24h/24 pour répondre à toutes vos exigences."}
+      {ti:'Immigration & Résidence',de:"Accompagnement complet pour votre résidence temporaire ou permanente au Mexique."},
+      {ti:'Conciergerie Deluxe',de:"Service sur mesure disponible 24h/24 pour répondre à toutes vos exigences."},
+      {ti:'Transport VIP',de:"Véhicules de prestige et chauffeurs privés à votre disposition, 24h/24 et 7j/7."},
+      {ti:'Tours Privés',de:"Explorez cenotes secrets, ruines mayas et plages exclusives de la péninsule du Yucatán."},
+      {ti:'Vols en Hélicoptère',de:"Survolez la Riviera Maya et découvrez Tulum depuis les cieux dans le plus grand confort."}
     ],
     pEy:'II · IMMOBILIER',pTi:'PROPRIÉTÉS SIGNATURE',
     prpOf:'DE',prpLbl:'PROPRIÉTÉ(S)',prpLoad:'VOIR',prpMore:'DE PLUS',prpLoading:'CHARGEMENT...',
@@ -1028,12 +1028,12 @@ const L = {
     abClosing:"At Luxury Real Estate Signature, we believe every property represents a unique opportunity to build wealth, enjoy a better lifestyle, and reach new goals.",
     sEy:'I · EXPERIENCE',sTi:'THE SIGNATURE EXPERIENCE',
     srv:[
-      {ti:'Helicopter Flights',de:"Soar above the Riviera Maya and discover Tulum from the sky in utmost comfort."},
-      {ti:'VIP Transport',de:"Prestige vehicles and private chauffeurs at your service, 24 hours a day, 7 days a week."},
-      {ti:'Immigration & Residency',de:"Complete guidance for your temporary or permanent residency in Mexico."},
-      {ti:'Private Tours',de:"Explore secret cenotes, Mayan ruins, and exclusive beaches of the Yucatán Peninsula."},
       {ti:'Luxury Properties',de:"Buying, selling, and renting exceptional properties in the heart of the Riviera Maya."},
-      {ti:'Deluxe Concierge',de:"Bespoke service available 24/7 to meet your every requirement."}
+      {ti:'Immigration & Residency',de:"Complete guidance for your temporary or permanent residency in Mexico."},
+      {ti:'Deluxe Concierge',de:"Bespoke service available 24/7 to meet your every requirement."},
+      {ti:'VIP Transport',de:"Prestige vehicles and private chauffeurs at your service, 24 hours a day, 7 days a week."},
+      {ti:'Private Tours',de:"Explore secret cenotes, Mayan ruins, and exclusive beaches of the Yucatán Peninsula."},
+      {ti:'Helicopter Flights',de:"Soar above the Riviera Maya and discover Tulum from the sky in utmost comfort."}
     ],
     pEy:'II · REAL ESTATE',pTi:'SIGNATURE PROPERTIES',
     prpOf:'OF',prpLbl:'PROPERTIES',prpLoad:'LOAD',prpMore:'MORE',prpLoading:'LOADING...',
@@ -1075,12 +1075,12 @@ const L = {
     abClosing:"En Luxury Real Estate Signature, creemos que cada propiedad representa una oportunidad única para construir patrimonio, disfrutar un mejor estilo de vida y alcanzar nuevos objetivos.",
     sEy:'I · EXPERIENCIA',sTi:'LA EXPERIENCIA SIGNATURE',
     srv:[
-      {ti:'Vuelos en Helicóptero',de:"Sobrevuela la Riviera Maya y descubre Tulum desde los cielos con el mayor de los confortos."},
-      {ti:'Transporte VIP',de:"Vehículos de lujo y chóferes privados a su disposición, las 24 horas del día, los 7 días de la semana."},
-      {ti:'Migración & Residencia',de:"Acompañamiento completo para su residencia temporal o permanente en México."},
-      {ti:'Tours Privados',de:"Explore cenotes secretos, ruinas mayas y playas exclusivas de la Península de Yucatán."},
       {ti:'Propiedades de Lujo',de:"Compra, venta y renta de bienes excepcionales en el corazón de la Riviera Maya."},
-      {ti:'Concierge Deluxe',de:"Servicio a medida disponible las 24 horas para atender todas sus exigencias."}
+      {ti:'Migración & Residencia',de:"Acompañamiento completo para su residencia temporal o permanente en México."},
+      {ti:'Concierge Deluxe',de:"Servicio a medida disponible las 24 horas para atender todas sus exigencias."},
+      {ti:'Transporte VIP',de:"Vehículos de lujo y chóferes privados a su disposición, las 24 horas del día, los 7 días de la semana."},
+      {ti:'Tours Privados',de:"Explore cenotes secretos, ruinas mayas y playas exclusivas de la Península de Yucatán."},
+      {ti:'Vuelos en Helicóptero',de:"Sobrevuela la Riviera Maya y descubre Tulum desde los cielos con el mayor de los confortos."}
     ],
     pEy:'II · INMOBILIARIA',pTi:'PROPIEDADES SIGNATURE',
     prpOf:'DE',prpLbl:'PROPIEDADES',prpLoad:'VER',prpMore:'MÁS',prpLoading:'CARGANDO...',
