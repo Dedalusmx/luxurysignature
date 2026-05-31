@@ -1174,12 +1174,18 @@ function render(){
   g('sEy').textContent = t.sEy;
   g('sTi').textContent = t.sTi;
   const ROMANS = ['I','II','III','IV','V','VI'];
-  const SRV_IMG = 'https://res.cloudinary.com/dphbptped/image/upload/w_900,q_auto,f_auto/v1779853245/Hero-luxury_xjrqqm.jpg';
+  const SRV_IMGS = [
+    'https://res.cloudinary.com/dphbptped/image/upload/w_1400,q_auto,f_auto/v1779853245/Hero-luxury_xjrqqm.jpg',
+    'https://res.cloudinary.com/dphbptped/image/upload/w_900,q_auto,f_auto/v1780267752/pexels-austin-zhang-925030-2441844_j1ewwm.jpg',
+    'https://res.cloudinary.com/dphbptped/image/upload/w_900,q_auto,f_auto/v1780267594/file_0000000077cc71f5b0c5d5cd43e42418_pucu5f.png',
+    'https://res.cloudinary.com/dphbptped/image/upload/w_900,q_auto,f_auto/v1780267608/file_00000000cfe871f584156018904a1db8_blliuj.png',
+    'https://res.cloudinary.com/dphbptped/image/upload/w_900,q_auto,f_auto/v1780267621/file_0000000055d071f58d1783eb11fe3234_hlsuld.png',
+    'https://res.cloudinary.com/dphbptped/image/upload/w_900,q_auto,f_auto/v1780267640/file_00000000495c71f79d00622e4bbcb10d_yrpgop.png'
+  ];
   const arrow = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
-  g('srvG').innerHTML = t.srv.map((s,i)=>{
-    if(i===0) return `
+  g('srvG').innerHTML = t.srv.map((s,i)=>`
     <div class="srv-c rev">
-      <div class="srv-bg-img"></div>
+      <div class="srv-bg-img" style="background-image:url('${SRV_IMGS[i]}')"></div>
       <div class="srv-bg-dim"></div>
       <span class="srv-num">${ROMANS[i]}</span>
       <div class="srv-inner">
@@ -1189,19 +1195,7 @@ function render(){
         <p class="srv-de">${s.de}</p>
       </div>
       <div class="srv-arr">${arrow}</div>
-    </div>`;
-    return `
-    <div class="srv-c rev">
-      <span class="srv-num">${ROMANS[i]}</span>
-      <div class="srv-inner">
-        <div class="srv-line"></div>
-        <div class="srv-ic">${IC[i]}</div>
-        <h3 class="srv-ti">${s.ti}</h3>
-        <p class="srv-de">${s.de}</p>
-      </div>
-      <div class="srv-arr">${arrow}</div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
   // Properties
   g('pEy').textContent = t.pEy;
   g('pTi').textContent = t.pTi;
