@@ -201,16 +201,49 @@ img{max-width:100%;display:block}
 
 /* ── SERVICES ── */
 #services{background:var(--bg)}
-.srv-g{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(196,163,90,.06)}
-.srv-c{padding:52px 38px;background:var(--bg2);transition:background .35s;position:relative;overflow:hidden}
-.srv-c::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--gold);transition:width .55s}
-.srv-c:hover{background:#131209}
-.srv-c:hover::after{width:100%}
-.srv-c:nth-child(1){transition-delay:0s}.srv-c:nth-child(2){transition-delay:.07s}.srv-c:nth-child(3){transition-delay:.14s}
-.srv-c:nth-child(4){transition-delay:.21s}.srv-c:nth-child(5){transition-delay:.28s}.srv-c:nth-child(6){transition-delay:.35s}
-.srv-ic{width:38px;height:38px;color:var(--gold);margin-bottom:28px;opacity:.88}
-.srv-ti{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;font-style:italic;color:var(--text);margin-bottom:14px}
-.srv-de{font-size:12.5px;line-height:1.85;color:var(--dim);font-weight:300}
+.srv-layout{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto;gap:1px;background:rgba(196,163,90,.07)}
+/* Primera tarjeta — hero card ancha */
+.srv-c:first-child{grid-column:1/3;display:grid;grid-template-columns:1fr 1fr;min-height:340px}
+.srv-hero-img{position:relative;overflow:hidden}
+.srv-hero-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.45) saturate(.65);transition:filter .7s,transform .7s}
+.srv-c:first-child:hover .srv-hero-img img{filter:brightness(.55) saturate(.8);transform:scale(1.04)}
+.srv-hero-ov{position:absolute;inset:0;background:linear-gradient(100deg,rgba(8,8,6,.0) 0%,rgba(8,8,6,.55) 100%)}
+.srv-hero-txt{padding:56px 52px;background:var(--bg2);display:flex;flex-direction:column;justify-content:center}
+/* Tarjetas secundarias */
+.srv-c{background:var(--bg2);padding:48px 42px;position:relative;overflow:hidden;transition:background .4s;cursor:default}
+.srv-c:hover{background:#111008}
+/* Número romano decorativo */
+.srv-num{font-family:'Cormorant Garamond',serif;font-size:88px;font-weight:300;color:var(--gold);opacity:.06;line-height:1;position:absolute;top:16px;right:24px;pointer-events:none;transition:opacity .4s}
+.srv-c:hover .srv-num{opacity:.11}
+/* Línea animada */
+.srv-line{width:32px;height:1px;background:var(--gold);margin-bottom:28px;transition:width .5s cubic-bezier(.16,1,.3,1);opacity:.7}
+.srv-c:hover .srv-line{width:64px}
+/* Ícono */
+.srv-ic{width:36px;height:36px;color:var(--gold);margin-bottom:20px;opacity:.85;transition:opacity .3s,transform .4s}
+.srv-c:hover .srv-ic{opacity:1;transform:translateY(-3px)}
+/* Título */
+.srv-ti{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,2vw,26px);font-weight:400;font-style:italic;color:var(--text);margin-bottom:12px;line-height:1.2}
+/* Descripción */
+.srv-de{font-size:12.5px;line-height:1.9;color:var(--dim);font-weight:300;max-width:320px}
+/* Flecha decorativa */
+.srv-arr{position:absolute;bottom:32px;right:36px;width:22px;height:22px;opacity:0;transform:translateX(-6px);transition:opacity .35s,transform .35s}
+.srv-arr svg{width:100%;height:100%;color:var(--gold)}
+.srv-c:hover .srv-arr{opacity:.55;transform:none}
+/* Hero card específico */
+.srv-c:first-child .srv-ic{width:44px;height:44px;margin-bottom:24px}
+.srv-c:first-child .srv-ti{font-size:clamp(24px,2.8vw,34px)}
+.srv-c:first-child .srv-de{font-size:13.5px;max-width:none}
+.srv-c:first-child .srv-num{font-size:140px;top:8px;right:16px}
+@media(max-width:900px){
+  .srv-layout{grid-template-columns:1fr}
+  .srv-c:first-child{grid-column:1;grid-template-columns:1fr}
+  .srv-hero-img{min-height:220px}
+  .srv-hero-txt{padding:40px 32px}
+}
+@media(max-width:600px){
+  .srv-c{padding:36px 28px}
+  .srv-hero-txt{padding:32px 24px}
+}
 
 /* ── PROPERTIES ── */
 #properties{background:var(--bg3)}
@@ -524,7 +557,7 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
       <h2 class="s-ti" id="sTi"></h2>
       <div class="s-div"><div class="gdot"></div></div>
     </div>
-    <div class="srv-g" id="srvG"></div>
+    <div class="srv-layout" id="srvG"></div>
   </div>
 </section>
 
@@ -1138,12 +1171,34 @@ function render(){
   // Services
   g('sEy').textContent = t.sEy;
   g('sTi').textContent = t.sTi;
-  g('srvG').innerHTML = t.srv.map((s,i)=>`
+  const ROMANS = ['I','II','III','IV','V','VI'];
+  const SRV_IMG = 'https://res.cloudinary.com/dphbptped/image/upload/w_900,q_auto,f_auto/v1779853245/Hero-luxury_xjrqqm.jpg';
+  const arrow = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  g('srvG').innerHTML = t.srv.map((s,i)=>{
+    if(i===0) return `
     <div class="srv-c rev">
+      <div class="srv-hero-img">
+        <img src="${SRV_IMG}" alt="${s.ti}" loading="lazy">
+        <div class="srv-hero-ov"></div>
+      </div>
+      <div class="srv-hero-txt">
+        <span class="srv-num">${ROMANS[i]}</span>
+        <div class="srv-line"></div>
+        <div class="srv-ic">${IC[i]}</div>
+        <h3 class="srv-ti">${s.ti}</h3>
+        <p class="srv-de">${s.de}</p>
+      </div>
+    </div>`;
+    return `
+    <div class="srv-c rev">
+      <span class="srv-num">${ROMANS[i]}</span>
+      <div class="srv-line"></div>
       <div class="srv-ic">${IC[i]}</div>
       <h3 class="srv-ti">${s.ti}</h3>
       <p class="srv-de">${s.de}</p>
-    </div>`).join('');
+      <div class="srv-arr">${arrow}</div>
+    </div>`;
+  }).join('');
   // Properties
   g('pEy').textContent = t.pEy;
   g('pTi').textContent = t.pTi;
