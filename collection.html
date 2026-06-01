@@ -879,42 +879,15 @@ function updateMapMarkers(props){
   }
 }
 
-// ── DETAIL VIEW ──
+// ── DETAIL VIEW → property.html ──
 function openProperty(data, cardEl){
-  renderDetail(data);
-  const img  = cardEl.querySelector('.card-img img') || cardEl.querySelector('.list-img img');
-  const rect = img ? img.getBoundingClientRect() : {top:0,left:0,width:0,height:0};
-
-  const clone = document.createElement('img');
-  clone.id = 'flyImg';
-  clone.src = img ? img.src : '';
-  clone.style.cssText = `position:fixed;top:${rect.top}px;left:${rect.left}px;width:${rect.width}px;height:${rect.height}px;object-fit:cover;z-index:2000;pointer-events:none;transition:top .65s cubic-bezier(.4,0,.2,1),left .65s cubic-bezier(.4,0,.2,1),width .65s cubic-bezier(.4,0,.2,1),height .65s cubic-bezier(.4,0,.2,1)`;
-  document.body.appendChild(clone);
-  document.body.style.overflow='hidden';
-
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    clone.style.top='0';clone.style.left='0';clone.style.width='100vw';clone.style.height='100vh';
-  }));
-
-  const id = data['home_listing_id']||data['Nombre']||'';
-  history.replaceState(null,'','#prop-'+encodeURIComponent(id));
-
-  setTimeout(()=>{
-    g('detailView').classList.add('open');
-    clone.remove();
-    const wa = g('waFloat');
-    if(wa){wa.dataset.hidden='1';wa.classList.remove('visible');}
-    setTimeout(()=>g('dHeroBg').classList.add('ready'),80);
-  },680);
+  const id = data['home_listing_id'] || encodeURIComponent(data['Nombre']||'');
+  window.location.href = `property.html?id=${id}&from=collection&lang=${lang}`;
 }
 
-function closeDetail(){
-  g('detailView').classList.remove('open');
-  document.body.style.overflow='';
-  history.replaceState(null,'',window.location.pathname+window.location.search);
-  const wa = g('waFloat');
-  if(wa){delete wa.dataset.hidden; wa.classList.add('visible');}
-  setTimeout(()=>{g('detailView').scrollTop=0;},450);
+function openPropertyDirect(data){
+  const id = data['home_listing_id'] || encodeURIComponent(data['Nombre']||'');
+  window.location.href = `property.html?id=${id}&from=collection&lang=${lang}`;
 }
 
 function splitDesc(text,n){
@@ -1226,12 +1199,11 @@ async function init(){
       buildFilterSelects();
       applyLang();
 
-      // Hash routing on load
+      // Hash routing on load → redirect to property.html
       const hash = decodeURIComponent(window.location.hash);
       if(hash.startsWith('#prop-')){
         const id = hash.slice(6);
-        const match = allProps.find(r=>(r['home_listing_id']||r['Nombre']||'')===id);
-        if(match) openPropertyDirect(match);
+        window.location.href = `property.html?id=${encodeURIComponent(id)}&from=collection&lang=${lang}`;
       }
     },
     error(){ g('propContainer').innerHTML='<div class="no-results"><h3>Error loading</h3><p>Please reload the page</p></div>'; }
