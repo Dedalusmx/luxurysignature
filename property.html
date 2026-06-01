@@ -151,6 +151,16 @@ img{max-width:100%;display:block}
 .fo-btn{background:none;border:1px solid rgba(196,163,90,.4);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:12px 36px;cursor:pointer;transition:border-color .25s,color .25s}
 .fo-btn:hover{border-color:var(--gold);color:var(--gold)}
 @media(max-width:600px){.frm-2{grid-template-columns:1fr}.fo-box{padding:40px 24px}}
+
+/* ── CTA INLINE FORM ── */
+.cta-form{margin:28px auto 0;max-width:480px}
+.cta-fields{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.cta-inp{width:100%;background:rgba(240,235,225,.06);border:none;border-bottom:1px solid rgba(196,163,90,.35);padding:12px 4px;color:var(--text);font-family:'Raleway',sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color .3s;text-align:center}
+.cta-inp::placeholder{color:rgba(240,235,225,.38);font-size:12px;letter-spacing:1px}
+.cta-inp:focus{border-color:var(--gold);background:rgba(240,235,225,.09)}
+.cta-send{width:100%;padding:15px;background:var(--gold);color:var(--bg);border:none;font-family:'Raleway',sans-serif;font-size:9px;font-weight:500;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:background .25s;margin-top:4px}
+.cta-send:hover{background:var(--gold-lt)}
+.cta-send:disabled{background:var(--gold-dk);cursor:default}
 #propFooter{padding:32px 6%;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:0}
 .foot-copy{font-size:9px;letter-spacing:2px;color:var(--dim)}
 .foot-links{display:flex;gap:24px}
@@ -478,7 +488,7 @@ function renderProperty(p){
     g('dMap').style.display='block';
     setTimeout(()=>{
       mapboxgl.accessToken=MAPBOX_TOKEN;
-      const OFFICE={lng:-87.0739,lat:20.6296};
+      const OFFICE={lng:-87.07472337603284,lat:20.626726043490706};
       const propLng=loc.lng, propLat=loc.lat;
       // Always center on property at zoom 15
       const pm=new mapboxgl.Map({container:'dPropMap',style:'mapbox://styles/mapbox/dark-v11',center:[propLng,propLat],zoom:15,attributionControl:false});
@@ -520,17 +530,29 @@ function renderProperty(p){
     : {es:'Compra de propiedad',en:'Property purchase',fr:'Achat de propriété'}[lang]||'Property purchase';
   const autoMsg = propName + (waUnit ? ' —'+waUnit : '');
 
-  // CTA — tour button + socials only (no contact us button)
+  // CTA con formulario minimalista integrado
+  const fN={es:'Nombre',en:'Name',fr:'Nom'}[lang];
+  const fE={es:'Correo electrónico',en:'Email',fr:'E-mail'}[lang];
+  const fP={es:'Teléfono',en:'Phone',fr:'Téléphone'}[lang];
+  const fS={es:'ENVIAR',en:'SEND',fr:'ENVOYER'}[lang];
+
   g('dCta').innerHTML=`
     <div class="d-cta-panel">
       <div class="d-cta-bg-img"><img src="${mainImg}" loading="lazy"></div>
       <div class="d-cta-content">
         <span class="d-cta-eyebrow">${t.ctaEy}</span>
         <h2 class="d-cta-heading">${t.intLbl}</h2>
-        <div class="d-cta-btns">
-          ${tourBtn}
-          <a href="https://wa.me/529841343546?text=${waMsg}" target="_blank" class="btn-o">WhatsApp →</a>
+        <div class="cta-form">
+          <input type="hidden" id="cf-interest" value="${autoInterest}">
+          <input type="hidden" id="cf-message" value="${autoMsg}">
+          <div class="cta-fields">
+            <input class="cta-inp" id="cf-name" type="text" placeholder="${fN}">
+            <input class="cta-inp" id="cf-phone" type="tel" placeholder="${fP}">
+            <input class="cta-inp" id="cf-email" type="email" placeholder="${fE}">
+          </div>
+          <button class="cta-send" id="cf-submit" onclick="submitContactForm()">${fS}</button>
         </div>
+        ${tourBtn?`<div style="margin-top:20px">${tourBtn}</div>`:''}
         <p class="d-cta-email"><a href="mailto:info@luxuryrealestatesignature.com">info@luxuryrealestatesignature.com</a></p>
         <div class="d-cta-social">
           <a href="mailto:info@luxuryrealestatesignature.com" class="d-cta-social-link" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="16" height="16"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></a>
@@ -551,34 +573,9 @@ function renderProperty(p){
     en:['Property purchase','Rental','Concierge services','Immigration & Residency','Investment'],
     fr:['Achat de propriété','Location','Conciergerie','Immigration & Résidence','Investissement']
   }[lang];
-  const fN={es:'Nombre completo',en:'Full name',fr:'Nom complet'}[lang];
-  const fE={es:'Correo electrónico',en:'Email address',fr:'Adresse e-mail'}[lang];
-  const fP={es:'Teléfono',en:'Phone number',fr:'Téléphone'}[lang];
-  const fM={es:'Mensaje',en:'Message',fr:'Message'}[lang];
-  const fS={es:'ENVIAR SOLICITUD',en:'SEND REQUEST',fr:'ENVOYER LA DEMANDE'}[lang];
   const fTi={es:'Ponte en contacto',en:'Get in touch',fr:'Contactez-nous'}[lang];
 
-  g('dForm').innerHTML=`
-    <div class="prop-form-wrap">
-      <span class="prop-form-ey">${t.ctaEy}</span>
-      <h2 class="prop-form-ti">${fTi}</h2>
-      <div class="frm-2">
-        <div class="frm-r"><label>${fN}</label><input id="cf-name" type="text" placeholder="${fN}"></div>
-        <div class="frm-r"><label>${fE}</label><input id="cf-email" type="email" placeholder="${fE}"></div>
-      </div>
-      <div class="frm-2">
-        <div class="frm-r"><label>${fP}</label><input id="cf-phone" type="tel" placeholder="${fP}"></div>
-        <div class="frm-r"><label>${fI}</label>
-          <select id="cf-interest">
-            <option value="" disabled>${fI}</option>
-            ${fO.map(o=>`<option value="${o}"${o===autoInterest?' selected':''}>${o}</option>`).join('')}
-          </select>
-        </div>
-      </div>
-      <div class="frm-r"><label>${fM}</label><textarea id="cf-message" placeholder="${fM}">${autoMsg}</textarea></div>
-      <button class="frm-sub" id="cf-submit" onclick="submitContactForm()">${fS}</button>
-    </div>`;
-  g('dForm').style.display='block';
+  g('dForm').style.display='none';
 
   // Show all sections
   g('propHero').style.display='flex';
