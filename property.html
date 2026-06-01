@@ -7,6 +7,19 @@
 <meta name="description" content="Luxury property in the Riviera Maya — Luxury Real Estate Signature">
 <link rel="icon" type="image/png" sizes="32x32" href="https://res.cloudinary.com/dphbptped/image/upload/w_32,h_32,c_fill,f_png/v1779854304/file_00000000181071fdb75c1bcfb5823568_detuve.png">
 <meta name="theme-color" content="#080806">
+
+<!-- ── GOOGLE ANALYTICS 4 ── -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3W7EMQBPC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Q3W7EMQBPC', {
+    page_title: document.title,
+    page_location: window.location.href
+  });
+</script>
+
 <!-- OG tags — updated dynamically -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Luxury Real Estate Signature">
@@ -583,8 +596,19 @@ function renderProperty(p){
   g('dNarrative').style.display='block';
   g('dCta').style.display='block';
   g('propFooter').style.display='flex';
-
   g('loadingState').style.display='none';
+
+  // GA4 — property view + page update
+  if(typeof gtag==='function'){
+    gtag('config','G-Q3W7EMQBPC',{page_title:document.title,page_location:window.location.href});
+    gtag('event','view_property',{
+      property_name:propName,
+      property_city:(p['Ciudad']||''),
+      property_type:(p['listing_type']||''),
+      property_price:(p['Precio']||''),
+      language:lang
+    });
+  }
 
   // Animate hero
   setTimeout(()=>{
@@ -660,7 +684,7 @@ function submitContactForm(){
     method:'POST',
     mode:'cors',
     headers:{'Content-Type':'application/json','X-Source-Token':'LRS-2025-xK9mP2qR7nJ4wT8v'},
-    body:JSON.stringify({uid:crypto.randomUUID(),name,email,phone,interest,message,source:'luxuryrealestatesignature.com',lang,timestamp:new Date().toISOString()})
+    body:JSON.stringify({uid:crypto.randomUUID(),name,email,phone,interest,message,source:'luxuryrealestatesignature.com',lang,timestamp:new Date().toLocaleString('sv-SE',{timeZone:'America/Cancun'}).replace(' ','T')})
   }).then(r=>{
     btn.disabled=false;
     btn.textContent=sendLabel;
@@ -669,6 +693,7 @@ function submitContactForm(){
       g('cf-name').value='';
       g('cf-email').value='';
       if(g('cf-phone')) g('cf-phone').value='';
+      if(typeof gtag==='function') gtag('event','generate_lead',{method:'property_form',property_name:interest,language:lang});
       showFormOverlay('success',
         {es:'Mensaje enviado',en:'Message sent',fr:'Message envoyé'}[lang],
         {es:'Gracias. Nuestro equipo le contactará en breve.',en:'Thank you. Our team will be in touch shortly.',fr:'Merci. Notre équipe vous contactera bientôt.'}[lang],
@@ -707,13 +732,15 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLightbox(); }
 // ── SHARE ──
 let _propName='';
 function shareProperty(){
-  const url=window.location.href;
+  // Use OG endpoint so social previews show property image
+  const ogUrl='https://n8n-production-3be9.up.railway.app/webhook/og-property?id='+encodeURIComponent(new URLSearchParams(window.location.search).get('id')||'');
   const toast=g('shareToast');
   const t=L[lang];
+  if(typeof gtag==='function') gtag('event','share',{method:navigator.share?'native':'clipboard',content_type:'property',item_id:_propName});
   function showToast(msg){ toast.textContent='✦  '+msg+'  ✦'; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2800); }
-  if(navigator.share){ navigator.share({title:_propName,url}).then(()=>showToast(t.toast.shared)).catch(()=>{}); return; }
-  if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>showToast(t.toast.copied)).catch(()=>fallback(url,showToast,t.toast.copied)); }
-  else fallback(url,showToast,t.toast.copied);
+  if(navigator.share){ navigator.share({title:_propName,url:ogUrl}).then(()=>showToast(t.toast.shared)).catch(()=>{}); return; }
+  if(navigator.clipboard){ navigator.clipboard.writeText(ogUrl).then(()=>showToast(t.toast.copied)).catch(()=>fallback(ogUrl,showToast,t.toast.copied)); }
+  else fallback(ogUrl,showToast,t.toast.copied);
 }
 function fallback(url,showToast,msg){ const el=document.createElement('input');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);showToast(msg); }
 
