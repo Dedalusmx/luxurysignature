@@ -545,20 +545,6 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
   </div>
 </section>
 
-<!-- ABOUT -->
-<section id="about" class="sec">
-  <div class="s-in">
-    <div class="s-hd rev">
-      <span class="s-ey" id="abEy"></span>
-      <h2 class="s-ti" id="abTi"></h2>
-      <div class="s-div"><div class="gdot"></div></div>
-    </div>
-    <p class="ab-intro rev" id="abIntro"></p>
-    <div class="ab-accordion rev" id="abAccordion"></div>
-    <p class="ab-closing rev" id="abClosing"></p>
-  </div>
-</section>
-
 <!-- SERVICES -->
 <section id="services" class="sec">
   <div class="s-in">
@@ -594,6 +580,20 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
     </div>
     <div class="st-g" id="stG"></div>
     <p class="inv-tx rev" id="iTx"></p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="sec">
+  <div class="s-in">
+    <div class="s-hd rev">
+      <span class="s-ey" id="abEy"></span>
+      <h2 class="s-ti" id="abTi"></h2>
+      <div class="s-div"><div class="gdot"></div></div>
+    </div>
+    <p class="ab-intro rev" id="abIntro"></p>
+    <div class="ab-accordion rev" id="abAccordion"></div>
+    <p class="ab-closing rev" id="abClosing"></p>
   </div>
 </section>
 
@@ -948,7 +948,7 @@ function closeUnitPanel(){
 // ── i18n ──
 const L = {
   fr:{
-    nav:['SERVICES','PROPRIÉTÉS','À PROPOS','INVESTIR','CONTACT'],href:['#services','#properties','#about','#invest','#contact'],
+    nav:['SERVICES','PROPRIÉTÉS','INVESTIR','À PROPOS','CONTACT'],href:['#services','#properties','#invest','#about','#contact'],
     hEy:'EST. 2018 · RIVIERA MAYA',
     hTi:"L'Art de<br><em>Vivre Exceptionnel</em>",
     hSlogan:'Là où les opportunités deviennent des projets de vie',
@@ -995,7 +995,7 @@ const L = {
     ftCp:'© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México'
   },
   en:{
-    nav:['SERVICES','PROPERTIES','ABOUT','INVEST','CONTACT'],href:['#services','#properties','#about','#invest','#contact'],
+    nav:['SERVICES','PROPERTIES','INVEST','ABOUT','CONTACT'],href:['#services','#properties','#invest','#about','#contact'],
     hEy:'EST. 2018 · RIVIERA MAYA',
     hTi:"The Art of<br><em>Exceptional Living</em>",
     hSlogan:'Where opportunities become life projects',
@@ -1042,7 +1042,7 @@ const L = {
     ftCp:'© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México'
   },
   es:{
-    nav:['SERVICIOS','PROPIEDADES','NOSOTROS','INVERTIR','CONTACTO'],href:['#services','#properties','#about','#invest','#contact'],
+    nav:['SERVICIOS','PROPIEDADES','INVERTIR','NOSOTROS','CONTACTO'],href:['#services','#properties','#invest','#about','#contact'],
     hEy:'EST. 2018 · RIVIERA MAYA',
     hTi:"El Arte de<br><em>Vivir Excepcional</em>",
     hSlogan:'Donde las oportunidades se convierten en proyectos de vida',
