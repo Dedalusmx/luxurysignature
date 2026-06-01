@@ -20,13 +20,17 @@
   });
 </script>
 
-<!-- OG tags — updated dynamically -->
+<!-- OG tags — default use hero image, updated dynamically with property image -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Luxury Real Estate Signature">
 <meta id="ogTitle" property="og:title" content="Property | Luxury Real Estate Signature">
-<meta id="ogDesc" property="og:description" content="Luxury property in the Riviera Maya">
-<meta id="ogImg" property="og:image" content="">
-<meta id="ogUrl" property="og:url" content="">
+<meta id="ogDesc" property="og:description" content="Luxury property in the Riviera Maya — Luxury Real Estate Signature">
+<meta id="ogImg" property="og:image" content="https://res.cloudinary.com/dphbptped/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/v1779853245/Hero-luxury_xjrqqm.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta id="ogUrl" property="og:url" content="https://luxuryrealestatesignature.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://res.cloudinary.com/dphbptped/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/v1779853245/Hero-luxury_xjrqqm.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
@@ -732,15 +736,14 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLightbox(); }
 // ── SHARE ──
 let _propName='';
 function shareProperty(){
-  // Use OG endpoint so social previews show property image
-  const ogUrl='https://n8n-production-3be9.up.railway.app/webhook/og-property?id='+encodeURIComponent(new URLSearchParams(window.location.search).get('id')||'');
+  const url=window.location.href;
   const toast=g('shareToast');
   const t=L[lang];
   if(typeof gtag==='function') gtag('event','share',{method:navigator.share?'native':'clipboard',content_type:'property',item_id:_propName});
   function showToast(msg){ toast.textContent='✦  '+msg+'  ✦'; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2800); }
-  if(navigator.share){ navigator.share({title:_propName,url:ogUrl}).then(()=>showToast(t.toast.shared)).catch(()=>{}); return; }
-  if(navigator.clipboard){ navigator.clipboard.writeText(ogUrl).then(()=>showToast(t.toast.copied)).catch(()=>fallback(ogUrl,showToast,t.toast.copied)); }
-  else fallback(ogUrl,showToast,t.toast.copied);
+  if(navigator.share){ navigator.share({title:_propName,url}).then(()=>showToast(t.toast.shared)).catch(()=>{}); return; }
+  if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>showToast(t.toast.copied)).catch(()=>fallback(url,showToast,t.toast.copied)); }
+  else fallback(url,showToast,t.toast.copied);
 }
 function fallback(url,showToast,msg){ const el=document.createElement('input');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);showToast(msg); }
 
