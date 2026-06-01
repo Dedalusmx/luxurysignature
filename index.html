@@ -1302,44 +1302,14 @@ render();
 let renderedProps = [];
 
 function openProperty(data, cardEl){
-  const id = data['home_listing_id'] || data['Nombre'] || '';
-  history.replaceState(null,'','#prop-'+encodeURIComponent(id));
+  const id = data['home_listing_id'] || encodeURIComponent(data['Nombre']||'');
   if(typeof gtag!=='undefined') gtag('event','view_property',{property_name:data['Nombre']||id,property_city:data['Ciudad']||''});
-  // Update title + OG for sharing this property
-  const propName = data['Nombre']||id;
-  const propCity = [data['Colonia'],data['Ciudad']].filter(Boolean).join(', ');
-  document.title = propName + (propCity?' — '+propCity:'') + ' | Luxury Real Estate Signature';
-  const ogTitle = document.querySelector('meta[property="og:title"]');
-  const ogDesc  = document.querySelector('meta[property="og:description"]');
-  const ogImg   = document.querySelector('meta[property="og:image"]');
-  const twTitle = document.querySelector('meta[name="twitter:title"]');
-  const twImg   = document.querySelector('meta[name="twitter:image"]');
-  const propImg = IMG_COLS.map(c=>data[c]).find(u=>u&&u.trim())||'';
-  const ogImgUrl = propImg ? imgUrl(propImg,1200,630) : '';
-  if(ogTitle) ogTitle.content = propName + ' | Luxury Real Estate Signature';
-  if(ogDesc)  ogDesc.content  = (data['description']||'').substring(0,160)||'Premium property in the Riviera Maya.';
-  if(ogImg && ogImgUrl)   ogImg.content  = ogImgUrl;
-  if(twTitle) twTitle.content = propName + ' | Luxury Real Estate Signature';
-  if(twImg && ogImgUrl)   twImg.content  = ogImgUrl;
-  renderDetail(data);
-  const img  = cardEl.querySelector('.prp-img img');
-  const rect = img.getBoundingClientRect();
-  const clone = document.createElement('img');
-  clone.id = 'flyImg';
-  clone.src = img.src;
-  clone.style.cssText = 'top:'+rect.top+'px;left:'+rect.left+'px;width:'+rect.width+'px;height:'+rect.height+'px;transition:top .65s cubic-bezier(.4,0,.2,1),left .65s cubic-bezier(.4,0,.2,1),width .65s cubic-bezier(.4,0,.2,1),height .65s cubic-bezier(.4,0,.2,1)';
-  document.body.appendChild(clone);
-  document.body.style.overflow = 'hidden';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    clone.style.top='0';clone.style.left='0';
-    clone.style.width='100vw';clone.style.height='100vh';
-  }));
-  setTimeout(()=>{
-    document.getElementById('detailView').classList.add('open');
-    clone.remove();
-    const wa=document.getElementById('waFloat');if(wa){wa.dataset.hidden='1';wa.classList.remove('visible');}
-    setTimeout(()=>document.getElementById('dHeroBg').classList.add('ready'),80);
-  },680);
+  window.location.href = `property.html?id=${id}&from=index&lang=${lang}`;
+}
+
+function openPropertyDirect(data){
+  const id = data['home_listing_id'] || encodeURIComponent(data['Nombre']||'');
+  window.location.href = `property.html?id=${id}&from=index&lang=${lang}`;
 }
 
 function closeDetail(){
