@@ -645,6 +645,13 @@ function renderPropsFromData(data){
   }).join('');
   observe();
   bindCardClicks();
+  // Si regresamos desde property.html con #properties, scroll al anchor
+  if(window.location.hash==='#properties'){
+    setTimeout(()=>{
+      const el=document.getElementById('properties');
+      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+    },300);
+  }
 }
 
 // ── Filtrado ──
