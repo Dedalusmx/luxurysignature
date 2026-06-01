@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property | Luxury Real Estate Signature</title>
+<meta name="description" content="Luxury property in the Riviera Maya — Luxury Real Estate Signature">
+<link rel="icon" type="image/png" sizes="32x32" href="https://res.cloudinary.com/dphbptped/image/upload/w_32,h_32,c_fill,f_png/v1779854304/file_00000000181071fdb75c1bcfb5823568_detuve.png">
+<meta name="theme-color" content="#080806">
+<!-- OG tags — updated dynamically -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Luxury Real Estate Signature">
+<meta id="ogTitle" property="og:title" content="Property | Luxury Real Estate Signature">
+<meta id="ogDesc" property="og:description" content="Luxury property in the Riviera Maya">
+<meta id="ogImg" property="og:image" content="">
+<meta id="ogUrl" property="og:url" content="">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#080806;color:#F0EBE1;font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+:root{
+  --gold:#C4A35A;--gold-lt:#E8D5A3;--gold-dk:#7A6535;
+  --bg:#080806;--bg2:#0F0E0C;--bg3:#151310;
+  --text:#F0EBE1;--dim:#8A8478;--border:rgba(196,163,90,0.12)
+}
+
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;background:rgba(8,8,6,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4%;gap:20px}
+.nav-back{font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:var(--dim);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .2s;white-space:nowrap;flex-shrink:0}
+.nav-back:hover{color:var(--gold)}
+.nav-back svg{width:12px;height:12px}
+.nav-logo{flex:1;display:flex;justify-content:center}
+.nav-logo img{height:34px;object-fit:contain;filter:brightness(1.15)}
+.nav-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.lang-sw{display:flex;align-items:center;gap:5px}
+.lang-btn{background:none;border:none;font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;color:var(--dim);cursor:pointer;padding:3px;transition:color .2s}
+.lang-btn.active,.lang-btn:hover{color:var(--gold)}
+.lang-sep{color:var(--dim);opacity:.3;font-size:7px}
+.share-btn{background:none;border:1px solid var(--border);color:var(--dim);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
+.share-btn:hover{border-color:var(--gold);color:var(--gold)}
+.share-btn svg{width:12px;height:12px}
+
+/* ── LOADING / ERROR ── */
+#loadingState{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;z-index:100}
+.load-logo img{height:56px;opacity:.7;animation:pulse 2s ease-in-out infinite}
+.load-txt{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--dim);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+#errorState{display:none;position:fixed;inset:0;background:var(--bg);align-items:center;justify-content:center;flex-direction:column;gap:20px;text-align:center;padding:40px}
+.err-ti{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:8px}
+.err-sub{font-size:11px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:32px}
+
+/* ── HERO ── */
+#propHero{position:relative;height:100vh;min-height:560px;display:flex;align-items:flex-end;padding-bottom:64px;overflow:hidden}
+.h-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.06);transition:transform 10s ease}
+.h-bg.ready{transform:scale(1)}
+.h-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,6,.96) 0%,rgba(8,8,6,.3) 55%,rgba(8,8,6,.1) 100%)}
+.h-cnt{position:relative;z-index:2;padding:0 6%;width:100%;opacity:0;transform:translateY(20px);transition:opacity .6s .2s,transform .6s .2s}
+.h-cnt.ready{opacity:1;transform:none}
+.h-type{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:block}
+.h-name{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,80px);font-weight:300;line-height:1.02;color:var(--text);margin-bottom:12px}
+.h-loc{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(240,235,225,.55);margin-bottom:18px}
+.h-price{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--gold-lt)}
+
+/* ── BODY ── */
+#propBody{max-width:1200px;margin:0 auto;padding:72px 6% 0}
+.d-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1px;background:var(--border);margin-bottom:56px}
+.d-stat{padding:24px 20px;background:var(--bg2);opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+.d-stat.vis{opacity:1;transform:none}
+.d-stat:nth-child(1){transition-delay:.05s}.d-stat:nth-child(2){transition-delay:.1s}.d-stat:nth-child(3){transition-delay:.15s}
+.d-stat:nth-child(4){transition-delay:.2s}.d-stat:nth-child(5){transition-delay:.25s}.d-stat:nth-child(6){transition-delay:.3s}
+.d-stat-v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);margin-bottom:4px}
+.d-stat-l{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--dim)}
+
+/* ── NARRATIVE PANELS ── */
+.d-panel{position:relative;height:80vh;min-height:480px;overflow:hidden;display:flex;align-items:center}
+.d-panel-img-wrap{position:absolute;inset:-18% 0;z-index:0;will-change:transform;cursor:zoom-in}
+.d-panel-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.d-panel-ov-l{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.6) 45%,rgba(8,8,6,.05) 100%);z-index:1;pointer-events:none}
+.d-panel-ov-r{position:absolute;inset:0;background:linear-gradient(270deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.6) 45%,rgba(8,8,6,.05) 100%);z-index:1;pointer-events:none}
+.d-panel-txt{position:relative;z-index:2;padding:0 8%;max-width:560px;opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease}
+.d-panel-txt.right{margin-left:auto;text-align:right}
+.d-panel-txt.vis{opacity:1;transform:none}
+.d-panel-num{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--gold);opacity:.1;line-height:1;margin-bottom:-12px;display:block}
+.d-panel-p{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,22px);font-style:italic;font-weight:300;line-height:1.8;color:rgba(240,235,225,.88)}
+.d-panel-div{width:28px;height:1px;background:var(--gold);margin:16px 0;opacity:.6}
+.d-panel-txt.right .d-panel-div{margin-left:auto}
+
+/* ── GALLERY ── */
+.d-section{padding:72px 6%;max-width:1200px;margin:0 auto}
+.d-section-ey{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:28px;display:block}
+.d-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.d-gallery-grid a{display:block;overflow:hidden;aspect-ratio:4/3;cursor:zoom-in}
+.d-gallery-grid a:first-child{grid-column:1/3;grid-row:1/3;aspect-ratio:unset}
+.d-gallery-grid img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.d-gallery-grid a:hover img{transform:scale(1.04)}
+
+/* ── PROP MAP ── */
+.d-map-container{height:420px;border:1px solid var(--border);overflow:hidden}
+
+/* ── CTA ── */
+.d-cta-panel{position:relative;min-height:55vh;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:72px}
+.d-cta-bg-img{position:absolute;inset:-15% 0;z-index:0}
+.d-cta-bg-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.3) saturate(.6)}
+.d-cta-content{position:relative;z-index:2;text-align:center;padding:56px 24px}
+.d-cta-eyebrow{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:block}
+.d-cta-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.5vw,46px);font-weight:300;font-style:italic;color:var(--text);margin-bottom:36px;line-height:1.25}
+.d-cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.d-cta-email{margin-top:24px;font-size:11px;font-weight:300;letter-spacing:2px}
+.d-cta-email a{color:rgba(240,235,225,.45);text-decoration:none;transition:color .2s}
+.d-cta-email a:hover{color:var(--gold-lt)}
+.d-cta-social{display:flex;gap:16px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.d-cta-social-link{color:rgba(240,235,225,.3);transition:color .25s,transform .2s;display:flex;align-items:center}
+.d-cta-social-link:hover{color:var(--gold);transform:translateY(-2px)}
+.d-cta-social-link svg{width:16px;height:16px}
+.btn-g{display:inline-block;padding:14px 34px;background:var(--gold);color:var(--bg);text-decoration:none;font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;transition:background .25s;cursor:pointer;border:none}
+.btn-g:hover{background:var(--gold-lt)}
+.btn-o{display:inline-block;padding:13px 34px;border:1px solid rgba(196,163,90,.42);color:rgba(240,235,225,.82);text-decoration:none;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;transition:border-color .25s,color .25s;cursor:pointer;background:none}
+.btn-o:hover{border-color:var(--gold);color:var(--gold-lt)}
+
+/* ── FOOTER ── */
+#propFooter{padding:32px 6%;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:0}
+.foot-copy{font-size:9px;letter-spacing:2px;color:var(--dim)}
+.foot-links{display:flex;gap:24px}
+.foot-links a{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s}
+.foot-links a:hover{color:var(--gold)}
+
+/* ── LIGHTBOX ── */
+#lightbox{position:fixed;inset:0;z-index:1500;background:rgba(8,8,6,.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;cursor:zoom-out;backdrop-filter:blur(6px)}
+#lightbox.open{opacity:1;pointer-events:auto}
+#lbImg{max-width:90vw;max-height:90vh;object-fit:contain;transform:scale(.96);transition:transform .35s}
+#lightbox.open #lbImg{transform:scale(1)}
+.lb-close{position:absolute;top:24px;right:24px;background:none;border:1px solid rgba(196,163,90,.35);color:var(--gold);font-size:14px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* ── TOAST ── */
+#shareToast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%) translateY(16px);z-index:700;background:var(--bg2);border:1px solid var(--gold);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:12px 28px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;white-space:nowrap}
+#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── WA FLOAT ── */
+#waFloat{position:fixed;bottom:28px;right:28px;z-index:400;width:48px;height:48px;background:var(--bg2);border:1px solid rgba(196,163,90,.35);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .5s,transform .5s,border-color .25s}
+#waFloat.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
+#waFloat:hover{border-color:var(--gold)}
+#waFloat svg{width:22px;height:22px;fill:var(--gold)}
+
+@media(max-width:768px){
+  .d-gallery-grid{grid-template-columns:1fr 1fr}
+  .d-gallery-grid a:first-child{grid-column:1/3;grid-row:auto}
+  .d-map-container{height:280px}
+  .d-panel{height:60vh;min-height:360px}
+  #propBody{padding:48px 5% 0}
+  .d-section{padding:48px 5%}
+}
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-back" id="navBack" href="collection.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+    <span id="navBackTxt">BACK</span>
+  </a>
+  <a href="index.html" class="nav-logo">
+    <img src="https://cdn.shopify.com/s/files/1/0602/2417/6173/files/Luxury_Signture.png?v=1779266683" alt="Luxury Real Estate Signature">
+  </a>
+  <div class="nav-controls">
+    <div class="lang-sw">
+      <button class="lang-btn" data-lang="fr">FR</button>
+      <span class="lang-sep">◆</span>
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <span class="lang-sep">◆</span>
+      <button class="lang-btn" data-lang="es">ES</button>
+    </div>
+    <button class="share-btn" onclick="shareProperty()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <span id="shareTxt">SHARE</span>
+    </button>
+  </div>
+</nav>
+
+<!-- LOADING -->
+<div id="loadingState">
+  <div class="load-logo"><img src="https://cdn.shopify.com/s/files/1/0602/2417/6173/files/Luxury_Signture.png?v=1779266683" alt=""></div>
+  <p class="load-txt" id="loadTxt">Loading property...</p>
+</div>
+
+<!-- ERROR -->
+<div id="errorState">
+  <p class="err-ti" id="errTi">Property not found</p>
+  <p class="err-sub" id="errSub">The requested property could not be loaded</p>
+  <a href="collection.html" class="btn-o" id="errBtn">View Collection</a>
+</div>
+
+<!-- HERO -->
+<div id="propHero" style="display:none">
+  <div class="h-bg" id="hBg"></div>
+  <div class="h-ov"></div>
+  <div class="h-cnt" id="hCnt">
+    <span class="h-type" id="hType"></span>
+    <h1 class="h-name" id="hName"></h1>
+    <p class="h-loc" id="hLoc"></p>
+    <p class="h-price" id="hPrice"></p>
+  </div>
+</div>
+
+<!-- BODY -->
+<div id="propBody" style="display:none">
+  <div class="d-stats" id="dStats"></div>
+</div>
+
+<!-- NARRATIVE -->
+<div id="dNarrative" style="display:none"></div>
+
+<!-- GALLERY -->
+<div id="dGallery" style="display:none"></div>
+
+<!-- MAP -->
+<div id="dMap" style="display:none"></div>
+
+<!-- CTA -->
+<div id="dCta" style="display:none"></div>
+
+<!-- FOOTER -->
+<footer id="propFooter" style="display:none">
+  <p class="foot-copy">© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México</p>
+  <div class="foot-links">
+    <a href="index.html" id="footHome">Home</a>
+    <a href="collection.html" id="footCol">Collection</a>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">&#x2715;</button>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<!-- TOAST -->
+<div id="shareToast"></div>
+
+<!-- WA FLOAT -->
+<a id="waFloat" href="https://wa.me/529841343546?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20sus%20propiedades." target="_blank" title="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+</a>
+
+<script>
+const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdEUO8SD2sTqn38dXV8VCzCddB5caiUUKpcbu6ufFsGYvdqEDadT67S88ltOsQamnVQ6itfSIMnv8r/pub?gid=0&single=true&output=csv';
+const MAPBOX_TOKEN = 'pk.eyJ1IjoibWV0YWNvbXByYXMiLCJhIjoiY21tc3Z0Njg1MDN1eDJ5cHQ5eWIwZG4zciJ9.jzsj45V8slnFVBaTWO_ZSw';
+const IMG_COLS = ['image[0].url','image[1].url','image[2].url','image[3].url','image[4].url','image[5].url','image[6].url','image[7].url','image[8].url','image[9].url'];
+
+let lang = 'en';
+let propData = null;
+let rates = {USD:0.058, CAD:0.079};
+let currency = 'MXN';
+
+const L = {
+  es:{back:'VOLVER',share:'COMPARTIR',loading:'Cargando propiedad...',notFound:'Propiedad no encontrada',notFoundSub:'La propiedad solicitada no pudo cargarse',viewCol:'Ver Colección',
+      rec:'Recámaras',ban:'Baños',area:'Área',park:'Estacionamiento',yr:'Año',tipo:'Tipo',
+      galLbl:'GALERÍA DE IMÁGENES',mapLbl:'UBICACIÓN',ctaEy:'SIGUIENTE PASO',
+      intLbl:'¿Te interesa esta propiedad?',tourLbl:'TOUR VIRTUAL',waLbl:'CONTÁCTENOS',
+      footHome:'Inicio',footCol:'Colección',toast:{copied:'ENLACE COPIADO',shared:'COMPARTIDO'}},
+  en:{back:'BACK',share:'SHARE',loading:'Loading property...',notFound:'Property not found',notFoundSub:'The requested property could not be loaded',viewCol:'View Collection',
+      rec:'Bedrooms',ban:'Bathrooms',area:'Area',park:'Parking',yr:'Year built',tipo:'Type',
+      galLbl:'IMAGE GALLERY',mapLbl:'LOCATION',ctaEy:'NEXT STEP',
+      intLbl:'Interested in this property?',tourLbl:'VIRTUAL TOUR',waLbl:'CONTACT US',
+      footHome:'Home',footCol:'Collection',toast:{copied:'LINK COPIED',shared:'SHARED'}},
+  fr:{back:'RETOUR',share:'PARTAGER',loading:'Chargement...',notFound:'Propriété introuvable',notFoundSub:'La propriété demandée n\'a pas pu être chargée',viewCol:'Voir la Collection',
+      rec:'Chambres',ban:'Salles de bain',area:'Surface',park:'Parking',yr:'Année',tipo:'Type',
+      galLbl:'GALERIE PHOTOS',mapLbl:'LOCALISATION',ctaEy:'PROCHAINE ÉTAPE',
+      intLbl:'Cette propriété vous intéresse?',tourLbl:'VISITE VIRTUELLE',waLbl:'NOUS CONTACTER',
+      footHome:'Accueil',footCol:'Collection',toast:{copied:'LIEN COPIÉ',shared:'PARTAGÉ'}}
+};
+
+const g = id => document.getElementById(id);
+
+function imgUrl(url, w, h){
+  if(!url) return '';
+  if(url.includes('cloudinary')){
+    const t='w_'+w+',q_auto,f_auto,c_fill'+(h?',h_'+h:'');
+    if(url.includes('/upload/'+t)) return url;
+    return url.replace('/upload/','/upload/'+t+'/');
+  }
+  return url;
+}
+
+function parsePrice(val){ return parseFloat(String(val||'').replace(/[^0-9.]/g,''))||0; }
+
+function formatCurrency(mxnPrice){
+  const n=parsePrice(mxnPrice);
+  if(!n) return '';
+  let amount,sym;
+  if(currency==='USD'){amount=n*rates.USD;sym='USD';}
+  else if(currency==='CAD'){amount=n*rates.CAD;sym='CAD';}
+  else{amount=n;sym='MXN';}
+  return sym+' $'+Math.round(amount).toLocaleString('en-US');
+}
+
+function parseLocation(locStr){
+  if(!locStr) return null;
+  const parts=locStr.split(',').map(s=>parseFloat(s.trim()));
+  if(parts.length===2&&!isNaN(parts[0])&&!isNaN(parts[1])) return {lat:parts[0],lng:parts[1]};
+  return null;
+}
+
+function getAllImgs(p){ return IMG_COLS.map(c=>p[c]).filter(u=>u&&u.trim()); }
+
+function isLand(p){
+  const t=(p['Tipo propiedad']||'').toLowerCase();
+  return t.includes('terreno')||t.includes('land')||t.includes('lote');
+}
+
+function parseListingType(raw){
+  const v=(raw||'').toLowerCase();
+  if(v.includes('sale')) return {es:'En Venta',en:'For Sale',fr:'À Vendre'}[lang]||'For Sale';
+  if(v.includes('rent')) return {es:'En Renta',en:'For Rent',fr:'À Louer'}[lang]||'For Rent';
+  return raw;
+}
+
+function splitDesc(text,n){
+  if(!text||!text.trim()) return Array(n).fill('');
+  let chunks=text.split(/\n\n+/).map(s=>s.trim()).filter(Boolean);
+  if(chunks.length<2){
+    const sents=text.match(/[^.!?]+[.!?]+\s*/g)||[text];
+    const per=Math.ceil(sents.length/n);
+    chunks=[];
+    for(let i=0;i<sents.length;i+=per) chunks.push(sents.slice(i,i+per).join('').trim());
+  }
+  while(chunks.length<n) chunks.push(chunks[chunks.length-1]||'');
+  return chunks.slice(0,n);
+}
+
+function applyLang(){
+  const t=L[lang];
+  document.documentElement.lang=lang;
+  g('navBackTxt').textContent=t.back;
+  g('shareTxt').textContent=t.share;
+  g('loadTxt').textContent=t.loading;
+  g('errTi').textContent=t.notFound;
+  g('errSub').textContent=t.notFoundSub;
+  g('errBtn').textContent=t.viewCol;
+  g('footHome').textContent=t.footHome;
+  g('footCol').textContent=t.footCol;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  // Update back link — preserve referrer
+  const ref=new URLSearchParams(window.location.search).get('from');
+  g('navBack').href = ref==='index' ? 'index.html' : 'collection.html';
+  if(propData) renderProperty(propData);
+}
+
+function showError(){
+  g('loadingState').style.display='none';
+  g('errorState').style.display='flex';
+}
+
+function renderProperty(p){
+  const t=L[lang];
+  const imgs=getAllImgs(p);
+  const mainImg=imgUrl(imgs[0]||'',1920);
+
+  // Title & meta
+  const propName=p['Nombre']||'';
+  document.title=propName+' | Luxury Real Estate Signature';
+  g('ogTitle').content=propName+' | Luxury Real Estate Signature';
+  g('ogDesc').content=[p['Colonia'],p['Ciudad']].filter(Boolean).join(', ')+' — '+formatCurrency(p['Precio']);
+  g('ogImg').content=imgUrl(imgs[0]||'',1200,630);
+  g('ogUrl').content=window.location.href;
+
+  // Hero
+  const hBg=g('hBg');
+  hBg.style.backgroundImage=`url('${mainImg}')`;
+  g('hType').textContent=parseListingType(p['listing_type']||'');
+  g('hName').textContent=propName;
+  g('hLoc').textContent=[p['Colonia'],p['Ciudad'],p['Estado']].filter(Boolean).join(' · ');
+  g('hPrice').textContent=formatCurrency(p['Precio']);
+
+  // Stats
+  const sL={rec:t.rec,ban:t.ban,area:t.area,park:t.park,yr:t.yr,tipo:t.tipo};
+  const stats=[
+    {v:p['Recámaras'],l:sL.rec},
+    {v:p['Baños'],l:sL.ban},
+    {v:p['Area']?(p['Area']+' '+(p['area_unit']||'m²')):'',l:sL.area},
+    {v:p['Cajon de estacionamiento'],l:sL.park},
+    {v:p['Año construcción'],l:sL.yr},
+    {v:p['Tipo propiedad'],l:sL.tipo}
+  ].filter(s=>s.v&&String(s.v).trim());
+  g('dStats').innerHTML=stats.map(s=>`<div class="d-stat"><div class="d-stat-v">${s.v}</div><div class="d-stat-l">${s.l}</div></div>`).join('');
+
+  // Narrative panels
+  const gallery=imgs.slice(1).filter(Boolean);
+  const panelImgs=gallery.length?gallery:(imgs[0]?[imgs[0]]:[]);
+  const panelCount=Math.min(panelImgs.length,6);
+  const textChunks=splitDesc(p['description']||'',panelCount);
+  const romans=['I','II','III','IV','V','VI'];
+  g('dNarrative').innerHTML=panelImgs.slice(0,panelCount).map((img,i)=>{
+    const side=i%2===0?'left':'right';
+    const ov=side==='left'?'d-panel-ov-l':'d-panel-ov-r';
+    return `<div class="d-panel">
+      <div class="d-panel-img-wrap" data-parallax>
+        <img src="${imgUrl(img,1920)}" loading="lazy" onerror="this.style.opacity=0.15">
+      </div>
+      <div class="${ov}"></div>
+      <div class="d-panel-txt ${side}" data-txt>
+        <span class="d-panel-num">${romans[i]}</span>
+        <div class="d-panel-div"></div>
+        <p class="d-panel-p">${textChunks[i]}</p>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Gallery
+  if(imgs.length>1){
+    g('dGallery').innerHTML=`
+      <div class="d-section">
+        <span class="d-section-ey">${t.galLbl}</span>
+        <div class="d-gallery-grid">
+          ${imgs.map(src=>`<a href="javascript:void(0)" onclick="openLightbox('${imgUrl(src,1920)}')">
+            <img src="${imgUrl(src,800,600)}" loading="lazy" onerror="this.style.opacity=.1">
+          </a>`).join('')}
+        </div>
+      </div>`;
+    g('dGallery').style.display='block';
+  }
+
+  // Map
+  const loc=parseLocation(p['Location']||p['location']);
+  if(loc){
+    g('dMap').innerHTML=`
+      <div class="d-section">
+        <span class="d-section-ey">${t.mapLbl}</span>
+        <div class="d-map-container" id="dPropMap"></div>
+      </div>`;
+    g('dMap').style.display='block';
+    setTimeout(()=>{
+      mapboxgl.accessToken=MAPBOX_TOKEN;
+      const pm=new mapboxgl.Map({container:'dPropMap',style:'mapbox://styles/mapbox/dark-v11',center:[loc.lng,loc.lat],zoom:15,attributionControl:false});
+      pm.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-right');
+      const el=document.createElement('div');
+      el.style.cssText='width:18px;height:18px;background:var(--gold);border-radius:50%;border:3px solid rgba(232,213,163,.5);box-shadow:0 0 16px rgba(196,163,90,.6)';
+      new mapboxgl.Marker(el).setLngLat([loc.lng,loc.lat]).addTo(pm);
+      setTimeout(()=>pm.resize(),100);
+    },300);
+  }
+
+  // WA message
+  const waUnit=p['Unidad']&&p['Unidad'].trim()?' — Unidad: '+p['Unidad'].trim():'';
+  const waMsg=encodeURIComponent('Hola, me interesa la propiedad: '+propName+waUnit);
+  const tourBtn=p['virtual_tour_url']?`<a href="${p['virtual_tour_url']}" target="_blank" class="btn-g">${t.tourLbl}</a>`:'';
+
+  // CTA
+  g('dCta').innerHTML=`
+    <div class="d-cta-panel">
+      <div class="d-cta-bg-img"><img src="${mainImg}" loading="lazy"></div>
+      <div class="d-cta-content">
+        <span class="d-cta-eyebrow">${t.ctaEy}</span>
+        <h2 class="d-cta-heading">${t.intLbl}</h2>
+        <div class="d-cta-btns">
+          ${tourBtn}
+          <a href="https://wa.me/529841343546?text=${waMsg}" target="_blank" class="btn-o">${t.waLbl} →</a>
+        </div>
+        <p class="d-cta-email"><a href="mailto:info@luxuryrealestatesignature.com">info@luxuryrealestatesignature.com</a></p>
+        <div class="d-cta-social">
+          <a href="mailto:info@luxuryrealestatesignature.com" class="d-cta-social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="16" height="16"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></a>
+          <a href="https://www.instagram.com/luxury_real_estate_signature" target="_blank" class="d-cta-social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.facebook.com/share/1JVgqwCeRr/" target="_blank" class="d-cta-social-link"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="https://whatsapp.com/channel/0029VbCqGtq1nozEEVcWul3l" target="_blank" class="d-cta-social-link"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></a>
+        </div>
+      </div>
+    </div>`;
+
+  // Show all sections
+  g('propHero').style.display='flex';
+  g('propBody').style.display='block';
+  g('dNarrative').style.display='block';
+  g('dCta').style.display='block';
+  g('propFooter').style.display='flex';
+  g('loadingState').style.display='none';
+
+  // Animate hero
+  setTimeout(()=>{
+    hBg.classList.add('ready');
+    g('hCnt').classList.add('ready');
+  },80);
+
+  // Animate stats on scroll
+  const statObs=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+  },{threshold:0.2});
+  document.querySelectorAll('.d-stat').forEach(el=>statObs.observe(el));
+
+  // Narrative text observer + parallax
+  const txtObs=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+  },{threshold:0.2});
+  document.querySelectorAll('[data-txt]').forEach(el=>txtObs.observe(el));
+
+  window.addEventListener('scroll',()=>{
+    document.querySelectorAll('[data-parallax]').forEach(wrap=>{
+      const r=wrap.getBoundingClientRect();
+      const rel=(r.top+r.height/2)-window.innerHeight/2;
+      wrap.style.transform='translateY('+(rel*0.14)+'px)';
+    });
+    g('waFloat').classList.toggle('visible',window.scrollY>300);
+  },{passive:true});
+
+  // Panel lightbox
+  document.querySelectorAll('.d-panel').forEach(panel=>{
+    const img=panel.querySelector('.d-panel-img-wrap img');
+    if(!img) return;
+    const txt=panel.querySelector('.d-panel-txt');
+    if(txt) txt.addEventListener('click',e=>e.stopPropagation());
+    panel.addEventListener('click',()=>openLightbox(img.src));
+  });
+}
+
+// ── LIGHTBOX ──
+function openLightbox(src){
+  g('lbImg').src=src;
+  g('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  g('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLightbox(); });
+
+// ── SHARE ──
+let _propName='';
+function shareProperty(){
+  const url=window.location.href;
+  const toast=g('shareToast');
+  const t=L[lang];
+  function showToast(msg){ toast.textContent='✦  '+msg+'  ✦'; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2800); }
+  if(navigator.share){ navigator.share({title:_propName,url}).then(()=>showToast(t.toast.shared)).catch(()=>{}); return; }
+  if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>showToast(t.toast.copied)).catch(()=>fallback(url,showToast,t.toast.copied)); }
+  else fallback(url,showToast,t.toast.copied);
+}
+function fallback(url,showToast,msg){ const el=document.createElement('input');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);showToast(msg); }
+
+// ── LANG ──
+document.querySelectorAll('.lang-btn').forEach(b=>{
+  b.addEventListener('click',()=>{ lang=b.dataset.lang; applyLang(); });
+});
+
+// ── INIT ──
+async function init(){
+  // Read lang from URL
+  const params=new URLSearchParams(window.location.search);
+  const urlLang=params.get('lang');
+  if(urlLang&&L[urlLang]) lang=urlLang;
+
+  // Get property ID
+  const propId=params.get('id');
+  if(!propId){ showError(); return; }
+
+  applyLang();
+
+  // Exchange rates
+  try{
+    const r=await fetch('https://open.er-api.com/v6/latest/MXN');
+    const d=await r.json();
+    if(d.rates){rates.USD=d.rates.USD;rates.CAD=d.rates.CAD;}
+  }catch(e){}
+
+  // Fetch sheet
+  Papa.parse(SHEET_CSV,{
+    download:true,header:true,skipEmptyLines:true,
+    complete(res){
+      const all=res.data.filter(r=>IMG_COLS.some(c=>r[c]&&r[c].trim()));
+      // Find by home_listing_id or Nombre
+      const match=all.find(r=>(r['home_listing_id']||'')=== propId)||(all.find(r=>encodeURIComponent(r['Nombre']||'')===propId));
+      if(!match){ showError(); return; }
+      propData=match;
+      _propName=match['Nombre']||'';
+      renderProperty(match);
+    },
+    error(){ showError(); }
+  });
+}
+
+init();
+</script>
+</body>
+</html>
