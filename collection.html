@@ -121,8 +121,8 @@ img{max-width:100%;display:block}
 .card-body{padding:16px 18px 20px}
 .card-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-loc{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-.card-stats{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
-.card-stat{font-size:9px;letter-spacing:1.5px;color:var(--dim);display:flex;align-items:center;gap:3px}
+.card-stats{display:flex;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.card-stat{font-size:11px;letter-spacing:1px;color:rgba(240,235,225,.75);display:flex;align-items:center;gap:3px;font-weight:400}
 .card-stat svg{width:10px;height:10px;opacity:.6}
 .card-price{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:var(--gold-lt)}
 .card-price-m2{font-size:8px;letter-spacing:1px;color:var(--dim);margin-top:2px}
@@ -285,8 +285,8 @@ img{max-width:100%;display:block}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
     <span id="navBackTxt">BACK</span>
   </a>
-  <a href="index.html" class="nav-logo"><img src="https://res.cloudinary.com/dphbptped/image/upload/v1779854302/20260526_225431_0000_lgxhla.png" alt="Luxury Real Estate Signature"></a>
-  <p class="nav-title" id="navTitle">The Collection</p>
+  <a href="index.html" class="nav-logo"><img src="https://cdn.shopify.com/s/files/1/0602/2417/6173/files/Luxury_Signture.png?v=1779266683" alt="Luxury Real Estate Signature"></a>
+  <div style="flex:1"></div>
   <div class="nav-controls">
     <div class="currency-sw">
       <button class="cur-btn active" data-cur="MXN">MXN</button>
@@ -490,7 +490,20 @@ function parseLocation(locStr){
 function getMainImg(p){ return IMG_COLS.map(c=>p[c]).find(u=>u&&u.trim())||''; }
 function getAllImgs(p){ return IMG_COLS.map(c=>p[c]).filter(u=>u&&u.trim()); }
 
+function parseListingType(raw){
+  const v=(raw||'').toLowerCase();
+  if(v.includes('sale')) return {es:'En Venta',en:'For Sale',fr:'À Vendre'}[lang]||'For Sale';
+  if(v.includes('rent')) return {es:'En Renta',en:'For Rent',fr:'À Louer'}[lang]||'For Rent';
+  return raw;
+}
+
+function isLand(p){
+  const t=(p['Tipo propiedad']||'').toLowerCase();
+  return t.includes('terreno')||t.includes('land')||t.includes('lote');
+}
+
 function pricePerM2(p){
+  if(!isLand(p)) return '';
   const price = parsePrice(p['Precio']);
   const area  = parseFloat(p['Area'])||0;
   if(!price||!area) return '';
@@ -511,11 +524,9 @@ async function fetchRates(){
 function applyLang(){
   const t = L[lang];
   g('navBackTxt').textContent = t.back;
-  g('navTitle').textContent = t.title;
   g('fSearch').placeholder = t.searchPh;
   g('mapToggleTxt').textContent = t.mapBtn;
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
-  // Rebuild selects
   buildFilterSelects();
   renderResults();
 }
@@ -525,16 +536,27 @@ function buildFilterSelects(){
   const t = L[lang];
   const uniq = col => [...new Set(allProps.map(p=>(p[col]||'').trim()).filter(Boolean))].sort();
 
-  function buildSel(id, defaultLabel, opts){
+  function buildSel(id, defaultLabel, opts, translateFn){
     const el = g(id);
     const cur = el.value;
     el.innerHTML = `<option value="">${defaultLabel}</option>`+
-      opts.map(o=>`<option value="${o.toLowerCase()}"${cur===o.toLowerCase()?'selected':''}>${o}</option>`).join('');
+      opts.map(o=>`<option value="${o.toLowerCase()}"${cur===o.toLowerCase()?'selected':''}>${translateFn?translateFn(o):o}</option>`).join('');
   }
 
-  buildSel('fCity', t.allCities, uniq('Ciudad'));
-  buildSel('fTipo', t.allTypes, uniq('Tipo propiedad'));
-  buildSel('fOferta', t.allOffers, uniq('listing_type'));
+  // Traducción de tipos de propiedad
+  const tipoMap = {
+    es:{casa:'Casa',departamento:'Departamento',condominio:'Condominio',terreno:'Terreno',lote:'Lote',local:'Local Comercial',oficina:'Oficina',edificio:'Edificio',penthouse:'Penthouse',villa:'Villa',estudio:'Estudio'},
+    en:{casa:'House',departamento:'Apartment',condominio:'Condominium',terreno:'Land',lote:'Lot',local:'Commercial',oficina:'Office',edificio:'Building',penthouse:'Penthouse',villa:'Villa',estudio:'Studio'},
+    fr:{casa:'Maison',departamento:'Appartement',condominio:'Copropriété',terreno:'Terrain',lote:'Lot',local:'Commercial',oficina:'Bureau',edificio:'Immeuble',penthouse:'Penthouse',villa:'Villa',estudio:'Studio'}
+  };
+  function translateTipo(raw){
+    const key=raw.toLowerCase().trim();
+    return (tipoMap[lang]||tipoMap.en)[key]||raw;
+  }
+
+  buildSel('fCity', t.allCities, uniq('Ciudad'), null);
+  buildSel('fTipo', t.allTypes, uniq('Tipo propiedad'), translateTipo);
+  buildSel('fOferta', t.allOffers, uniq('listing_type'), parseListingType);
 }
 
 // ── AGRUPACIÓN POR NOMBRE (igual que index) ──
@@ -721,15 +743,19 @@ function renderCard(p, i){
   const sold = ['sold','vendido','inactive'].includes((p['status']||'').toLowerCase());
   const pm2  = pricePerM2(p);
   const units= p._unitCount||1;
+  const badgeLbl = parseListingType(tipo);
+  const recLbl = {es:'rec',en:'bd',fr:'ch'}[lang]||'bd';
+  const baLbl  = {es:'ba',en:'ba',fr:'sdb'}[lang]||'ba';
+  const unitsLbl = {es:'UNIDADES',en:'UNITS',fr:'UNITÉS'}[lang]||'UNITS';
 
   return `<div class="prop-card" data-idx="${i}">
     <div class="card-img">
       <img src="${img}" alt="${name}" loading="lazy" onerror="this.style.opacity='.1'">
       <div class="card-img-ov"></div>
       <div class="card-badges">
-        ${tipo?`<span class="badge badge-type">${tipo.toUpperCase()}</span>`:''}
+        ${tipo?`<span class="badge badge-type">${badgeLbl}</span>`:''}
         ${sold?`<span class="badge badge-sold">SOLD</span>`:''}
-        ${units>1?`<span class="badge" style="background:var(--bg2);border:1px solid var(--gold);color:var(--gold)">${units} UNIDADES</span>`:''}
+        ${units>1?`<span class="badge" style="background:var(--bg2);border:1px solid var(--gold);color:var(--gold)">${units} ${unitsLbl}</span>`:''}
       </div>
       ${imgs.length>1?`<div class="card-gallery-nav">
         <button class="gall-btn" data-card="${i}" data-dir="prev">&#8592;</button>
@@ -740,8 +766,8 @@ function renderCard(p, i){
       <h3 class="card-name">${name}</h3>
       <p class="card-loc">${loc}</p>
       <div class="card-stats">
-        ${beds?`<span class="card-stat">${beds} rec.</span>`:''}
-        ${baths?`<span class="card-stat">${baths} ba.</span>`:''}
+        ${beds?`<span class="card-stat">${beds} ${recLbl}</span>`:''}
+        ${baths?`<span class="card-stat">${baths} ${baLbl}</span>`:''}
         ${area?`<span class="card-stat">${area}</span>`:''}
       </div>
       <p class="card-price">${formatCurrency(p['Precio'])}</p>
@@ -755,11 +781,14 @@ function renderListItem(p, i){
   const img  = imgUrl(imgs[0]||'', 400, 280);
   const name = p['Nombre']||'';
   const loc  = [p['Colonia'],p['Ciudad']].filter(Boolean).join(', ');
-  const beds = p['Recámaras']||p['Recámaras']||'';
-  const baths= p['Baños']||p['Baños']||'';
+  const beds = p['Recámaras']||'';
+  const baths= p['Baños']||'';
   const area = p['Area'] ? p['Area']+' '+(p['area_unit']||'m²') : '';
   const tipo = p['listing_type']||'';
   const pm2  = pricePerM2(p);
+  const badgeLbl = parseListingType(tipo);
+  const recLbl = {es:'rec',en:'bd',fr:'ch'}[lang]||'bd';
+  const baLbl  = {es:'ba',en:'ba',fr:'sdb'}[lang]||'ba';
 
   return `<div class="list-item" data-idx="${i}">
     <div class="list-img">
@@ -769,15 +798,15 @@ function renderListItem(p, i){
       <h3 class="list-name">${name}</h3>
       <p class="list-loc">${loc}</p>
       <div class="list-stats">
-        ${beds?`<span class="list-stat">${beds} rec.</span>`:''}
-        ${baths?`<span class="list-stat">${baths} ba.</span>`:''}
+        ${beds?`<span class="list-stat">${beds} ${recLbl}</span>`:''}
+        ${baths?`<span class="list-stat">${baths} ${baLbl}</span>`:''}
         ${area?`<span class="list-stat">${area}</span>`:''}
       </div>
     </div>
     <div class="list-price-col">
       <p class="list-price">${formatCurrency(p['Precio'])}</p>
       ${pm2?`<p class="list-price-m2">${pm2}</p>`:''}
-      ${tipo?`<span class="list-badge">${tipo.toUpperCase()}</span>`:''}
+      ${tipo?`<span class="list-badge">${badgeLbl}</span>`:''}
     </div>
   </div>`;
 }
