@@ -73,7 +73,7 @@ img{max-width:100%;display:block}
 }
 
 /* ── MAIN LAYOUT ── */
-#main{display:grid;grid-template-columns:380px 1fr;margin-top:104px;min-height:calc(100vh - 104px)}
+#main{display:grid;grid-template-columns:1fr;margin-top:104px;min-height:calc(100vh - 104px)}
 
 /* ── MAP PANEL ── */
 #mapPanel{position:sticky;top:104px;height:calc(100vh - 104px);overflow:hidden;border-right:1px solid var(--border);display:none}
@@ -102,7 +102,7 @@ img{max-width:100%;display:block}
 .sort-sel option{background:var(--bg2)}
 
 /* ── GRID VIEW ── */
-.props-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:rgba(196,163,90,.05);padding:1px}
+.props-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(196,163,90,.05);padding:1px}
 .prop-card{background:var(--bg2);cursor:pointer;transition:transform .25s;position:relative}
 .prop-card:hover{transform:translateY(-3px);z-index:2}
 .prop-card.highlighted{box-shadow:0 0 0 2px var(--gold)}
@@ -1047,6 +1047,10 @@ g('mapToggle').addEventListener('click',()=>{
   if(window.innerWidth > 900){
     g('main').style.gridTemplateColumns = mapVisible ? '380px 1fr' : '1fr';
   }
+  // Ajustar columnas del grid según mapa
+  document.querySelectorAll('.props-grid').forEach(g=>{
+    g.style.gridTemplateColumns = (mapVisible && window.innerWidth > 900) ? 'repeat(2,1fr)' : 'repeat(3,1fr)';
+  });
   btn.classList.toggle('active', mapVisible);
   if(mapVisible && mapInstance) setTimeout(()=>mapInstance.resize(),300);
 });
