@@ -348,133 +348,6 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
 #waFloat:hover{border-color:var(--gold);box-shadow:0 6px 32px rgba(196,163,90,.2)}
 #waFloat svg{width:24px;height:24px;fill:var(--gold)}
 
-/* ── DETAIL GALLERY ── */
-.d-gallery-wrap{max-width:1200px;margin:0 auto;padding:0 6% 80px}
-.d-gallery-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-.d-gallery-count{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold)}
-.d-gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.d-gallery-thumb{aspect-ratio:4/3;overflow:hidden;cursor:zoom-in;position:relative;touch-action:manipulation;-webkit-tap-highlight-color:transparent;background:var(--bg3)}
-.d-gallery-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s,filter .3s;filter:brightness(.85)}
-.d-gallery-thumb:hover img{transform:scale(1.05);filter:brightness(1.05)}
-.d-gallery-thumb:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:unset}
-/* ── LIGHTBOX ENHANCED ── */
-.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(8,8,6,.6);border:1px solid var(--border);color:var(--gold-lt);font-size:18px;width:48px;height:48px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s;z-index:10}
-.lb-nav:hover{background:rgba(196,163,90,.15);color:var(--gold)}
-#lbPrev{left:24px}
-#lbNext{right:24px}
-#lbCounter{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:3px;color:var(--dim)}
-@media(max-width:600px){.d-gallery-grid{grid-template-columns:repeat(2,1fr)}.d-gallery-thumb:first-child{grid-column:span 2;grid-row:span 1}}
-#lightbox{position:fixed;inset:0;z-index:1500;background:rgba(8,8,6,.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;cursor:zoom-out;backdrop-filter:blur(6px)}
-#lightbox.open{opacity:1;pointer-events:auto}
-#lbImg{max-width:90vw;max-height:90vh;object-fit:contain;transform:scale(.96);transition:transform .35s ease;box-shadow:0 0 80px rgba(0,0,0,.8)}
-#lightbox.open #lbImg{transform:scale(1)}
-.lb-close{position:absolute;top:24px;right:24px;background:none;border:1px solid rgba(196,163,90,.35);color:var(--gold);font-size:14px;width:40px;height:40px;cursor:pointer;transition:border-color .2s,color .2s;display:flex;align-items:center;justify-content:center}
-.lb-close:hover{border-color:var(--gold);color:var(--gold-lt)}
-
-/* ── FORM OVERLAY ── */
-#formOverlay{position:fixed;inset:0;z-index:800;background:rgba(8,8,6,.97);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s ease;backdrop-filter:blur(8px)}
-#formOverlay.open{opacity:1;pointer-events:auto}
-.fo-inner{text-align:center;padding:48px 32px;max-width:480px;width:90%}
-.fo-icon{font-size:40px;margin-bottom:28px;animation:foIconIn .6s .1s both}
-@keyframes foIconIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
-.fo-ornament{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:28px;opacity:0;animation:up .7s .3s forwards}
-.fo-line{flex:1;max-width:60px;height:1px;background:linear-gradient(to right,transparent,var(--gold))}
-.fo-ornament .fo-line:last-child{background:linear-gradient(to left,transparent,var(--gold))}
-.fo-dot{width:5px;height:5px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
-.fo-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,42px);font-weight:300;font-style:italic;color:var(--text);margin-bottom:16px;opacity:0;animation:up .7s .4s forwards}
-.fo-sub{font-size:13px;font-weight:300;letter-spacing:.04em;line-height:1.8;color:var(--dim);margin-bottom:40px;opacity:0;animation:up .7s .5s forwards}
-.fo-btn{background:none;border:1px solid rgba(196,163,90,.35);color:var(--gold);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:4px;text-transform:uppercase;padding:13px 36px;cursor:pointer;transition:border-color .25s,color .25s;opacity:0;animation:up .7s .65s forwards}
-.fo-btn:hover{border-color:var(--gold);color:var(--gold-lt)}
-
-/* ── DETAIL VIEW ── */
-#detailView{position:fixed;inset:0;z-index:500;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .4s ease;overflow-y:auto;overflow-x:hidden}
-#detailView.open{opacity:1;pointer-events:auto}
-.detail-back{position:fixed;top:24px;left:5%;z-index:600;background:rgba(8,8,6,.75);backdrop-filter:blur(14px);border:1px solid var(--border);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:11px 22px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .25s,color .25s}
-.detail-back:hover{border-color:var(--gold);color:var(--gold)}
-.detail-share{position:fixed;top:24px;right:5%;z-index:600;background:rgba(8,8,6,.75);backdrop-filter:blur(14px);border:1px solid var(--border);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:11px 22px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .25s,color .25s}
-.detail-share:hover{border-color:var(--gold);color:var(--gold)}
-#shareToast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(20px);z-index:700;background:var(--bg2);border:1px solid var(--gold);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:12px 28px;opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s ease;white-space:nowrap}
-#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-#detailHero{position:relative;height:100vh;min-height:600px;display:flex;align-items:flex-end;padding-bottom:72px;overflow:hidden}
-.d-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.06);transition:transform 10s ease}
-.d-hero-bg.ready{transform:scale(1)}
-.d-hero-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,6,.96) 0%,rgba(8,8,6,.35) 55%,rgba(8,8,6,.08) 100%)}
-.d-hero-cnt{position:relative;z-index:2;padding:0 6%;width:100%;opacity:0;transform:translateY(24px);transition:opacity .5s .2s ease,transform .5s .2s ease}
-#detailView.open .d-hero-cnt{opacity:1;transform:none}
-.d-type{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-.d-name{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,6vw,78px);font-weight:300;line-height:1.02;color:var(--text);margin-bottom:14px}
-.d-loc{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(240,235,225,.55);margin-bottom:20px}
-.d-price{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--gold-lt)}
-.d-body{max-width:1200px;margin:0 auto;padding:80px 6% 120px}
-.d-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1px;background:var(--border);margin-bottom:64px}
-.d-stat{padding:28px 24px;background:var(--bg2);opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
-#detailView.open .d-stat{opacity:1;transform:none}
-.d-stat:nth-child(1){transition-delay:.1s}.d-stat:nth-child(2){transition-delay:.17s}.d-stat:nth-child(3){transition-delay:.24s}
-.d-stat:nth-child(4){transition-delay:.31s}.d-stat:nth-child(5){transition-delay:.38s}.d-stat:nth-child(6){transition-delay:.45s}
-.d-stat-v{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--text);margin-bottom:6px}
-.d-stat-l{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim)}
-.d-sec-ey{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
-.d-desc{font-size:15px;line-height:2;color:rgba(240,235,225,.68);font-weight:300;max-width:740px;margin-bottom:72px;white-space:pre-line}
-.d-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:72px}
-.d-gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;cursor:zoom-in;transition:transform .4s,filter .3s;filter:brightness(.9)}
-.d-gallery img:hover{transform:scale(1.02);filter:brightness(1.05)}
-.d-gallery img:first-child{grid-column:span 2;aspect-ratio:16/9}
-.d-ctas{display:flex;gap:16px;flex-wrap:wrap}
-#flyImg{position:fixed;z-index:2000;object-fit:cover;pointer-events:none;margin:0}
-.prp-c{cursor:pointer}
-
-/* ── PARALLAX NARRATIVE ── */
-.d-panel{position:relative;height:85vh;min-height:500px;overflow:hidden;display:flex;align-items:center}
-.d-panel-img-wrap{position:absolute;inset:-18% 0;z-index:0;will-change:transform;cursor:zoom-in}
-.d-panel-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
-.d-panel-ov-l{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.65) 45%,rgba(8,8,6,.05) 100%);z-index:1;pointer-events:none}
-.d-panel-ov-r{position:absolute;inset:0;background:linear-gradient(270deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.65) 45%,rgba(8,8,6,.05) 100%);z-index:1;pointer-events:none}
-.d-panel-txt{position:relative;z-index:2;padding:0 8%;max-width:560px;opacity:0;transform:translateY(32px);transition:opacity .9s ease,transform .9s ease}
-.d-panel-txt.right{margin-left:auto;text-align:right}
-.d-panel-txt.visible{opacity:1;transform:none}
-.d-panel-num{font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:300;color:var(--gold);opacity:.12;line-height:1;margin-bottom:-16px;display:block}
-.d-panel-p{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.2vw,24px);font-style:italic;font-weight:300;line-height:1.75;color:rgba(240,235,225,.88)}
-.d-panel-div{width:32px;height:1px;background:var(--gold);margin:20px 0;opacity:.6}
-.d-panel-txt.right .d-panel-div{margin-left:auto}
-/* CTA CLOSING SECTION */
-.d-cta-panel{position:relative;min-height:60vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.d-cta-bg-img{position:absolute;inset:-15% 0;z-index:0}
-.d-cta-bg-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.35) saturate(.7)}
-.d-cta-content{position:relative;z-index:2;text-align:center;padding:60px 24px}
-.d-cta-eyebrow{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
-.d-cta-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,52px);font-weight:300;font-style:italic;color:var(--text);margin-bottom:40px;line-height:1.2}
-.d-cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.d-cta-email{margin-top:28px;font-size:12px;font-weight:300;letter-spacing:2px}
-.d-cta-email a{color:rgba(240,235,225,.5);text-decoration:none;transition:color .2s}
-.d-cta-email a:hover{color:var(--gold-lt)}
-.d-cta-social{display:flex;gap:18px;justify-content:center;margin-top:24px;flex-wrap:wrap}
-.d-cta-social-link{color:rgba(240,235,225,.35);transition:color .25s,transform .2s;display:flex;align-items:center}
-.d-cta-social-link:hover{color:var(--gold);transform:translateY(-2px)}
-.d-cta-social-link svg{width:18px;height:18px}
-@media(max-width:600px){
-  .d-panel-txt{max-width:100%;padding:0 6%}
-  .d-panel-txt.right{margin-left:0;text-align:left}
-  .d-panel-ov-r{background:linear-gradient(90deg,rgba(8,8,6,.92) 0%,rgba(8,8,6,.65) 45%,rgba(8,8,6,.05) 100%)}
-}
-
-
-/* ── UNIT SELECTOR PANEL ── */
-#unitPanel{position:fixed;inset:0;z-index:450;background:rgba(8,8,6,.92);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s ease;padding:24px}
-#unitPanel.open{opacity:1;pointer-events:auto}
-.unit-panel-inner{background:var(--bg2);border:1px solid var(--border);max-width:680px;width:100%;max-height:85vh;overflow-y:auto}
-.unit-panel-header{padding:28px 32px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-.unit-panel-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;font-style:italic;color:var(--text)}
-.unit-panel-loc{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-top:6px}
-.unit-panel-close{background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;padding:4px;transition:color .2s;flex-shrink:0}
-.unit-panel-close:hover{color:var(--gold)}
-.unit-panel-lbl{padding:16px 32px 12px;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--dim)}
-.unit-list{padding:0 32px 32px;display:flex;flex-direction:column;gap:8px}
-.unit-item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;padding:16px 20px;border:1px solid var(--border);cursor:pointer;transition:border-color .25s,background .25s}
-.unit-item:hover{border-color:var(--gold);background:rgba(196,163,90,.04)}
-.unit-item-left{}
-.unit-item-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:var(--text);margin-bottom:4px}
-.unit-item-stats{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
-.unit-item-price{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:var(--gold-lt);white-space:nowrap}
 /* ── ANIMATIONS ── */
 @keyframes bodyIn{to{opacity:1}}
 @keyframes up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
@@ -665,9 +538,8 @@ const IC = [
 
 // ── GOOGLE SHEETS — PROPIEDADES ──
 const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdEUO8SD2sTqn38dXV8VCzCddB5caiUUKpcbu6ufFsGYvdqEDadT67S88ltOsQamnVQ6itfSIMnv8r/pub?gid=0&single=true&output=csv';
-let allFetched  = [];   // todas las propiedades con imagen
-let filterState = { city:'', type:'', listing:'' };
-let visibleCount = 6;
+let allFetched  = [];
+let renderedProps = [];
 
 const IMG_COLS = ['image[0].url','image[1].url','image[2].url','image[3].url','image[4].url',
                   'image[5].url','image[6].url','image[7].url','image[8].url','image[9].url'];
@@ -794,17 +666,6 @@ function parseTimestamp(ts){
 
 function getFiltered(){
   return allFetched
-    .filter(p=>{
-      const city    = (p['Ciudad']||'').trim().toLowerCase();
-      const type    = (p['Tipo propiedad']||'').trim().toLowerCase();
-      const listing = (p['listing_type']||'').trim().toLowerCase();
-      return (
-        (!filterState.city    || city    === filterState.city) &&
-        (!filterState.type    || type    === filterState.type) &&
-        (!filterState.listing || listing === filterState.listing)
-      );
-    })
-    // Sort by timestamp descending — newest first
     .sort((a,b) => parseTimestamp(b['timestamp']||b['Timestamp']||b['TIMESTAMP']) -
                    parseTimestamp(a['timestamp']||a['Timestamp']||a['TIMESTAMP']));
 }
@@ -850,15 +711,6 @@ function loadProps(){
         console.error('renderFiltered error:', e.message, e.stack);
         renderPropsFromData(allFetched.slice(0, 3));
       }
-      // Open property from URL hash if present
-      const hash = decodeURIComponent(window.location.hash);
-      if(hash.startsWith('#prop-')){
-        const id = hash.slice(6);
-        const match = allFetched.find(r=>
-          (r['home_listing_id']||r['Nombre']||'') === id
-        );
-        if(match) openPropertyDirect(match);
-      }
     },
     error(){
       g('prpG').innerHTML = '<div class="prp-loading" style="color:rgba(196,163,90,.4)">ERROR AL CARGAR</div>';
@@ -894,55 +746,6 @@ function groupByName(data){
 
 // ── UNIT PANEL ──
 // Store current units for click binding
-let _unitPanelUnits = [];
-
-function openUnitPanel(units){
-  _unitPanelUnits = units;
-  const rep = units[0];
-  const selLbl = {fr:'Sélectionner une unité',en:'Select a unit',es:'Selecciona una unidad'}[lang];
-
-  g('unitPanelName').textContent = rep['Nombre']||'';
-  g('unitPanelLoc').textContent  = [rep['Colonia'],rep['Ciudad']].filter(Boolean).join(', ');
-  g('unitPanelLbl').textContent  = selLbl;
-
-  g('unitList').innerHTML = units.map((p,i)=>{
-    const unit  = p['Unidad']||'';
-    const beds  = p['Rec\u00e1maras']||'';
-    const baths = p['Ba\u00f1os']||'';
-    const area  = p['Area']?formatArea(p['Area'],p['area_unit']):'';
-    const stats = [
-      beds  ? beds+' '+statLabels().rec :'',
-      baths ? baths+' '+statLabels().ban:'',
-      area  ? area :''
-    ].filter(Boolean).join(' · ');
-
-    return `<div class="unit-item" data-unit-idx="${i}">
-      <div class="unit-item-left">
-        <p class="unit-item-name">${unit ? 'Unidad '+unit : (p['Nombre']||'')}</p>
-        ${stats?`<p class="unit-item-stats">${stats}</p>`:''}
-      </div>
-      <p class="unit-item-price">${formatPrice(p['Precio'])}</p>
-    </div>`;
-  }).join('');
-
-  // Bind clicks after render
-  g('unitList').querySelectorAll('.unit-item').forEach(el=>{
-    el.addEventListener('click', ()=>{
-      const idx = parseInt(el.dataset.unitIdx)||0;
-      closeUnitPanel();
-      openPropertyDirect(_unitPanelUnits[idx]);
-    });
-  });
-
-  g('unitPanel').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-
-function closeUnitPanel(){
-  g('unitPanel').classList.remove('open');
-  document.body.style.overflow='';
-}
-
 // ── i18n ──
 const L = {
   fr:{
@@ -1298,10 +1101,8 @@ function observe(){
 
 render();
 
-// ── PROPERTY DETAIL ──
-let renderedProps = [];
-
-function openProperty(data, cardEl){
+// ── PROPERTY NAVIGATION ──
+function openProperty(data){
   const id = data['home_listing_id'] || encodeURIComponent(data['Nombre']||'');
   if(typeof gtag!=='undefined') gtag('event','view_property',{property_name:data['Nombre']||id,property_city:data['Ciudad']||''});
   window.location.href = `property.html?id=${id}&from=index&lang=${lang}`;
@@ -1312,307 +1113,19 @@ function openPropertyDirect(data){
   window.location.href = `property.html?id=${id}&from=index&lang=${lang}`;
 }
 
-function closeDetail(){
-  history.replaceState(null,'',window.location.pathname + window.location.search);
-  const wa2=document.getElementById('waFloat');if(wa2){delete wa2.dataset.hidden;if(window.scrollY>window.innerHeight*.6)wa2.classList.add('visible');}
-  document.title = 'Luxury Real Estate Signature | Riviera Maya — Playa del Carmen & Tulum';
-  const ogTitle = document.querySelector('meta[property="og:title"]');
-  const ogDesc  = document.querySelector('meta[property="og:description"]');
-  if(ogTitle) ogTitle.content = 'Luxury Real Estate Signature | Riviera Maya';
-  if(ogDesc)  ogDesc.content  = 'Your passport to an exceptional life at the heart of the Riviera Maya.';
-  document.getElementById('detailView').classList.remove('open');
-  document.body.style.overflow = '';
-  setTimeout(()=>{ document.getElementById('detailView').scrollTop=0; },450);
-}
-
-function splitDesc(text, n){
-  if(!text||!text.trim()) return Array(n).fill('');
-  let chunks = text.split(/\n\n+/).map(s=>s.trim()).filter(Boolean);
-  if(chunks.length < 2){
-    const sents = text.match(/[^.!?]+[.!?]+\s*/g) || [text];
-    const per = Math.ceil(sents.length / n);
-    chunks = [];
-    for(let i=0;i<sents.length;i+=per) chunks.push(sents.slice(i,i+per).join('').trim());
-  }
-  while(chunks.length < n) chunks.push(chunks[chunks.length-1]||'');
-  return chunks.slice(0,n);
-}
-
-function renderDetail(p){
-  const imgs    = IMG_COLS.map(c=>p[c]).filter(u=>u&&u.trim());
-  const mainImg = imgs[0]||'';
-  const gallery = imgs.slice(1).filter(Boolean);
-
-  const backLbl = {fr:'RETOUR',en:'BACK',es:'VOLVER'}[lang];
-  const tourLbl = {fr:'VISITE VIRTUELLE',en:'VIRTUAL TOUR',es:'TOUR VIRTUAL'}[lang];
-  const waLbl   = {fr:'NOUS CONTACTER',en:'CONTACT US',es:'CONT\u00c1CTENOS'}[lang];
-  const intLbl  = {fr:'Vous \u00eates int\u00e9ress\u00e9?',en:'Interested in this property?',es:'\u00bfTe interesa esta propiedad?'}[lang];
-  const ctaEy   = {fr:'PROCHAINE \u00c9TAPE',en:'NEXT STEP',es:'SIGUIENTE PASO'}[lang];
-  const sL = {
-    rec:{fr:'Chambres',en:'Bedrooms',es:'Rec\u00e1maras'},
-    ban:{fr:'Salles de bain',en:'Bathrooms',es:'Ba\u00f1os'},
-    area:{fr:'Surface',en:'Area',es:'\u00c1rea'},
-    park:{fr:'Parking',en:'Parking',es:'Estacionamiento'},
-    yr:{fr:'Ann\u00e9e',en:'Year built',es:'A\u00f1o'},
-    tipo:{fr:'Type',en:'Type',es:'Tipo'}
-  };
-
-  const bg = document.getElementById('dHeroBg');
-  bg.style.backgroundImage = "url('"+imgUrl(mainImg,1920)+"')";
-  bg.classList.remove('ready');
-  document.getElementById('detailBackTxt').textContent = backLbl;
-  document.getElementById('detailShareTxt').textContent = {fr:'PARTAGER',en:'SHARE',es:'COMPARTIR'}[lang];
-  _currentPropName = p['Nombre']||'';
-
-  document.getElementById('dHeroCnt').innerHTML =
-    '<p class="d-type">'+(p['listing_type']||'').toUpperCase()+'</p>'+
-    '<h1 class="d-name">'+(p['Nombre']||'')+'</h1>'+
-    '<p class="d-loc">'+[p['Colonia'],p['Ciudad'],p['Estado']].filter(Boolean).join(' \u00b7 ')+'</p>'+
-    '<p class="d-price">'+formatPrice(p['Precio'])+'</p>';
-
-  const stats = [
-    {v:p['Rec\u00e1maras'], l:sL.rec[lang]},
-    {v:p['Ba\u00f1os'],     l:sL.ban[lang]},
-    {v:p['Area']?(p['Area']+' '+(p['area_unit']||'m\u00b2')):'', l:sL.area[lang]},
-    {v:p['Cajon de estacionamiento'], l:sL.park[lang]},
-    {v:p['A\u00f1o construcci\u00f3n'], l:sL.yr[lang]},
-    {v:p['Tipo propiedad'], l:sL.tipo[lang]}
-  ].filter(s=>s.v&&String(s.v).trim());
-
-  document.getElementById('dBody').innerHTML =
-    '<div class="d-stats">'+
-    stats.map(s=>'<div class="d-stat"><div class="d-stat-v">'+s.v+'</div><div class="d-stat-l">'+s.l+'</div></div>').join('')+
-    '</div>';
-
-  const panelImgs  = gallery.length ? gallery : (mainImg?[mainImg]:[]);
-  const panelCount = Math.min(panelImgs.length, 6);
-  const textChunks = splitDesc(getDesc(p), panelCount);
-  const romans = ['I','II','III','IV','V','VI'];
-
-  document.getElementById('dNarrative').innerHTML = panelImgs.slice(0,panelCount).map(function(img,i){
-    const side = i%2===0?'left':'right';
-    const ov   = side==='left'?'d-panel-ov-l':'d-panel-ov-r';
-    return '<div class="d-panel">'+
-      '<div class="d-panel-img-wrap" data-parallax>'+
-        '<img src="'+imgUrl(img,1920)+'" loading="lazy" onerror="this.closest(\'.d-panel\').style.display=\'none\'">'+
-      '</div>'+
-      '<div class="'+ov+'"></div>'+
-      '<div class="d-panel-txt '+side+'" data-txt>'+
-        '<span class="d-panel-num">'+romans[i]+'</span>'+
-        '<div class="d-panel-div"></div>'+
-        '<p class="d-panel-p">'+textChunks[i]+'</p>'+
-      '</div>'+
-    '</div>';
-  }).join('');
-
-  const waUnit = p['Unidad']&&p['Unidad'].trim()?' \u2014 Unidad: '+p['Unidad'].trim():'';
-  const waMsg  = encodeURIComponent('Hola, me interesa la propiedad: '+(p['Nombre']||'')+waUnit);
-  const tourBtn = p['virtual_tour_url']
-    ? '<a href="'+p['virtual_tour_url']+'" target="_blank" class="btn-g" onclick="event.stopPropagation()">'+tourLbl+'</a>' : '';
-
-  document.getElementById('dCtaSection').innerHTML =
-    '<div class="d-cta-panel">'+
-      '<div class="d-cta-bg-img"><img src="'+imgUrl(mainImg,1920)+'" loading="lazy"></div>'+
-      '<div class="d-cta-content">'+
-        '<span class="d-cta-eyebrow">'+ctaEy+'</span>'+
-        '<h2 class="d-cta-heading">'+intLbl+'</h2>'+
-        '<div class="d-cta-btns">'+
-          tourBtn+
-          '<a href="https://wa.me/529841343546?text='+waMsg+'" target="_blank" class="btn-o">'+waLbl+' \u2192</a>'+
-        '</div>'+
-        '<p class="d-cta-email"><a href="mailto:info@luxuryrealestatesignature.com">info@luxuryrealestatesignature.com</a></p>'+
-        '<div class="d-cta-social">\n        <a href="mailto:info@luxuryrealestatesignature.com" title="Email" class="d-cta-social-link">\n          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>\n        </a>\n        <a href="https://www.facebook.com/share/1JVgqwCeRr/" target="_blank" title="Facebook" class="d-cta-social-link">\n          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>\n        </a>\n        <a href="https://www.instagram.com/luxury_real_estate_signature" target="_blank" title="Instagram" class="d-cta-social-link">\n          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>\n        </a>\n        <a href="https://www.tiktok.com/@luxury.real.estat71" target="_blank" title="TikTok" class="d-cta-social-link">\n          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.74a4.85 4.85 0 0 1-1.01-.05z"/></svg>\n        </a>\n        <a href="https://whatsapp.com/channel/0029VbCqGtq1nozEEVcWul3l" target="_blank" title="WhatsApp" class="d-cta-social-link">\n          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>\n        </a>\n        <a href="https://www.youtube.com/@LuxuryRealEstateSignature" target="_blank" title="YouTube" class="d-cta-social-link">\n          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#080806"/></svg>\n        </a>\n        <a href="https://www.linkedin.com/company/luxury-real-estate-signature" target="_blank" title="LinkedIn" class="d-cta-social-link">\n          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>\n        </a>\n      </div>'+
-      '</div>'+
-    '</div>';
-
-  // Gallery: all images as thumbnails
-  const galLbl2 = {fr:'GALERIE · ',en:'GALLERY · ',es:'GALERÍA · '}[lang];
-  const allImgsFull = imgs.map(u=>imgUrl(u,1920));
-  const fullImgs = imgs.map(u=>imgUrl(u,1920));
-  // Gallery — all images
-  const galImgs = imgs.filter(u=>u&&u.trim());
-  g('dGallery').innerHTML = galImgs.length > 1 ? `
-    <div class="d-gallery-wrap">
-      <div class="d-gallery-header">
-        <span class="d-gallery-count">${galLbl2}${galImgs.length} PHOTOS</span>
-      </div>
-      <div class="d-gallery-grid">
-        ${galImgs.map((u,i)=>`<div class="d-gallery-thumb" data-idx="${i}">
-          <img src="${imgUrl(u,800,600)}" loading="eager"
-            onerror="this.style.display='none';this.removeAttribute('onerror')">
-        </div>`).join('')}
-      </div>
-    </div>` : '';
-
-  // Bind gallery thumb clicks — galImgs so index matches rendered thumbs
-  const _galFullImgs = galImgs.map(u=>imgUrl(u,1920));
-  setTimeout(()=>{
-    document.querySelectorAll('#dGallery .d-gallery-thumb').forEach(thumb=>{
-      const idx = parseInt(thumb.dataset.idx)||0;
-      function openThumb(e){
-        e.preventDefault();
-        e.stopPropagation();
-        openLightbox(_galFullImgs[idx], _galFullImgs, idx);
-      }
-      thumb.addEventListener('click', openThumb);
-      thumb.addEventListener('touchend', openThumb, {passive:false});
-    });
-  }, 80);
-
-  setTimeout(initDetailParallax, 60);
-}
-
-let _lbImages = [], _lbIndex = 0;
-
-function openLightbox(src, images, startIndex){
-  _lbImages = images || [src];
-  _lbIndex  = startIndex !== undefined ? startIndex : Math.max(0, _lbImages.indexOf(src));
-  updateLightbox();
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function updateLightbox(){
-  const img = document.getElementById('lbImg');
-  img.style.opacity = '1';
-  img.src = _lbImages[_lbIndex];
-  document.getElementById('lbCounter').textContent = (_lbIndex+1) + ' / ' + _lbImages.length;
-  const show = _lbImages.length > 1 ? '1' : '0';
-  document.getElementById('lbPrev').style.opacity = show;
-  document.getElementById('lbNext').style.opacity = show;
-}
-function lbNavigate(dir){
-  _lbIndex = (_lbIndex + dir + _lbImages.length) % _lbImages.length;
-  updateLightbox();
-}
-function closeLightbox(){
-  document.getElementById('lightbox').classList.remove('open');
-  if(!document.getElementById('detailView').classList.contains('open'))
-    document.body.style.overflow = '';
-}
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
-
-function initDetailParallax(){
-  const dv     = document.getElementById('detailView');
-  const panels = dv.querySelectorAll('.d-panel');
-  const txts   = dv.querySelectorAll('[data-txt]');
-
-  const revObs = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
-  },{root:dv, threshold:0.25});
-  txts.forEach(function(t){ revObs.observe(t); });
-
-  function applyParallax(){
-    const dvRect = dv.getBoundingClientRect();
-    panels.forEach(function(panel){
-      const wrap = panel.querySelector('[data-parallax]');
-      if(!wrap) return;
-      const r = panel.getBoundingClientRect();
-      const relCenter = (r.top + r.height/2) - dvRect.top - dvRect.height/2;
-      wrap.style.transform = 'translateY('+(relCenter*0.18)+'px)';
-    });
-  }
-  dv.addEventListener('scroll', applyParallax, {passive:true});
-  applyParallax();
-
-  // Click panel image area to open lightbox with full gallery
-  const _allGallImgs = [...dv.querySelectorAll('.d-panel-img-wrap img')].map(i=>i.src);
-  dv.querySelectorAll('.d-panel').forEach(panel=>{
-    const img = panel.querySelector('.d-panel-img-wrap img');
-    if(!img) return;
-    const txt = panel.querySelector('.d-panel-txt');
-    if(txt) txt.addEventListener('click', e=>e.stopPropagation());
-    function openPanel(e){
-      e.preventDefault();
-      openLightbox(img.src, _allGallImgs, _allGallImgs.indexOf(img.src));
-    }
-    panel.addEventListener('click', openPanel);
-  });
-
-}
-
-
-
-let _currentPropName = '';
-
-function shareProperty(){
-  if(typeof gtag!=='undefined') gtag('event','share',{method:navigator.share?'native':'clipboard',content_type:'property',item_id:_currentPropName});
-  const url  = window.location.href;
-  const name = _currentPropName;
-  const toast = document.getElementById('shareToast');
-  const copied = {fr:'LIEN COPIÉ',en:'LINK COPIED',es:'ENLACE COPIADO'}[lang];
-  const shared = {fr:'PARTAGÉ',en:'SHARED',es:'COMPARTIDO'}[lang];
-
-  function showToast(msg){
-    toast.textContent = '✦  '+msg+'  ✦';
-    toast.classList.add('show');
-    setTimeout(()=>toast.classList.remove('show'), 2800);
-  }
-
-  if(navigator.share){
-    navigator.share({title:name, url})
-      .then(()=>showToast(shared)).catch(()=>{});
-    return;
-  }
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(url)
-      .then(()=>showToast(copied))
-      .catch(()=>fallbackCopy(url,showToast,copied));
-  } else {
-    fallbackCopy(url,showToast,copied);
-  }
-}
-
-function fallbackCopy(url,showToast,msg){
-  const el = document.createElement('input');
-  el.value = url;
-  document.body.appendChild(el);
-  el.select();
-  document.execCommand('copy');
-  document.body.removeChild(el);
-  showToast(msg);
-}
-
-// Open property directly from URL (no fly animation)
-function openPropertyDirect(data){
-  renderDetail(data);
-  document.getElementById('detailView').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  setTimeout(()=>document.getElementById('dHeroBg').classList.add('ready'),80);
-}
-
-// Browser back/forward button support
-window.addEventListener('popstate', ()=>{
-  const hash = decodeURIComponent(window.location.hash);
-  if(hash.startsWith('#prop-')){
-    const id = hash.slice(6);
-    const match = allFetched.find(r=>(r['home_listing_id']||r['Nombre']||'')===id);
-    if(match) openPropertyDirect(match);
-  } else {
-    document.getElementById('detailView').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-});
-
 function bindCardClicks(){
   document.querySelectorAll('#prpG .prp-c').forEach((card,idx)=>{
     const p = renderedProps[idx];
     card.onclick = ()=>{
-      if(p && p._unitCount > 1) openUnitPanel(p._units);
-      else openProperty(p, card);
+      if(!p) return;
+      const id = p['home_listing_id'] || encodeURIComponent(p['Nombre']||'');
+      window.location.href = `property.html?id=${id}&from=index&lang=${lang}`;
     };
   });
   document.querySelectorAll('#prpG .prp-lk').forEach(a=>{ a.onclick = e=>e.stopPropagation(); });
 }
 
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape' && g('unitPanel').classList.contains('open')){ closeUnitPanel(); return; }
-  if(e.key==='Escape') closeDetail();
-  if(document.getElementById('lightbox').classList.contains('open')){
-    if(e.key==='ArrowRight') lbNavigate(1);
-    if(e.key==='ArrowLeft')  lbNavigate(-1);
-    if(e.key==='Escape')     closeLightbox();
-  }
-});
+
 
 
 // ── CONTACT FORM → n8n ──
@@ -1762,62 +1275,6 @@ window.addEventListener('load', function(){
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
 </a>
 
-
-<!-- UNIT SELECTOR PANEL -->
-<div id="unitPanel" onclick="if(event.target===this)closeUnitPanel()">
-  <div class="unit-panel-inner">
-    <div class="unit-panel-header">
-      <div>
-        <h2 class="unit-panel-name" id="unitPanelName"></h2>
-        <p class="unit-panel-loc" id="unitPanelLoc"></p>
-      </div>
-      <button class="unit-panel-close" onclick="closeUnitPanel()">&#x2715;</button>
-    </div>
-    <p class="unit-panel-lbl" id="unitPanelLbl"></p>
-    <div class="unit-list" id="unitList"></div>
-  </div>
-</div>
-<!-- LIGHTBOX -->
-<div id="lightbox" onclick="closeLightbox()">
-  <button class="lb-close" onclick="closeLightbox()">&#x2715;</button>
-  <button class="lb-nav" id="lbPrev" onclick="event.stopPropagation();lbNavigate(-1)">&#8592;</button>
-  <img id="lbImg" src="" alt="" onerror="this.style.opacity='.15';this.removeAttribute('onerror')">
-  <button class="lb-nav" id="lbNext" onclick="event.stopPropagation();lbNavigate(1)">&#8594;</button>
-  <span id="lbCounter"></span>
-</div>
-
-<!-- FORM FEEDBACK OVERLAY -->
-<div id="formOverlay">
-  <div class="fo-inner">
-    <div class="fo-icon" id="foIcon"></div>
-    <div class="fo-ornament"><div class="fo-line"></div><div class="fo-dot"></div><div class="fo-line"></div></div>
-    <h2 class="fo-title" id="foTitle"></h2>
-    <p class="fo-sub" id="foSub"></p>
-    <button class="fo-btn" id="foBtn" onclick="closeFormOverlay()"></button>
-  </div>
-</div>
-
-<!-- DETAIL VIEW -->
-<div id="detailView">
-  <button class="detail-back" onclick="closeDetail()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14" style="flex-shrink:0"><path d="M19 12H5M5 12l7-7M5 12l7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span id="detailBackTxt">BACK</span>
-  </button>
-  <button class="detail-share" onclick="shareProperty()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14" style="flex-shrink:0"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke-linecap="round"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke-linecap="round"/></svg>
-    <span id="detailShareTxt">SHARE</span>
-  </button>
-  <div id="shareToast"></div>
-  <div id="detailHero">
-    <div class="d-hero-bg" id="dHeroBg"></div>
-    <div class="d-hero-ov"></div>
-    <div class="d-hero-cnt" id="dHeroCnt"></div>
-  </div>
-  <div class="d-body" id="dBody"></div>
-  <div id="dNarrative"></div>
-  <div id="dGallery"></div>
-  <div id="dCtaSection"></div>
-</div>
 
 <img id="fLogo" src="https://res.cloudinary.com/dphbptped/image/upload/w_200,q_auto,f_auto/v1779854302/20260526_225431_0000_lgxhla.png" alt="Luxury Real Estate Signature" onclick="window.scrollTo({top:0,behavior:'smooth'})">
 
