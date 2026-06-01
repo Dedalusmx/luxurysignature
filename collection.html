@@ -220,7 +220,23 @@ img{max-width:100%;display:block}
 .btn-o{display:inline-block;padding:13px 34px;border:1px solid rgba(196,163,90,.42);color:rgba(240,235,225,.82);text-decoration:none;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;transition:border-color .25s,color .25s;cursor:pointer;background:none}
 .btn-o:hover{border-color:var(--gold);color:var(--gold-lt)}
 
-/* ── LIGHTBOX ── */
+/* ── DETAIL GALLERY ── */
+.d-gallery{padding:0 6% 72px;max-width:1200px;margin:0 auto}
+.d-gallery-ey{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:block}
+.d-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.d-gallery-grid a{display:block;overflow:hidden;aspect-ratio:4/3;cursor:zoom-in}
+.d-gallery-grid a:first-child{grid-column:1/3;grid-row:1/3;aspect-ratio:unset}
+.d-gallery-grid img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.d-gallery-grid a:hover img{transform:scale(1.04)}
+/* ── DETAIL MAP ── */
+.d-map-section{padding:0 6% 72px;max-width:1200px;margin:0 auto}
+.d-map-ey{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:block}
+.d-map-container{height:380px;border:1px solid var(--border);overflow:hidden}
+@media(max-width:600px){
+  .d-gallery-grid{grid-template-columns:1fr 1fr}
+  .d-gallery-grid a:first-child{grid-column:1/3;grid-row:auto}
+  .d-map-container{height:260px}
+}
 #lightbox{position:fixed;inset:0;z-index:1500;background:rgba(8,8,6,.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;cursor:zoom-out;backdrop-filter:blur(6px)}
 #lightbox.open{opacity:1;pointer-events:auto}
 #lbImg{max-width:90vw;max-height:90vh;object-fit:contain;transform:scale(.96);transition:transform .35s ease;box-shadow:0 0 80px rgba(0,0,0,.8)}
@@ -521,6 +537,31 @@ function buildFilterSelects(){
   buildSel('fOferta', t.allOffers, uniq('listing_type'));
 }
 
+// ── AGRUPACIÓN POR NOMBRE (igual que index) ──
+function parseTimestamp(ts){
+  if(!ts) return 0;
+  const s=String(ts).trim();
+  const m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2}):(\d{2})$/);
+  if(m) return new Date(+m[3],+m[2]-1,+m[1],+m[4],+m[5],+m[6]).getTime();
+  const d=new Date(s); return isNaN(d)?0:d.getTime();
+}
+
+function normalName(n){ return (n||'').toLowerCase().replace(/\s+/g,' ').trim(); }
+
+function groupByName(rows){
+  const map=new Map();
+  rows.forEach(p=>{
+    const key=normalName(p['Nombre']);
+    if(!map.has(key)) map.set(key,[]);
+    map.get(key).push(p);
+  });
+  return [...map.values()].map(units=>{
+    const sorted=[...units].sort((a,b)=>parseTimestamp(b['timestamp']||b['Timestamp'])-parseTimestamp(a['timestamp']||a['Timestamp']));
+    const rep=sorted[0];
+    return Object.assign({},rep,{_units:sorted,_unitCount:units.length});
+  });
+}
+
 function getFiltered(){
   let res = allProps.filter(p=>{
     const img = getMainImg(p);
@@ -533,7 +574,6 @@ function getFiltered(){
     const price = parsePrice(p['Precio']);
     const rooms = parseInt(p['Recámaras']||p['Recámaras'])||0;
     const s = filters.search.toLowerCase();
-
     if(s && !name.includes(s) && !city.includes(s) && !col.includes(s)) return false;
     if(filters.city    && city !== filters.city) return false;
     if(filters.tipo    && tipo !== filters.tipo) return false;
@@ -544,14 +584,18 @@ function getFiltered(){
     return true;
   });
 
+  // Agrupar
+  const grouped = groupByName(res);
+
   // Sort
   switch(filters.sort){
-    case 'price-asc':  res.sort((a,b)=>parsePrice(a['Precio'])-parsePrice(b['Precio'])); break;
-    case 'price-desc': res.sort((a,b)=>parsePrice(b['Precio'])-parsePrice(a['Precio'])); break;
-    case 'area-desc':  res.sort((a,b)=>(parseFloat(b['Area'])||0)-(parseFloat(a['Area'])||0)); break;
-    case 'rooms-desc': res.sort((a,b)=>(parseInt(b['Recámaras'])||0)-(parseInt(a['Recámaras'])||0)); break;
+    case 'price-asc':  grouped.sort((a,b)=>parsePrice(a['Precio'])-parsePrice(b['Precio'])); break;
+    case 'price-desc': grouped.sort((a,b)=>parsePrice(b['Precio'])-parsePrice(a['Precio'])); break;
+    case 'area-desc':  grouped.sort((a,b)=>(parseFloat(b['Area'])||0)-(parseFloat(a['Area'])||0)); break;
+    case 'rooms-desc': grouped.sort((a,b)=>(parseInt(b['Recámaras'])||0)-(parseInt(a['Recámaras'])||0)); break;
+    default: grouped.sort((a,b)=>parseTimestamp(b['timestamp']||b['Timestamp'])-parseTimestamp(a['timestamp']||a['Timestamp'])); break;
   }
-  return res;
+  return grouped;
 }
 
 function clearAllFilters(){
@@ -670,12 +714,13 @@ function renderCard(p, i){
   const img  = imgUrl(imgs[0]||'', 800, 600);
   const name = p['Nombre']||'';
   const loc  = [p['Colonia'],p['Ciudad']].filter(Boolean).join(', ');
-  const beds = p['Recámaras']||p['Recámaras']||'';
-  const baths= p['Baños']||p['Baños']||'';
+  const beds = p['Recámaras']||'';
+  const baths= p['Baños']||'';
   const area = p['Area'] ? p['Area']+' '+(p['area_unit']||'m²') : '';
   const tipo = p['listing_type']||'';
   const sold = ['sold','vendido','inactive'].includes((p['status']||'').toLowerCase());
   const pm2  = pricePerM2(p);
+  const units= p._unitCount||1;
 
   return `<div class="prop-card" data-idx="${i}">
     <div class="card-img">
@@ -684,6 +729,7 @@ function renderCard(p, i){
       <div class="card-badges">
         ${tipo?`<span class="badge badge-type">${tipo.toUpperCase()}</span>`:''}
         ${sold?`<span class="badge badge-sold">SOLD</span>`:''}
+        ${units>1?`<span class="badge" style="background:var(--bg2);border:1px solid var(--gold);color:var(--gold)">${units} UNIDADES</span>`:''}
       </div>
       ${imgs.length>1?`<div class="card-gallery-nav">
         <button class="gall-btn" data-card="${i}" data-dir="prev">&#8592;</button>
@@ -912,6 +958,28 @@ function renderDetail(p){
     '</div>';
   }).join('');
 
+  // ── GALERÍA ──
+  const galLabels={es:'GALERÍA DE IMÁGENES',en:'IMAGE GALLERY',fr:'GALERIE PHOTOS'};
+  const galHtml = imgs.length > 1 ? `
+    <div class="d-gallery">
+      <span class="d-gallery-ey">${galLabels[lang]||galLabels.en}</span>
+      <div class="d-gallery-grid">
+        ${imgs.map(src=>`
+          <a href="javascript:void(0)" onclick="openLightbox('${imgUrl(src,1920)}')">
+            <img src="${imgUrl(src,800,600)}" loading="lazy" onerror="this.style.opacity=.1">
+          </a>`).join('')}
+      </div>
+    </div>` : '';
+
+  // ── MAPA DE UBICACIÓN ──
+  const loc = parseLocation(p['Location']||p['location']);
+  const mapLabels={es:'UBICACIÓN',en:'LOCATION',fr:'LOCALISATION'};
+  const mapHtml = loc ? `
+    <div class="d-map-section">
+      <span class="d-map-ey">${mapLabels[lang]||mapLabels.en}</span>
+      <div class="d-map-container" id="dPropMap"></div>
+    </div>` : '';
+
   const waUnit = p['Unidad']&&p['Unidad'].trim()?' — Unidad: '+p['Unidad'].trim():'';
   const waMsg  = encodeURIComponent('Hola, me interesa la propiedad: '+(p['Nombre']||'')+waUnit);
   const tourBtn = p['virtual_tour_url']
@@ -925,6 +993,8 @@ function renderDetail(p){
   '</div>';
 
   g('dCtaSection').innerHTML=
+    galHtml+
+    mapHtml+
     '<div class="d-cta-panel">'+
       '<div class="d-cta-bg-img"><img src="'+mainImg+'" loading="lazy"></div>'+
       '<div class="d-cta-content">'+
@@ -938,6 +1008,28 @@ function renderDetail(p){
         socialIcons+
       '</div>'+
     '</div>';
+
+  // Inicializar mapa de propiedad si hay coordenadas
+  if(loc){
+    setTimeout(()=>{
+      const mapEl = document.getElementById('dPropMap');
+      if(!mapEl) return;
+      const propMap = new mapboxgl.Map({
+        container:'dPropMap',
+        style:'mapbox://styles/mapbox/dark-v11',
+        center:[loc.lng, loc.lat],
+        zoom:15,
+        attributionControl:false,
+        interactive:true
+      });
+      propMap.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-right');
+      // Marker dorado
+      const el=document.createElement('div');
+      el.style.cssText='width:18px;height:18px;background:var(--gold);border-radius:50%;border:3px solid rgba(232,213,163,.5);box-shadow:0 0 16px rgba(196,163,90,.6)';
+      new mapboxgl.Marker(el).setLngLat([loc.lng,loc.lat]).addTo(propMap);
+      setTimeout(()=>propMap.resize(),100);
+    },200);
+  }
 
   setTimeout(initDetailParallax, 60);
 }
