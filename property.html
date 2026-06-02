@@ -51,8 +51,10 @@ img{max-width:100%;display:block}
 .nav-back{font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:var(--dim);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .2s;white-space:nowrap;flex-shrink:0}
 .nav-back:hover{color:var(--gold)}
 .nav-back svg{width:12px;height:12px}
-.nav-logo{flex:1;display:flex;justify-content:center}
-.nav-logo img{height:34px;object-fit:contain;filter:brightness(1.15)}
+.nav-logo{flex:1;display:flex;justify-content:center;align-items:center;gap:10px;text-decoration:none}
+.nav-logo img{height:28px;width:28px;object-fit:contain;filter:brightness(1.2) drop-shadow(0 0 6px rgba(196,163,90,.4));flex-shrink:0}
+.nav-logo-txt{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;font-style:italic;color:var(--text);white-space:nowrap;letter-spacing:.02em}
+@media(max-width:600px){.nav-logo-txt{display:none}}
 .nav-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .lang-sw{display:flex;align-items:center;gap:5px}
 .lang-btn{background:none;border:none;font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;color:var(--dim);cursor:pointer;padding:3px;transition:color .2s}
@@ -225,7 +227,8 @@ img{max-width:100%;display:block}
     <span id="navBackTxt">BACK</span>
   </a>
   <a href="index.html" class="nav-logo">
-    <img src="https://cdn.shopify.com/s/files/1/0602/2417/6173/files/Luxury_Signture.png?v=1779266683" alt="Luxury Real Estate Signature">
+    <img src="https://res.cloudinary.com/dphbptped/image/upload/w_64,h_64,c_fill,f_png/v1779854304/file_00000000181071fdb75c1bcfb5823568_detuve.png" alt="Luxury Real Estate Signature">
+    <span class="nav-logo-txt">Luxury Real Estate Signature</span>
   </a>
   <div class="nav-controls">
     <div class="lang-sw">
