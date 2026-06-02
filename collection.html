@@ -24,8 +24,8 @@ img{max-width:100%;display:block}
 }
 
 /* ── NAV ── */
-#nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;background:rgba(8,8,6,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4%;gap:16px}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex:1;justify-content:center}
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;background:rgba(8,8,6,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4%}
+.nav-logo{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;text-decoration:none;pointer-events:auto}
 .nav-logo img{height:28px;width:28px;object-fit:contain;filter:brightness(1.2) drop-shadow(0 0 6px rgba(196,163,90,.4));flex-shrink:0}
 .nav-logo-txt{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;font-style:italic;color:var(--text);white-space:nowrap;letter-spacing:.02em}
 @media(max-width:600px){.nav-logo-txt{font-size:14px}}
