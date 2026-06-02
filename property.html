@@ -466,14 +466,46 @@ function renderProperty(p){
 
   // Amenities
   const amenRaw = p['building_amenities[0]']||p['building_amenities']||'';
-  const amenLabel = {es:'LO QUE INCLUYE',en:'WHAT\'S INCLUDED',fr:'CE QUI EST INCLUS'}[lang];
+  const amenLabel = {es:'AMENIDADES',en:'AMENITIES',fr:'COMMODITÉS'}[lang];
+  const amenDict = {
+    en:{
+      'sky zone':'Sky Zone','jacuzzi':'Jacuzzi','infinity pool':'Infinity Pool',
+      'elevator':'Elevator','parking':'Parking','lobby':'Lobby','sun deck':'Sun Deck',
+      'grill zone':'Grill Zone','pool':'Pool','gym':'Gym','spa':'Spa',
+      'greenhouse':'Greenhouse','bar':'Bar','terrace':'Terrace','palapa':'Palapa',
+      'productive property':'Income Property','solar panels':'Solar Panels',
+      '26 solar panels':'26 Solar Panels','well':'Well','rooftop':'Rooftop',
+      'roof garden':'Rooftop','concierge':'Concierge','security':'Security',
+      'coworking':'Co-working','cinema':'Cinema','kids area':'Kids Area',
+      'yoga':'Yoga Area','bbq':'BBQ Area','storage':'Storage','laundry':'Laundry'
+    },
+    fr:{
+      'sky zone':'Sky Zone','jacuzzi':'Jacuzzi','infinity pool':'Piscine à débordement',
+      'elevator':'Ascenseur','parking':'Stationnement','lobby':'Hall d\'entrée','sun deck':'Solarium',
+      'grill zone':'Zone Barbecue','pool':'Piscine','gym':'Salle de sport','spa':'Spa',
+      'greenhouse':'Serre','bar':'Bar','terrace':'Terrasse','palapa':'Palapa',
+      'productive property':'Propriété rentable','solar panels':'Panneaux solaires',
+      '26 solar panels':'26 Panneaux solaires','well':'Puits','rooftop':'Toit-terrasse',
+      'roof garden':'Toit-terrasse','concierge':'Conciergerie','security':'Sécurité',
+      'coworking':'Coworking','cinema':'Cinéma','kids area':'Espace enfants',
+      'yoga':'Espace yoga','bbq':'Barbecue','storage':'Garde-meuble','laundry':'Buanderie'
+    }
+  };
+  function translateAmenity(raw){
+    if(lang==='en'||lang==='fr'){
+      const dict = amenDict[lang];
+      const key = raw.toLowerCase().trim();
+      return dict[key] || raw.trim();
+    }
+    return raw.trim();
+  }
   if(amenRaw && amenRaw.trim()){
-    const items = amenRaw.split(/[,;|\/]/).map(a=>a.trim()).filter(Boolean);
+    const items = [...new Set(amenRaw.split(/[,;|\/]/).map(a=>a.trim()).filter(Boolean))];
     g('dAmenities').innerHTML = `
       <div class="d-amenities">
         <span class="d-amenities-ey">${amenLabel}</span>
         <div class="d-amenities-grid">
-          ${items.map(a=>`<span class="d-amenity">${a}</span>`).join('')}
+          ${items.map(a=>`<span class="d-amenity">${translateAmenity(a)}</span>`).join('')}
         </div>
       </div>`;
   } else {
