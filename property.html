@@ -267,10 +267,11 @@ img{max-width:100%;display:block}
   </div>
   <div class="h-actions">
     <button class="h-share" id="hBrochure" onclick="requestBrochure()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       <span id="brochureTxt">BROCHURE</span>
     </button>
     <button class="h-share" id="hShare" onclick="shareProperty()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       <span id="shareTxt">SHARE</span>
     </button>
   </div>
@@ -341,7 +342,7 @@ let rates = {USD:0.058, CAD:0.079};
 let currency = 'MXN';
 
 const L = {
-  es:{back:'VOLVER',share:'COMPARTIR',brochure:'BROCHURE',loading:'Cargando propiedad...',notFound:'Propiedad no encontrada',notFoundSub:'La propiedad solicitada no pudo cargarse',viewCol:'Ver Colección',
+  es:{back:'VOLVER',share:'COMPARTIR',brochure:'FOLLETO',loading:'Cargando propiedad...',notFound:'Propiedad no encontrada',notFoundSub:'La propiedad solicitada no pudo cargarse',viewCol:'Ver Colección',
       rec:'Recámaras',ban:'Baños',area:'Área',park:'Estacionamiento',yr:'Año',tipo:'Tipo',
       galLbl:'GALERÍA DE IMÁGENES',mapLbl:'UBICACIÓN',ctaEy:'SIGUIENTE PASO',
       intLbl:'¿Te interesa esta propiedad?',tourLbl:'TOUR VIRTUAL',waLbl:'CONTÁCTENOS',
@@ -351,7 +352,7 @@ const L = {
       galLbl:'IMAGE GALLERY',mapLbl:'LOCATION',ctaEy:'NEXT STEP',
       intLbl:'Interested in this property?',tourLbl:'VIRTUAL TOUR',waLbl:'CONTACT US',
       footHome:'Home',footCol:'Collection',toast:{copied:'LINK COPIED',shared:'SHARED'}},
-  fr:{back:'RETOUR',share:'PARTAGER',brochure:'BROCHURE',loading:'Chargement...',notFound:'Propriété introuvable',notFoundSub:'La propriété demandée n\'a pas pu être chargée',viewCol:'Voir la Collection',
+  fr:{back:'RETOUR',share:'PARTAGER',brochure:'DÉPLIANT',loading:'Chargement...',notFound:'Propriété introuvable',notFoundSub:'La propriété demandée n\'a pas pu être chargée',viewCol:'Voir la Collection',
       rec:'Chambres',ban:'Salles de bain',area:'Surface',park:'Parking',yr:'Année',tipo:'Type',
       galLbl:'GALERIE PHOTOS',mapLbl:'LOCALISATION',ctaEy:'PROCHAINE ÉTAPE',
       intLbl:'Cette propriété vous intéresse?',tourLbl:'VISITE VIRTUELLE',waLbl:'NOUS CONTACTER',
