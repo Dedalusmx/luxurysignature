@@ -58,9 +58,6 @@ img{max-width:100%;display:block}
 .lang-btn{background:none;border:none;font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;color:var(--dim);cursor:pointer;padding:3px;transition:color .2s}
 .lang-btn.active,.lang-btn:hover{color:var(--gold)}
 .lang-sep{color:var(--dim);opacity:.3;font-size:7px}
-.share-btn{background:none;border:1px solid var(--border);color:var(--dim);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
-.share-btn:hover{border-color:var(--gold);color:var(--gold)}
-.share-btn svg{width:12px;height:12px}
 
 /* ── LOADING / ERROR ── */
 #loadingState{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;z-index:100}
@@ -71,7 +68,9 @@ img{max-width:100%;display:block}
 .err-ti{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:8px}
 .err-sub{font-size:11px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:32px}
 
-/* ── HERO ── */
+/* ── HERO SHARE BUTTON ── */
+.h-share{position:absolute;bottom:40px;right:6%;z-index:3;background:rgba(8,8,6,.45);backdrop-filter:blur(8px);border:1px solid rgba(232,213,163,.35);color:rgba(232,213,163,.85);font-family:'Raleway',sans-serif;font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;padding:11px 22px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:background .25s,border-color .25s,color .25s;opacity:0;animation:up .8s 1s forwards}
+.h-share:hover{background:rgba(196,163,90,.15);border-color:var(--gold);color:var(--gold-lt)}
 #propHero{position:relative;height:100vh;min-height:560px;display:flex;align-items:flex-end;padding-bottom:64px;overflow:hidden}
 .h-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.06);transition:transform 10s ease}
 .h-bg.ready{transform:scale(1)}
@@ -93,7 +92,12 @@ img{max-width:100%;display:block}
 .d-stat-v{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);margin-bottom:4px}
 .d-stat-l{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--dim)}
 
-/* ── NARRATIVE PANELS ── */
+/* ── AMENITIES ── */
+.d-amenities{max-width:1200px;margin:0 auto;padding:0 6% 72px}
+.d-amenities-ey{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:28px;display:block}
+.d-amenities-grid{display:flex;flex-wrap:wrap;gap:10px}
+.d-amenity{font-size:11px;font-weight:300;letter-spacing:1.5px;color:rgba(240,235,225,.65);padding:9px 20px;border:1px solid rgba(196,163,90,.15);transition:border-color .25s,color .25s}
+.d-amenity:hover{border-color:rgba(196,163,90,.4);color:rgba(240,235,225,.9)}
 .d-panel{position:relative;height:80vh;min-height:480px;overflow:hidden;display:flex;align-items:center}
 .d-panel-img-wrap{position:absolute;inset:-18% 0;z-index:0;will-change:transform;cursor:zoom-in}
 .d-panel-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
@@ -172,9 +176,9 @@ img{max-width:100%;display:block}
 /* ── CTA INLINE FORM ── */
 .cta-form{margin:28px auto 0;max-width:480px}
 .cta-fields{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
-.cta-inp{width:100%;background:rgba(240,235,225,.06);border:none;border-bottom:1px solid rgba(196,163,90,.35);padding:12px 4px;color:var(--text);font-family:'Raleway',sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color .3s;text-align:center}
-.cta-inp::placeholder{color:rgba(240,235,225,.38);font-size:12px;letter-spacing:1px}
-.cta-inp:focus{border-color:var(--gold);background:rgba(240,235,225,.09)}
+.cta-inp{width:100%;background:rgba(240,235,225,.1);border:none;border-bottom:1px solid rgba(196,163,90,.55);padding:14px 10px;color:var(--text);font-family:'Raleway',sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color .3s,background .3s;text-align:center}
+.cta-inp::placeholder{color:rgba(240,235,225,.55);font-size:12px;letter-spacing:1px}
+.cta-inp:focus{border-color:var(--gold);background:rgba(240,235,225,.14)}
 .cta-send{width:100%;padding:15px;background:var(--gold);color:var(--bg);border:none;font-family:'Raleway',sans-serif;font-size:9px;font-weight:500;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:background .25s;margin-top:4px}
 .cta-send:hover{background:var(--gold-lt)}
 .cta-send:disabled{background:var(--gold-dk);cursor:default}
@@ -231,10 +235,6 @@ img{max-width:100%;display:block}
       <span class="lang-sep">◆</span>
       <button class="lang-btn" data-lang="es">ES</button>
     </div>
-    <button class="share-btn" onclick="shareProperty()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-      <span id="shareTxt">SHARE</span>
-    </button>
   </div>
 </nav>
 
@@ -261,11 +261,16 @@ img{max-width:100%;display:block}
     <p class="h-loc" id="hLoc"></p>
     <p class="h-price" id="hPrice"></p>
   </div>
+  <button class="h-share" id="hShare" onclick="shareProperty()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    <span id="shareTxt">SHARE</span>
+  </button>
 </div>
 
 <!-- BODY -->
 <div id="propBody" style="display:none">
   <div class="d-stats" id="dStats"></div>
+  <div id="dAmenities"></div>
 </div>
 
 <!-- NARRATIVE -->
@@ -406,7 +411,7 @@ function applyLang(){
   const t=L[lang];
   document.documentElement.lang=lang;
   g('navBackTxt').textContent=t.back;
-  g('shareTxt').textContent=t.share;
+  const st=g('shareTxt'); if(st) st.textContent=t.share;
   g('loadTxt').textContent=t.loading;
   g('errTi').textContent=t.notFound;
   g('errSub').textContent=t.notFoundSub;
@@ -416,7 +421,8 @@ function applyLang(){
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
   // Update back link — preserve referrer
   const ref=new URLSearchParams(window.location.search).get('from');
-  g('navBack').href = ref==='index' ? 'index.html' : 'collection.html';
+  if(ref==='index') g('navBack').href='index.html#properties';
+  else g('navBack').href='collection.html';
   if(propData) renderProperty(propData);
 }
 
@@ -457,6 +463,22 @@ function renderProperty(p){
     {v:p['Tipo propiedad'],l:sL.tipo}
   ].filter(s=>s.v&&String(s.v).trim());
   g('dStats').innerHTML=stats.map(s=>`<div class="d-stat"><div class="d-stat-v">${s.v}</div><div class="d-stat-l">${s.l}</div></div>`).join('');
+
+  // Amenities
+  const amenRaw = p['building_amenities[0]']||p['building_amenities']||'';
+  const amenLabel = {es:'LO QUE INCLUYE',en:'WHAT\'S INCLUDED',fr:'CE QUI EST INCLUS'}[lang];
+  if(amenRaw && amenRaw.trim()){
+    const items = amenRaw.split(/[,;|\/]/).map(a=>a.trim()).filter(Boolean);
+    g('dAmenities').innerHTML = `
+      <div class="d-amenities">
+        <span class="d-amenities-ey">${amenLabel}</span>
+        <div class="d-amenities-grid">
+          ${items.map(a=>`<span class="d-amenity">${a}</span>`).join('')}
+        </div>
+      </div>`;
+  } else {
+    g('dAmenities').innerHTML = '';
+  }
 
   // Narrative panels
   const gallery=imgs.slice(1).filter(Boolean);
