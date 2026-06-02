@@ -25,7 +25,7 @@ img{max-width:100%;display:block}
 
 /* ── NAV ── */
 #nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;background:rgba(8,8,6,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4%;gap:16px}
-.nav-logo img{height:32px;object-fit:contain;filter:brightness(1.15)}
+.nav-logo img{height:44px;object-fit:contain;filter:brightness(1.15)}
 .nav-back{font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:var(--dim);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .2s;white-space:nowrap;flex-shrink:0}
 .nav-back:hover{color:var(--gold)}
 .nav-back svg{width:12px;height:12px}
@@ -220,7 +220,31 @@ img{max-width:100%;display:block}
 .btn-o{display:inline-block;padding:13px 34px;border:1px solid rgba(196,163,90,.42);color:rgba(240,235,225,.82);text-decoration:none;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;transition:border-color .25s,color .25s;cursor:pointer;background:none}
 .btn-o:hover{border-color:var(--gold);color:var(--gold-lt)}
 
-/* ── WA FLOAT ── */
+/* ── UNIT SELECTOR PANEL ── */
+#unitPanel{position:fixed;inset:0;z-index:500;background:rgba(8,8,6,.82);backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+#unitPanel.open{opacity:1;pointer-events:auto}
+.unit-box{background:var(--bg2);border-top:1px solid rgba(196,163,90,.18);width:100%;max-width:100%;max-height:82vh;overflow-y:auto;padding:28px 8% 48px;scrollbar-width:thin;scrollbar-color:rgba(196,163,90,.25) transparent;position:relative}
+.unit-box::-webkit-scrollbar{width:4px}
+.unit-box::-webkit-scrollbar-track{background:transparent}
+.unit-box::-webkit-scrollbar-thumb{background:rgba(196,163,90,.25);border-radius:2px}
+.unit-box-ti{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:4px}
+.unit-box-sub{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;display:block}
+.unit-list{display:flex;flex-direction:column;gap:1px;max-width:900px}
+.unit-item{display:grid;grid-template-columns:1fr auto auto;align-items:center;padding:20px 24px;background:var(--bg3);cursor:pointer;transition:background .2s;gap:24px}
+.unit-item:hover{background:#1c1a14}
+.unit-item-left{display:flex;flex-direction:column;gap:5px}
+.unit-item-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:var(--text)}
+.unit-item-meta{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
+.unit-item-price{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:var(--gold-lt);white-space:nowrap;text-align:right}
+.unit-item-arr{color:var(--gold);opacity:.45;font-size:16px;flex-shrink:0}
+.unit-item:hover .unit-item-arr{opacity:1}
+.unit-close{position:absolute;top:24px;right:6%;background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:4px 8px;transition:color .2s;line-height:1}
+.unit-close:hover{color:var(--gold)}
+@media(max-width:600px){
+  .unit-box{padding:28px 5% 36px}
+  .unit-item{grid-template-columns:1fr auto;gap:12px;padding:16px 16px}
+  .unit-item-arr{display:none}
+}
 #waFloat{position:fixed;bottom:28px;right:28px;z-index:400;width:48px;height:48px;background:var(--bg2);border:1px solid rgba(196,163,90,.35);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease,border-color .25s}
 #waFloat.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
 #waFloat:hover{border-color:var(--gold)}
@@ -327,6 +351,16 @@ img{max-width:100%;display:block}
     </div>
     <div id="propContainer"></div>
     <div id="loadMoreWrap"></div>
+  </div>
+</div>
+
+<!-- UNIT SELECTOR -->
+<div id="unitPanel" onclick="if(event.target===this)closeUnitPanel()">
+  <div class="unit-box">
+    <button class="unit-close" onclick="closeUnitPanel()">✕</button>
+    <h2 class="unit-box-ti" id="unitBoxTi"></h2>
+    <p class="unit-box-sub" id="unitBoxSub"></p>
+    <div class="unit-list" id="unitList"></div>
   </div>
 </div>
 
@@ -644,7 +678,14 @@ function renderResults(){
     el.addEventListener('click', e=>{
       if(e.target.classList.contains('gall-btn')) return;
       const idx = parseInt(el.dataset.idx);
-      openProperty(renderedProps[idx]);
+      const p = renderedProps[idx];
+      if(!p) return;
+      if(p._unitCount > 1){
+        _unitPanelUnits = p._units;
+        openUnitPanel(p._units);
+      } else {
+        openProperty(p);
+      }
     });
   });
 
@@ -822,6 +863,45 @@ function updateMapMarkers(props){
   if(hasCoords && mapMarkers.length > 0){
     try{ mapInstance.fitBounds(bounds, {padding:60, maxZoom:13, duration:1000}); }catch(e){}
   }
+}
+
+// ── UNIT SELECTOR ──
+function openUnitPanel(units){
+  const t = L[lang];
+  const name = units[0]['Nombre']||'';
+  g('unitBoxTi').textContent = name;
+  g('unitBoxSub').textContent = units.length + ' ' + ({es:'unidades disponibles',en:'available units',fr:'unités disponibles'}[lang]||'units');
+  g('unitList').innerHTML = units.map((u,i)=>{
+    const beds  = u['Recámaras']||'';
+    const baths = u['Baños']||'';
+    const area  = u['Area'] ? u['Area']+' '+(u['area_unit']||'m²') : '';
+    const unit  = u['Unidad']||u['Unidad_nombre']||('Unidad '+(i+1));
+    const meta  = [beds?beds+' rec':'', baths?baths+' ba':'', area].filter(Boolean).join(' · ');
+    return `<div class="unit-item" onclick="selectUnit(${i})">
+      <div class="unit-item-left">
+        <span class="unit-item-name">${unit}</span>
+        ${meta?`<span class="unit-item-meta">${meta}</span>`:''}
+      </div>
+      <span class="unit-item-price">${formatCurrency(u['Precio'])}</span>
+      <span class="unit-item-arr">→</span>
+    </div>`;
+  }).join('');
+  g('unitPanel').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeUnitPanel(){
+  g('unitPanel').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+let _unitPanelUnits=[];
+function selectUnit(idx){
+  const u = _unitPanelUnits[idx];
+  if(!u) return;
+  closeUnitPanel();
+  const id = u['home_listing_id'] || encodeURIComponent(u['Nombre']||'');
+  window.location.href = `property.html?id=${id}&from=collection&lang=${lang}`;
 }
 
 // ── DETAIL VIEW → property.html ──
