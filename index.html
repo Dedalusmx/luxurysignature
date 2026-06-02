@@ -221,22 +221,30 @@ img{max-width:100%;display:block}
 .btn-o:hover{border-color:var(--gold);color:var(--gold-lt)}
 
 /* ── UNIT SELECTOR PANEL ── */
-#unitPanel{position:fixed;inset:0;z-index:500;background:rgba(8,8,6,.88);backdrop-filter:blur(12px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s}
+#unitPanel{position:fixed;inset:0;z-index:500;background:rgba(8,8,6,.82);backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
 #unitPanel.open{opacity:1;pointer-events:auto}
-.unit-box{background:var(--bg2);border-top:1px solid var(--border);width:100%;max-width:640px;max-height:70vh;overflow-y:auto;padding:36px 40px 40px}
-.unit-box-ti{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:6px}
-.unit-box-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);margin-bottom:28px}
-.unit-list{display:flex;flex-direction:column;gap:1px}
-.unit-item{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:var(--bg3);cursor:pointer;transition:background .25s;gap:16px}
-.unit-item:hover{background:#1a1812}
-.unit-item-left{display:flex;flex-direction:column;gap:4px}
-.unit-item-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:var(--text)}
+.unit-box{background:var(--bg2);border-top:1px solid rgba(196,163,90,.18);width:100%;max-width:100%;max-height:72vh;overflow-y:auto;padding:36px 8% 48px;scrollbar-width:thin;scrollbar-color:rgba(196,163,90,.25) transparent}
+.unit-box::-webkit-scrollbar{width:4px}
+.unit-box::-webkit-scrollbar-track{background:transparent}
+.unit-box::-webkit-scrollbar-thumb{background:rgba(196,163,90,.25);border-radius:2px}
+.unit-box-ti{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:4px}
+.unit-box-sub{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;display:block}
+.unit-list{display:flex;flex-direction:column;gap:1px;max-width:900px}
+.unit-item{display:grid;grid-template-columns:1fr auto auto;align-items:center;padding:20px 24px;background:var(--bg3);cursor:pointer;transition:background .2s;gap:24px}
+.unit-item:hover{background:#1c1a14}
+.unit-item-left{display:flex;flex-direction:column;gap:5px}
+.unit-item-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:var(--text)}
 .unit-item-meta{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
-.unit-item-price{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:var(--gold-lt);white-space:nowrap}
-.unit-item-arr{color:var(--gold);opacity:.5;font-size:14px;flex-shrink:0}
-.unit-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;padding:4px 8px;transition:color .2s}
+.unit-item-price{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;color:var(--gold-lt);white-space:nowrap;text-align:right}
+.unit-item-arr{color:var(--gold);opacity:.45;font-size:16px;flex-shrink:0}
+.unit-item:hover .unit-item-arr{opacity:1}
+.unit-close{position:absolute;top:20px;right:28px;background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:4px 8px;transition:color .2s;line-height:1}
 .unit-close:hover{color:var(--gold)}
-@media(max-width:600px){.unit-box{padding:28px 24px 32px}}
+@media(max-width:600px){
+  .unit-box{padding:28px 5% 36px}
+  .unit-item{grid-template-columns:1fr auto;gap:12px;padding:16px 16px}
+  .unit-item-arr{display:none}
+}
 #waFloat{position:fixed;bottom:28px;right:28px;z-index:400;width:48px;height:48px;background:var(--bg2);border:1px solid rgba(196,163,90,.35);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease,border-color .25s}
 #waFloat.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
 #waFloat:hover{border-color:var(--gold)}
