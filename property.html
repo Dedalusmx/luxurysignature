@@ -443,7 +443,7 @@ function renderProperty(p){
   const propName=p['Nombre']||'';
   document.title=propName+' | Luxury Real Estate Signature';
   g('ogTitle').content=propName+' | Luxury Real Estate Signature';
-  g('ogDesc').content=[p['Colonia'],p['Ciudad']].filter(Boolean).join(', ')+' — '+formatCurrency(p['Precio']);
+  g('ogDesc').content=getLangDesc(p).substring(0,160)||[p['Colonia'],p['Ciudad']].filter(Boolean).join(', ')+' — '+formatCurrency(p['Precio']);
   g('ogImg').content=imgUrl(imgs[0]||'',1200,630);
   g('ogUrl').content=window.location.href;
 
@@ -515,11 +515,18 @@ function renderProperty(p){
     g('dAmenities').innerHTML = '';
   }
 
+  // Pick description based on language
+  function getLangDesc(p){
+    if(lang==='fr' && p['description FR'] && p['description FR'].trim()) return p['description FR'];
+    if(lang==='en' && p['description EN'] && p['description EN'].trim()) return p['description EN'];
+    return p['description']||'';
+  }
+
   // Narrative panels
   const gallery=imgs.slice(1).filter(Boolean);
   const panelImgs=gallery.length?gallery:(imgs[0]?[imgs[0]]:[]);
   const panelCount=Math.min(panelImgs.length,6);
-  const textChunks=splitDesc(p['description']||'',panelCount);
+  const textChunks=splitDesc(getLangDesc(p),panelCount);
   const romans=['I','II','III','IV','V','VI'];
   g('dNarrative').innerHTML=panelImgs.slice(0,panelCount).map((img,i)=>{
     const side=i%2===0?'left':'right';
