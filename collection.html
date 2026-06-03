@@ -303,6 +303,8 @@ img{max-width:100%;display:block}
       <button class="lang-btn active" data-lang="en">EN</button>
       <span class="lang-sep">◆</span>
       <button class="lang-btn" data-lang="es">ES</button>
+      <span class="lang-sep">◆</span>
+      <button class="lang-btn" data-lang="it">IT</button>
     </div>
   </div>
 </nav>
@@ -438,6 +440,20 @@ const L = {
     intLbl:'¿Te interesa esta propiedad?',ctaEy:'SIGUIENTE PASO',
     rec:'Recámaras',ban:'Baños',area:'Área',park:'Estacionamiento',yr:'Año',tipo:'Tipo',
     toast:{copied:'ENLACE COPIADO',shared:'COMPARTIDO'}
+  },
+  it:{
+    back:'INDIETRO',title:'La Collezione',
+    searchPh:'Cerca proprietà...',allCities:'Tutte le città',allTypes:'Tutti i tipi',allOffers:'Vendita & Affitto',
+    sort:'Ordina',sortPA:'Prezzo ↑',sortPD:'Prezzo ↓',sortAD:'Più grande',sortRD:'Più camere',
+    mapBtn:'MAPPA',clear:'CANCELLA',rooms:'Camere',
+    results:n=>`<span>${n}</span> proprietà`,
+    noResults:'Nessun risultato',noResultsSub:'Modifica i filtri per vedere più proprietà',
+    loadMore:n=>`CARICA ${n} IN PIÙ`,
+    detailBack:'INDIETRO',share:'CONDIVIDI',
+    descLbl:'DESCRIZIONE',galLbl:'GALLERIA',tourLbl:'TOUR VIRTUALE',waLbl:'CONTATTACI',
+    intLbl:'Questa proprietà ti interessa?',ctaEy:'PASSO SUCCESSIVO',
+    rec:'Camere',ban:'Bagni',area:'Superficie',park:'Parcheggio',yr:'Anno',tipo:'Tipo',
+    toast:{copied:'LINK COPIATO',shared:'CONDIVISO'}
   }
 };
 
@@ -481,8 +497,8 @@ function getAllImgs(p){ return IMG_COLS.map(c=>p[c]).filter(u=>u&&u.trim()); }
 
 function parseListingType(raw){
   const v=(raw||'').toLowerCase();
-  if(v.includes('sale')) return {es:'En Venta',en:'For Sale',fr:'À Vendre'}[lang]||'For Sale';
-  if(v.includes('rent')) return {es:'En Renta',en:'For Rent',fr:'À Louer'}[lang]||'For Rent';
+  if(v.includes('sale')) return {es:'En Venta',en:'For Sale',fr:'À Vendre',it:'In Vendita'}[lang]||'For Sale';
+  if(v.includes('rent')) return {es:'En Renta',en:'For Rent',fr:'À Louer',it:'In Affitto'}[lang]||'For Rent';
   return raw;
 }
 
@@ -536,7 +552,8 @@ function buildFilterSelects(){
   const tipoMap = {
     es:{casa:'Casa',departamento:'Departamento',condominio:'Condominio',terreno:'Terreno',lote:'Lote',local:'Local Comercial',oficina:'Oficina',edificio:'Edificio',penthouse:'Penthouse',villa:'Villa',estudio:'Estudio'},
     en:{casa:'House',departamento:'Apartment',condominio:'Condominium',terreno:'Land',lote:'Lot',local:'Commercial',oficina:'Office',edificio:'Building',penthouse:'Penthouse',villa:'Villa',estudio:'Studio'},
-    fr:{casa:'Maison',departamento:'Appartement',condominio:'Copropriété',terreno:'Terrain',lote:'Lot',local:'Commercial',oficina:'Bureau',edificio:'Immeuble',penthouse:'Penthouse',villa:'Villa',estudio:'Studio'}
+    fr:{casa:'Maison',departamento:'Appartement',condominio:'Copropriété',terreno:'Terrain',lote:'Lot',local:'Commercial',oficina:'Bureau',edificio:'Immeuble',penthouse:'Penthouse',villa:'Villa',estudio:'Studio'},
+    it:{casa:'Casa',departamento:'Appartamento',condominio:'Condominio',terreno:'Terreno',lote:'Lotto',local:'Commerciale',oficina:'Ufficio',edificio:'Edificio',penthouse:'Penthouse',villa:'Villa',estudio:'Monolocale'}
   };
   function translateTipo(raw){
     const key=raw.toLowerCase().trim();
@@ -740,9 +757,9 @@ function renderCard(p, i){
   const pm2  = pricePerM2(p);
   const units= p._unitCount||1;
   const badgeLbl = parseListingType(tipo);
-  const recLbl = {es:'rec',en:'bd',fr:'ch'}[lang]||'bd';
-  const baLbl  = {es:'ba',en:'ba',fr:'sdb'}[lang]||'ba';
-  const unitsLbl = {es:'UNIDADES',en:'UNITS',fr:'UNITÉS'}[lang]||'UNITS';
+  const recLbl = {es:'rec',en:'bd',fr:'ch',it:'cam'}[lang]||'bd';
+  const baLbl  = {es:'ba',en:'ba',fr:'sdb',it:'bagni'}[lang]||'ba';
+  const unitsLbl = {es:'UNIDADES',en:'UNITS',fr:'UNITÉS',it:'UNITÀ'}[lang]||'UNITS';
 
   return `<div class="prop-card" data-idx="${i}">
     <div class="card-img">
@@ -783,8 +800,8 @@ function renderListItem(p, i){
   const tipo = p['listing_type']||'';
   const pm2  = pricePerM2(p);
   const badgeLbl = parseListingType(tipo);
-  const recLbl = {es:'rec',en:'bd',fr:'ch'}[lang]||'bd';
-  const baLbl  = {es:'ba',en:'ba',fr:'sdb'}[lang]||'ba';
+  const recLbl = {es:'rec',en:'bd',fr:'ch',it:'cam'}[lang]||'bd';
+  const baLbl  = {es:'ba',en:'ba',fr:'sdb',it:'bagni'}[lang]||'ba';
 
   return `<div class="list-item" data-idx="${i}">
     <div class="list-img">
@@ -880,7 +897,7 @@ function openUnitPanel(units){
   const t = L[lang];
   const name = units[0]['Nombre']||'';
   g('unitBoxTi').textContent = name;
-  g('unitBoxSub').textContent = units.length + ' ' + ({es:'unidades disponibles',en:'available units',fr:'unités disponibles'}[lang]||'units');
+  g('unitBoxSub').textContent = units.length + ' ' + ({es:'unidades disponibles',en:'available units',fr:'unités disponibles',it:'unità disponibili'}[lang]||'units');
   g('unitList').innerHTML = units.map((u,i)=>{
     const beds  = u['Recámaras']||'';
     const baths = u['Baños']||'';
