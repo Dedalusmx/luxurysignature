@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -407,6 +407,8 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
       <button class="lang-btn active" data-lang="en">EN</button>
       <span class="lang-sep">◆</span>
       <button class="lang-btn" data-lang="es">ES</button>
+      <span class="lang-sep">◆</span>
+      <button class="lang-btn" data-lang="it">IT</button>
     </div>
   </div>
 </nav>
@@ -592,7 +594,8 @@ function parseListingType(val){
   const map = {
     fr:{FOR_SALE:'À Vendre',FOR_SALE_BY_AGENT:'À Vendre',FOR_RENT:'À Louer',FOR_RENT_BY_AGENT:'À Louer',SOLD:'Vendu'},
     en:{FOR_SALE:'For Sale',FOR_SALE_BY_AGENT:'For Sale',FOR_RENT:'For Rent',FOR_RENT_BY_AGENT:'For Rent',SOLD:'Sold'},
-    es:{FOR_SALE:'Venta',FOR_SALE_BY_AGENT:'Venta',FOR_RENT:'Renta',FOR_RENT_BY_AGENT:'Renta',SOLD:'Vendido'}
+    es:{FOR_SALE:'Venta',FOR_SALE_BY_AGENT:'Venta',FOR_RENT:'Renta',FOR_RENT_BY_AGENT:'Renta',SOLD:'Vendido'},
+    it:{FOR_SALE:'In Vendita',FOR_SALE_BY_AGENT:'In Vendita',FOR_RENT:'In Affitto',FOR_RENT_BY_AGENT:'In Affitto',SOLD:'Venduto'}
   };
   return (map[lang]&&map[lang][v]) || v.replace(/_/g,' ');
 }
@@ -653,7 +656,7 @@ function renderPropsFromData(data){
         <div class="prp-ov"></div>
         <div class="prp-badges">
           ${type?`<span class="prp-badge">${parseListingType(type)}</span>`:''}
-          ${p._unitCount>1?`<span class="prp-badge" style="background:var(--bg2);border:1px solid var(--gold);color:var(--gold)">${p._unitCount} ${({fr:'UNITÉS',en:'UNITS',es:'UNIDADES'})[lang]}</span>`:''}
+          ${p._unitCount>1?`<span class="prp-badge" style="background:var(--bg2);border:1px solid var(--gold);color:var(--gold)">${p._unitCount} ${({fr:'UNITÉS',en:'UNITS',es:'UNIDADES',it:'UNITÀ'})[lang]}</span>`:''}
           ${sold?`<span class="prp-badge" style="background:rgba(8,8,6,.8);color:rgba(240,235,225,.6)">SOLD</span>`:''}
         </div>
       </div>
@@ -915,6 +918,53 @@ const L = {
     fN:'Nombre completo',fE:'Correo electrónico',fP:'Teléfono',fM:'Mensaje',fS:'ENVIAR SOLICITUD',
     ftL:'Aviso Legal',ftP:'Privacidad',ftC:'Cookies',
     ftCp:'© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México'
+  },
+  it:{
+    nav:['SERVIZI','PROPRIETÀ','INVESTIRE','CHI SIAMO','CONTATTI'],href:['#services','#properties','#invest','#about','#contact'],
+    hEy:'EST. 2018 · RIVIERA MAYA',
+    hTi:"L'Arte di<br><em>Vivere Eccezionale</em>",
+    hSlogan:'Dove le opportunità diventano progetti di vita',
+    hLoc:'Playa del Carmen · Tulum · Quintana Roo',
+    c1:'ESPLORA PROPRIETÀ',c2:'I NOSTRI SERVIZI',
+    mfTi:"Più di un'agenzia.",
+    mfTx:"Luxury Real Estate Signature è il vostro passaporto verso una vita eccezionale nel cuore della Riviera Maya. Orchestriamo ogni dettaglio del vostro percorso — dal primo volo in elicottero sopra Tulum alla firma della vostra proprietà dei sogni.",
+    abEy:'· CHI SIAMO',abTi:'LA NOSTRA STORIA',
+    abIntro:"Luxury Real Estate Signature è un'azienda specializzata nel settore immobiliare e nei servizi di accompagnamento per investitori, famiglie e persone che desiderano stabilirsi nella Riviera Maya. Il nostro impegno è offrire un'esperienza professionale, trasparente e personalizzata in ogni fase del processo di acquisto, vendita o investimento immobiliare.",
+    abCol1p:["Grazie all'ampia conoscenza del mercato immobiliare della regione, aiutiamo i nostri clienti a trovare proprietà adatte alle loro esigenze, obiettivi e stile di vita — che si tratti di abitarci, trascorrere le vacanze, generare redditi da locazione o diversificare il patrimonio.","Ci distinguiamo per l'attenzione personalizzata, la consulenza integrale e le soluzioni su misura, accompagnando i clienti dalla ricerca della proprietà ideale fino alla chiusura dell'operazione."],
+    abCol2p:["Offriamo inoltre servizi complementari di orientamento per chi desidera stabilirsi in Messico e sfruttare le opportunità offerte dalla Riviera Maya.","Il nostro team è pronto ad accompagnarvi in ogni fase del vostro progetto immobiliare nella Riviera Maya — con professionalità, etica e dedizione."],
+    abMvv:[
+      {ti:'LA NOSTRA MISSIONE',tx:"Fornire servizi immobiliari di eccellenza, mettendo in contatto i nostri clienti con le migliori opportunità di investimento e residenza nella Riviera Maya, attraverso un'attenzione professionale, etica e personalizzata."},
+      {ti:'LA NOSTRA VISIONE',tx:"Essere un'azienda leader e punto di riferimento nel mercato immobiliare della Riviera Maya, riconosciuta per fiducia, trasparenza e qualità dei servizi."},
+      {ti:'I NOSTRI VALORI',vals:["Integrità e trasparenza","Professionalità ed eccellenza","Impegno verso i clienti","Attenzione personalizzata","Fiducia e responsabilità","Innovazione e miglioramento continuo"]}
+    ],
+    abClosing:"In Luxury Real Estate Signature, crediamo che ogni proprietà rappresenti un'opportunità unica per costruire patrimonio, godere di uno stile di vita migliore e raggiungere nuovi obiettivi.",
+    sEy:'I · ESPERIENZA',sTi:'L\'ESPERIENZA SIGNATURE',
+    srv:[
+      {ti:'Proprietà di Lusso',de:"Acquisto, vendita e locazione di immobili eccezionali nel cuore della Riviera Maya."},
+      {ti:'Immigrazione & Residenza',de:"Accompagnamento completo per la vostra residenza temporanea o permanente in Messico."},
+      {ti:'Concierge Deluxe',de:"Servizio su misura disponibile 24 ore su 24 per soddisfare ogni vostra esigenza."},
+      {ti:'Trasporto VIP',de:"Veicoli di pregio e autisti privati a vostra disposizione, 24 ore su 24, 7 giorni su 7."},
+      {ti:'Tour Privati',de:"Esplorate cenotes segreti, rovine maya e spiagge esclusive della Penisola dello Yucatán."},
+      {ti:'Voli in Elicottero',de:"Sorvolate la Riviera Maya e scoprite Tulum dal cielo nel massimo comfort."}
+    ],
+    pEy:'II · IMMOBILIARE',pTi:'PROPRIETÀ SIGNATURE',
+    prpOf:'DI',prpLbl:'PROPRIETÀ',prpLoad:'CARICA',prpMore:'DI PIÙ',prpLoading:'CARICAMENTO...',
+    iEy:'III · INVESTIMENTO',iTi:'PERCHÉ INVESTIRE',
+    iTx:"Il Quintana Roo è tra i mercati immobiliari più dinamici dell'America Latina. Con una crescente domanda di locazione e un costante afflusso di investitori nordamericani ed europei, la Riviera Maya rappresenta un'opportunità di investimento unica.",
+    st:[{n:'526+',l:'Proprietà\nin portafoglio'},{n:'12%',l:'Rendimento\nlocativo medio'},{n:'15+',l:'Anni di\nesperienza'},{n:'98%',l:'Clienti\nsoddisfatti'}],
+    tEy:'IV · TESTIMONIANZE',tTi:'SI FIDANO DI NOI',
+    tst:[
+      {tx:"La nostra esperienza con Luxury Real Estate Signature è stata eccezionale. Il loro team ci ha guidati in ogni fase, offrendo un servizio personalizzato per trovare la casa dei nostri sogni.",au:'Aline & Martin Rieu'},
+      {tx:"La locazione della nostra villa è avvenuta senza intoppi grazie alla professionalità del team. Siamo deliziati dal loro servizio eccezionale.",au:'Sophie Duchamps'},
+      {tx:"Come investitore, sono rimasto colpito dalla profonda conoscenza del mercato, che mi ha permesso di realizzare un investimento molto redditizio.",au:'Paul Simon'}
+    ],
+    cEy:'V · CONTATTI',cTi:'CONTATTACI',
+    tag:"Iniziate il vostro viaggio\nverso l'eccellenza.",
+    cAd:'Indirizzo',cPh:'Telefono',cEm:'Email',
+    fI:'Il vostro interesse',fO:['Acquisto proprietà','Affitto','Servizi Concierge','Immigrazione & Residenza','Investimento'],
+    fN:'Nome completo',fE:'Indirizzo email',fP:'Telefono',fM:'Messaggio',fS:'INVIA RICHIESTA',
+    ftL:'Note Legali',ftP:'Privacy',ftC:'Cookie',
+    ftCp:'© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México'
   }
 };
 
@@ -944,7 +994,7 @@ function render(){
     {
       key:'quienes',
       num:'01',
-      ti: {es:'Quiénes Somos', en:'Who We Are', fr:'Qui Sommes-Nous'},
+      ti: {es:'Quiénes Somos', en:'Who We Are', fr:'Qui Sommes-Nous', it:'Chi Siamo'},
       content: () => `<div class="ab-panel-txt">${
         [...t.abCol1p, ...t.abCol2p].map(p=>`<p>${p}</p>`).join('')
       }</div>`
@@ -952,19 +1002,19 @@ function render(){
     {
       key:'mision',
       num:'02',
-      ti: {es:'Nuestra Misión', en:'Our Mission', fr:'Notre Mission'},
+      ti: {es:'Nuestra Misión', en:'Our Mission', fr:'Notre Mission', it:'La Nostra Missione'},
       content: () => `<div class="ab-panel-txt"><p>${t.abMvv[0].tx}</p></div>`
     },
     {
       key:'vision',
       num:'03',
-      ti: {es:'Nuestra Visión', en:'Our Vision', fr:'Notre Vision'},
+      ti: {es:'Nuestra Visión', en:'Our Vision', fr:'Notre Vision', it:'La Nostra Visione'},
       content: () => `<div class="ab-panel-txt"><p>${t.abMvv[1].tx}</p></div>`
     },
     {
       key:'valores',
       num:'04',
-      ti: {es:'Nuestros Valores', en:'Our Values', fr:'Nos Valeurs'},
+      ti: {es:'Nuestros Valores', en:'Our Values', fr:'Nos Valeurs', it:'I Nostri Valori'},
       content: () => `<div class="ab-vals">${t.abMvv[2].vals.map(v=>`<span class="ab-val">${v}</span>`).join('')}</div>`
     }
   ];
@@ -1147,7 +1197,7 @@ let _unitPanelUnits = [];
 function openUnitPanel(units){
   const name = units[0]['Nombre']||'';
   g('unitBoxTi').textContent = name;
-  g('unitBoxSub').textContent = units.length + ' ' + ({es:'unidades disponibles',en:'available units',fr:'unités disponibles'}[lang]||'units');
+  g('unitBoxSub').textContent = units.length + ' ' + ({es:'unidades disponibles',en:'available units',fr:'unités disponibles',it:'unità disponibili'}[lang]||'units');
   g('unitList').innerHTML = units.map((u,i)=>{
     const beds  = u['Recámaras']||'';
     const baths = u['Baños']||'';
