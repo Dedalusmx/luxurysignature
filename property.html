@@ -238,6 +238,8 @@ img{max-width:100%;display:block}
       <button class="lang-btn active" data-lang="en">EN</button>
       <span class="lang-sep">◆</span>
       <button class="lang-btn" data-lang="es">ES</button>
+      <span class="lang-sep">◆</span>
+      <button class="lang-btn" data-lang="it">IT</button>
     </div>
   </div>
 </nav>
@@ -356,7 +358,12 @@ const L = {
       rec:'Chambres',ban:'Salles de bain',area:'Surface',park:'Parking',yr:'Année',tipo:'Type',
       galLbl:'GALERIE PHOTOS',mapLbl:'LOCALISATION',ctaEy:'PROCHAINE ÉTAPE',
       intLbl:'Cette propriété vous intéresse?',tourLbl:'VISITE VIRTUELLE',waLbl:'NOUS CONTACTER',
-      footHome:'Accueil',footCol:'Collection',toast:{copied:'LIEN COPIÉ',shared:'PARTAGÉ'}}
+      footHome:'Accueil',footCol:'Collection',toast:{copied:'LIEN COPIÉ',shared:'PARTAGÉ'}},
+  it:{back:'INDIETRO',share:'CONDIVIDI',brochure:'BROCHURE',loading:'Caricamento...',notFound:'Proprietà non trovata',notFoundSub:'La proprietà richiesta non è disponibile',viewCol:'Vedi Collezione',
+      rec:'Camere',ban:'Bagni',area:'Superficie',park:'Parcheggio',yr:'Anno',tipo:'Tipo',
+      galLbl:'GALLERIA IMMAGINI',mapLbl:'POSIZIONE',ctaEy:'PASSO SUCCESSIVO',
+      intLbl:'Questa proprietà ti interessa?',tourLbl:'TOUR VIRTUALE',waLbl:'CONTATTACI',
+      footHome:'Home',footCol:'Collezione',toast:{copied:'LINK COPIATO',shared:'CONDIVISO'}}
 };
 
 const g = id => document.getElementById(id);
@@ -477,7 +484,7 @@ function renderProperty(p){
 
   // Amenities
   const amenRaw = p['building_amenities[0]']||p['building_amenities']||'';
-  const amenLabel = {es:'AMENIDADES',en:'AMENITIES',fr:'COMMODITÉS'}[lang];
+  const amenLabel = {es:'AMENIDADES',en:'AMENITIES',fr:'COMMODITÉS',it:'SERVIZI'}[lang];
   const amenDict = {
     en:{
       'sky zone':'Sky Zone','jacuzzi':'Jacuzzi','infinity pool':'Infinity Pool',
@@ -500,10 +507,21 @@ function renderProperty(p){
       'roof garden':'Toit-terrasse','concierge':'Conciergerie','security':'Sécurité',
       'coworking':'Coworking','cinema':'Cinéma','kids area':'Espace enfants',
       'yoga':'Espace yoga','bbq':'Barbecue','storage':'Garde-meuble','laundry':'Buanderie'
+    },
+    it:{
+      'sky zone':'Sky Zone','jacuzzi':'Jacuzzi','infinity pool':'Piscina a sfioro',
+      'elevator':'Ascensore','parking':'Parcheggio','lobby':'Lobby','sun deck':'Solarium',
+      'grill zone':'Area Barbecue','pool':'Piscina','gym':'Palestra','spa':'Spa',
+      'greenhouse':'Serra','bar':'Bar','terrace':'Terrazza','palapa':'Palapa',
+      'productive property':'Proprietà redditizia','solar panels':'Pannelli solari',
+      '26 solar panels':'26 Pannelli solari','well':'Pozzo','rooftop':'Rooftop',
+      'roof garden':'Tetto giardino','concierge':'Concierge','security':'Sicurezza',
+      'coworking':'Coworking','cinema':'Cinema','kids area':'Area bambini',
+      'yoga':'Area yoga','bbq':'Barbecue','storage':'Deposito','laundry':'Lavanderia'
     }
   };
   function translateAmenity(raw){
-    if(lang==='en'||lang==='fr'){
+    if(lang==='en'||lang==='fr'||lang==='it'){
       const dict = amenDict[lang];
       const key = raw.toLowerCase().trim();
       return dict[key] || raw.trim();
@@ -527,6 +545,7 @@ function renderProperty(p){
   function getLangDesc(p){
     if(lang==='fr' && p['description FR'] && p['description FR'].trim()) return p['description FR'];
     if(lang==='en' && p['description EN'] && p['description EN'].trim()) return p['description EN'];
+    if(lang==='it' && p['description IT'] && p['description IT'].trim()) return p['description IT'];
     return p['description']||'';
   }
 
@@ -615,15 +634,15 @@ function renderProperty(p){
   // Auto-fill values for form
   const listing=(p['listing_type']||'').toLowerCase();
   const autoInterest = listing.includes('rent')
-    ? {es:'Renta',en:'Rental',fr:'Location'}[lang]||'Rental'
-    : {es:'Compra de propiedad',en:'Property purchase',fr:'Achat de propriété'}[lang]||'Property purchase';
+    ? {es:'Renta',en:'Rental',fr:'Location',it:'Affitto'}[lang]||'Rental'
+    : {es:'Compra de propiedad',en:'Property purchase',fr:'Achat de propriété',it:'Acquisto proprietà'}[lang]||'Property purchase';
   const autoMsg = propName + (waUnit ? ' —'+waUnit : '');
 
   // CTA con formulario minimalista integrado
-  const fN={es:'Nombre',en:'Name',fr:'Nom'}[lang];
-  const fE={es:'Correo electrónico',en:'Email',fr:'E-mail'}[lang];
-  const fP={es:'Teléfono',en:'Phone',fr:'Téléphone'}[lang];
-  const fS={es:'ENVIAR',en:'SEND',fr:'ENVOYER'}[lang];
+  const fN={es:'Nombre',en:'Name',fr:'Nom',it:'Nome'}[lang];
+  const fE={es:'Correo electrónico',en:'Email',fr:'E-mail',it:'Email'}[lang];
+  const fP={es:'Teléfono',en:'Phone',fr:'Téléphone',it:'Telefono'}[lang];
+  const fS={es:'ENVIAR',en:'SEND',fr:'ENVOYER',it:'INVIA'}[lang];
 
   g('dCta').innerHTML=`
     <div class="d-cta-panel">
@@ -730,7 +749,8 @@ function requestBrochure(){
   const msg = {
     es: 'Requiero el brochure de ' + name + (unit?' — '+unit:''),
     en: 'I require a brochure for ' + name + (unit?' — '+unit:''),
-    fr: 'Je souhaite le brochure de ' + name + (unit?' — '+unit:'')
+    fr: 'Je souhaite le brochure de ' + name + (unit?' — '+unit:''),
+    it: 'Richiedo il brochure per ' + name + (unit?' — '+unit:'')
   }[lang];
   const msgField = document.getElementById('cf-message');
   if(msgField) msgField.value = msg;
