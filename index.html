@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -602,8 +602,8 @@ function parseListingType(val){
 
 function statLabels(){
   return {
-    rec: {fr:'Ch.',en:'Beds',es:'Rec.'}[lang],
-    ban: {fr:'SDB',en:'Baths',es:'Baños'}[lang]
+    rec: {fr:'Ch.',en:'Beds',es:'Rec.',it:'Cam.'}[lang],
+    ban: {fr:'SDB',en:'Baths',es:'Baños',it:'Bagni'}[lang]
   };
 }
 
@@ -618,16 +618,18 @@ function formatArea(area, unit){
 function getDesc(p){
   if(lang==='fr' && p['description FR'] && p['description FR'].trim()) return p['description FR'];
   if(lang==='en' && p['description EN'] && p['description EN'].trim()) return p['description EN'];
+  if(lang==='it' && p['description IT'] && p['description IT'].trim()) return p['description IT'];
   return p['description']||'';
 }
 function renderPropsFromData(data){
   renderedProps = data;
   const grid = g('prpG');
-  const ctaMap = {fr:'DÉCOUVRIR',en:'DISCOVER',es:'DESCUBRIR'};
+  const ctaMap = {fr:'DÉCOUVRIR',en:'DISCOVER',es:'DESCUBRIR',it:'SCOPRI'};
   const cta = ctaMap[lang];
 
   if(!data.length){
-    grid.innerHTML = '<div class="prp-loading" style="animation:none;opacity:.5">SIN RESULTADOS</div>';
+    const noRes = {fr:'AUCUN RÉSULTAT',en:'NO RESULTS',es:'SIN RESULTADOS',it:'NESSUN RISULTATO'}[lang]||'NO RESULTS';
+    grid.innerHTML = `<div class="prp-loading" style="animation:none;opacity:.5">${noRes}</div>`;
     return;
   }
 
@@ -712,7 +714,8 @@ function renderFiltered(){
   const labels = {
     es:{btn:'VER CATÁLOGO COMPLETO', sub:'Explora todas nuestras propiedades disponibles'},
     en:{btn:'VIEW FULL CATALOGUE',   sub:'Explore all our available properties'},
-    fr:{btn:'VOIR LE CATALOGUE',     sub:'Découvrez toutes nos propriétés disponibles'}
+    fr:{btn:'VOIR LE CATALOGUE',     sub:'Découvrez toutes nos propriétés disponibles'},
+    it:{btn:'VEDI CATALOGO COMPLETO',sub:'Esplora tutte le nostre proprietà disponibili'}
   };
   const lb = labels[lang] || labels.es;
   moreWrap.innerHTML = `
@@ -1095,7 +1098,7 @@ function render(){
     <p class="cnt-tagline">${t.tag.replace('\n','<br>')}</p>
     <p class="cnt-lbl">${t.cAd}</p>
     <p class="cnt-val">Calle 6 Norte Bis., Centro<br>Playa del Carmen, Quintana Roo<br>
-      <a href="https://www.google.com/maps?q=20.626726043490706,-87.07472337603284" target="_blank" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-family:'Raleway',sans-serif;font-weight:300">${{es:'ABRIR EN MAPS',en:'OPEN IN MAPS',fr:'OUVRIR DANS MAPS'}[lang]} →</a>
+      <a href="https://www.google.com/maps?q=20.626726043490706,-87.07472337603284" target="_blank" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-family:'Raleway',sans-serif;font-weight:300">${{es:'ABRIR EN MAPS',en:'OPEN IN MAPS',fr:'OUVRIR DANS MAPS',it:'APRI IN MAPS'}[lang]} →</a>
     </p>
     <p class="cnt-lbl">${t.cPh}</p>
     <p class="cnt-val">
