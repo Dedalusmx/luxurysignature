@@ -784,7 +784,7 @@ function submitContactForm(){
   const email=(g('cf-email')?.value||'').trim();
   const dialCode=(g('cf-dialcode')?.value||'').trim();
   const phoneNum=(g('cf-phone')?.value||'').trim();
-  const phone=[dialCode,phoneNum].filter(Boolean).join(' ');
+  const phone=[dialCode,phoneNum].filter(Boolean).join('').replace(/\D/g,'');
   const interest=(g('cf-interest')?.value||'').trim();
   const message=(g('cf-message')?.value||'').trim();
   const btn=g('cf-submit');
