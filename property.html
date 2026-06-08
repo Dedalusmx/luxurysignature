@@ -185,6 +185,14 @@ img{max-width:100%;display:block}
 .cta-send{width:100%;padding:15px;background:var(--gold);color:var(--bg);border:none;font-family:'Raleway',sans-serif;font-size:9px;font-weight:500;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:background .25s;margin-top:4px}
 .cta-send:hover{background:var(--gold-lt)}
 .cta-send:disabled{background:var(--gold-dk);cursor:default}
+/* ── CTA PHONE ROW ── */
+.cta-phone-row{display:flex;align-items:center;gap:0;background:rgba(240,235,225,.1);border-bottom:1px solid rgba(196,163,90,.55);transition:border-color .3s,background .3s}
+.cta-phone-row:focus-within{border-color:var(--gold);background:rgba(240,235,225,.14)}
+.cta-phone-row .cta-dial,.cta-phone-row .cta-phone-inp{background:transparent;border:none!important;outline:none}
+.cta-dial{flex-shrink:0;width:108px;padding:14px 14px 14px 10px;font-size:12px;color:rgba(240,235,225,.7);cursor:pointer;font-family:'Raleway',sans-serif;font-weight:300;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M0 0l4.5 5L9 0z' fill='%238A8478'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;border-right:1px solid rgba(196,163,90,.25)!important}
+.cta-dial option{background:#151310;color:var(--text)}
+.cta-phone-inp{flex:1;padding:14px 10px 14px 10px;font-size:13px;color:var(--text);font-family:'Raleway',sans-serif;font-weight:300;text-align:left}
+.cta-phone-inp::placeholder{color:rgba(240,235,225,.55);font-size:12px;letter-spacing:1px}
 #propFooter{padding:32px 6%;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:0}
 .foot-copy{font-size:9px;letter-spacing:2px;color:var(--dim)}
 .foot-links{display:flex;gap:24px}
@@ -367,6 +375,27 @@ const L = {
 };
 
 const g = id => document.getElementById(id);
+
+// ── DIAL CODES ──
+const DIAL_COUNTRIES = [
+  {c:'CA',d:'+1',   l:'🇨🇦 +1'},
+  {c:'FR',d:'+33',  l:'🇫🇷 +33'},
+  {c:'MX',d:'+52',  l:'🇲🇽 +52'},
+  {c:'US',d:'+1',   l:'🇺🇸 +1'},
+  {c:'BE',d:'+32',  l:'🇧🇪 +32'},
+  {c:'CH',d:'+41',  l:'🇨🇭 +41'},
+  {c:'DE',d:'+49',  l:'🇩🇪 +49'},
+  {c:'ES',d:'+34',  l:'🇪🇸 +34'},
+  {c:'GB',d:'+44',  l:'🇬🇧 +44'},
+  {c:'IT',d:'+39',  l:'🇮🇹 +39'},
+  {c:'LU',d:'+352', l:'🇱🇺 +352'},
+  {c:'MC',d:'+377', l:'🇲🇨 +377'},
+  {c:'NL',d:'+31',  l:'🇳🇱 +31'},
+  {c:'PT',d:'+351', l:'🇵🇹 +351'},
+];
+const DIAL_OPTIONS = DIAL_COUNTRIES.map(
+  (x,i) => `<option value="${x.d}"${i===0?' selected':''}>${x.l}</option>`
+).join('');
 
 function imgUrl(url, w, h){
   if(!url) return '';
@@ -655,7 +684,10 @@ function renderProperty(p){
           <input type="hidden" id="cf-message" value="${autoMsg}">
           <div class="cta-fields">
             <input class="cta-inp" id="cf-name" type="text" placeholder="${fN}">
-            <input class="cta-inp" id="cf-phone" type="tel" placeholder="${fP}">
+            <div class="cta-phone-row">
+              <select class="cta-dial" id="cf-dialcode">${DIAL_OPTIONS}</select>
+              <input class="cta-phone-inp" id="cf-phone" type="tel" placeholder="${fP}">
+            </div>
             <input class="cta-inp" id="cf-email" type="email" placeholder="${fE}">
           </div>
           <button class="cta-send" id="cf-submit" onclick="submitContactForm()">${fS}</button>
@@ -773,7 +805,9 @@ function closeFormOverlay(){ g('formOverlay').classList.remove('open'); }
 function submitContactForm(){
   const name=(g('cf-name')?.value||'').trim();
   const email=(g('cf-email')?.value||'').trim();
-  const phone=(g('cf-phone')?.value||'').trim();
+  const dialCode=(g('cf-dialcode')?.value||'').trim();
+  const phoneRaw=(g('cf-phone')?.value||'').trim();
+  const phone=phoneRaw?(dialCode?dialCode+' '+phoneRaw:phoneRaw):'';
   const interest=(g('cf-interest')?.value||'').trim();
   const message=(g('cf-message')?.value||'').trim();
   const btn=g('cf-submit');
