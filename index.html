@@ -323,6 +323,14 @@ img{max-width:100%;display:block}
 .frm-r input:focus,.frm-r textarea:focus,.frm-r select:focus{border-color:var(--gold)}
 .frm-r textarea{resize:none;height:90px}
 .frm-r select option{background:#151310;color:var(--text)}
+/* ── PHONE ROW ── */
+.phone-row{display:flex;align-items:flex-end;gap:0;border-bottom:1px solid rgba(196,163,90,.2);transition:border-color .3s}
+.phone-row:focus-within{border-color:var(--gold)}
+.phone-row .phone-dial,.phone-row .phone-num{border-bottom:none!important;outline:none}
+.phone-dial{flex-shrink:0;width:112px;padding:10px 18px 10px 0;font-size:13px;background:transparent;border:none;color:var(--dim);cursor:pointer;font-family:'Raleway',sans-serif;font-weight:300;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M0 0l4.5 5L9 0z' fill='%238A8478'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 2px center;border-right:1px solid rgba(196,163,90,.15)}
+.phone-dial option{background:#151310;color:var(--text)}
+.phone-num{flex:1;padding:10px 0 10px 10px;font-size:14px;background:transparent;border:none;color:var(--text);font-family:'Raleway',sans-serif;font-weight:300}
+.phone-num::placeholder{color:rgba(138,132,120,.55);font-weight:300;font-size:13px}
 .frm-sub{width:100%;padding:17px;background:var(--gold);color:var(--bg);border:none;font-family:'Raleway',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:background .25s;margin-top:8px}
 .frm-sub:hover{background:var(--gold-lt)}
 
@@ -824,7 +832,7 @@ const L = {
     tag:"Commençons votre voyage\nvers l'exception.",
     cAd:'Adresse',cPh:'Téléphone',cEm:'E-mail',
     fI:'Votre intérêt',fO:["Achat de propriété","Location","Conciergerie","Immigration & Résidence","Investissement"],
-    fN:'Nom complet',fE:'Adresse e-mail',fP:'Téléphone',fM:'Message',fS:'ENVOYER LA DEMANDE',
+    fN:'Nom complet',fE:'Adresse e-mail',fP:'Téléphone',fPh:'Numéro de téléphone',fM:'Message',fS:'ENVOYER LA DEMANDE',
     ftL:'Mentions légales',ftP:'Confidentialité',ftC:'Cookies',
     ftCp:'© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México'
   },
@@ -871,7 +879,7 @@ const L = {
     tag:"Begin your journey\ntoward excellence.",
     cAd:'Address',cPh:'Phone',cEm:'Email',
     fI:'Your interest',fO:['Property purchase','Rental','Concierge services','Immigration & Residency','Investment'],
-    fN:'Full name',fE:'Email address',fP:'Phone number',fM:'Message',fS:'SEND REQUEST',
+    fN:'Full name',fE:'Email address',fP:'Phone',fPh:'Phone number',fM:'Message',fS:'SEND REQUEST',
     ftL:'Legal Notice',ftP:'Privacy Policy',ftC:'Cookies',
     ftCp:'© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México'
   },
@@ -918,7 +926,7 @@ const L = {
     tag:"Comience su viaje\nhacia la excelencia.",
     cAd:'Dirección',cPh:'Teléfono',cEm:'Correo',
     fI:'Su interés',fO:['Compra de propiedad','Renta','Concierge','Migración & Residencia','Inversión'],
-    fN:'Nombre completo',fE:'Correo electrónico',fP:'Teléfono',fM:'Mensaje',fS:'ENVIAR SOLICITUD',
+    fN:'Nombre completo',fE:'Correo electrónico',fP:'Teléfono',fPh:'Número de teléfono',fM:'Mensaje',fS:'ENVIAR SOLICITUD',
     ftL:'Aviso Legal',ftP:'Privacidad',ftC:'Cookies',
     ftCp:'© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México'
   },
@@ -965,7 +973,7 @@ const L = {
     tag:"Iniziate il vostro viaggio\nverso l'eccellenza.",
     cAd:'Indirizzo',cPh:'Telefono',cEm:'Email',
     fI:'Il vostro interesse',fO:['Acquisto proprietà','Affitto','Servizi Concierge','Immigrazione & Residenza','Investimento'],
-    fN:'Nome completo',fE:'Indirizzo email',fP:'Telefono',fM:'Messaggio',fS:'INVIA RICHIESTA',
+    fN:'Nome completo',fE:'Indirizzo email',fP:'Telefono',fPh:'Numero di telefono',fM:'Messaggio',fS:'INVIA RICHIESTA',
     ftL:'Note Legali',ftP:'Privacy',ftC:'Cookie',
     ftCp:'© 2025 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México'
   }
@@ -1113,7 +1121,12 @@ function render(){
       <div class="frm-r"><label>${t.fE}</label><input id="cf-email" type="email" placeholder="${t.fE}"></div>
     </div>
     <div class="frm-2">
-      <div class="frm-r"><label>${t.fP}</label><input id="cf-phone" type="tel" placeholder="${t.fP}"></div>
+      <div class="frm-r"><label>${t.fP}</label>
+        <div class="phone-row">
+          <select class="phone-dial" id="cf-dialcode">${DIAL_OPTIONS}</select>
+          <input class="phone-num" id="cf-phone" type="tel" placeholder="${t.fPh}">
+        </div>
+      </div>
       <div class="frm-r"><label>${t.fI}</label>
         <select id="cf-interest"><option value="" disabled selected>${t.fI}</option>${t.fO.map(o=>`<option>${o}</option>`).join('')}</select>
       </div>
@@ -1179,6 +1192,27 @@ function observe(){
   },{threshold:0.1});
   document.querySelectorAll('.rev').forEach(el=>ob.observe(el));
 }
+
+// ── DIAL CODES ──
+const DIAL_COUNTRIES = [
+  {c:'CA',d:'+1',   l:'🇨🇦 +1'},
+  {c:'FR',d:'+33',  l:'🇫🇷 +33'},
+  {c:'MX',d:'+52',  l:'🇲🇽 +52'},
+  {c:'US',d:'+1',   l:'🇺🇸 +1'},
+  {c:'BE',d:'+32',  l:'🇧🇪 +32'},
+  {c:'CH',d:'+41',  l:'🇨🇭 +41'},
+  {c:'DE',d:'+49',  l:'🇩🇪 +49'},
+  {c:'ES',d:'+34',  l:'🇪🇸 +34'},
+  {c:'GB',d:'+44',  l:'🇬🇧 +44'},
+  {c:'IT',d:'+39',  l:'🇮🇹 +39'},
+  {c:'LU',d:'+352', l:'🇱🇺 +352'},
+  {c:'MC',d:'+377', l:'🇲🇨 +377'},
+  {c:'NL',d:'+31',  l:'🇳🇱 +31'},
+  {c:'PT',d:'+351', l:'🇵🇹 +351'},
+];
+const DIAL_OPTIONS = DIAL_COUNTRIES.map(
+  (x,i) => `<option value="${x.d}"${i===0?' selected':''}>${x.l}</option>`
+).join('');
 
 render();
 
@@ -1279,7 +1313,9 @@ function closeFormOverlay(){
 function submitContactForm(){
   const name     = (document.getElementById('cf-name')?.value||'').trim();
   const email    = (document.getElementById('cf-email')?.value||'').trim();
-  const phone    = (document.getElementById('cf-phone')?.value||'').trim();
+  const dialCode = (document.getElementById('cf-dialcode')?.value||'').trim();
+  const phoneRaw = (document.getElementById('cf-phone')?.value||'').trim();
+  const phone    = phoneRaw ? (dialCode ? dialCode + ' ' + phoneRaw : phoneRaw) : '';
   const interest = (document.getElementById('cf-interest')?.value||'').trim();
   const message  = (document.getElementById('cf-message')?.value||'').trim();
   const btn      = document.getElementById('cf-submit');
