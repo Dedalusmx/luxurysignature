@@ -1286,7 +1286,7 @@ function submitContactForm(){
   const email    = (document.getElementById('cf-email')?.value||'').trim();
   const dialCode = (document.getElementById('cf-dialcode')?.value||'').trim();
   const phoneNum = (document.getElementById('cf-phone')?.value||'').trim();
-  const phone    = [dialCode, phoneNum].filter(Boolean).join(' ');
+  const phone    = [dialCode, phoneNum].filter(Boolean).join('').replace(/\D/g,'');
   const interest = (document.getElementById('cf-interest')?.value||'').trim();
   const message  = (document.getElementById('cf-message')?.value||'').trim();
   const btn      = document.getElementById('cf-submit');
