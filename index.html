@@ -209,6 +209,30 @@ img{max-width:100%;display:block}
 .ab-val{font-size:11px;font-weight:300;letter-spacing:1.5px;color:rgba(240,235,225,.5);padding:7px 18px;border:1px solid rgba(196,163,90,.15)}
 /* Closing */
 .ab-closing{max-width:760px;margin:0 auto;text-align:center;font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2vw,24px);font-weight:300;font-style:italic;line-height:1.7;color:rgba(240,235,225,.7)}
+
+/* ── TEAM (5th about accordion item) ── */
+.ab-item.open.ab-team-item .ab-panel{max-height:2400px}
+.tm-loading{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--dim);padding:32px 0;animation:pulse 1.8s ease-in-out infinite}
+.tm-tier{margin-bottom:48px}
+.tm-tier-label{font-size:8px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);opacity:.55;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid rgba(196,163,90,.08)}
+.tm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:32px 24px}
+.tm-grid.tm-top{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));max-width:720px}
+.tm-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0}
+.tm-avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;border:1px solid rgba(196,163,90,.18);filter:grayscale(18%);transition:filter .4s,transform .4s;background:var(--bg2)}
+.tm-top .tm-avatar{width:108px;height:108px}
+.tm-card:hover .tm-avatar{filter:grayscale(0);transform:scale(1.04)}
+.tm-avatar-fallback{width:88px;height:88px;border-radius:50%;background:var(--bg2);border:1px solid rgba(196,163,90,.12);display:flex;align-items:center;justify-content:center;color:var(--gold);opacity:.3;font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic}
+.tm-top .tm-avatar-fallback{width:108px;height:108px}
+.tm-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;color:var(--text);margin-top:16px;margin-bottom:4px;line-height:1.2}
+.tm-role{font-size:8px;font-weight:300;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:12px}
+.tm-socials{display:flex;gap:10px;align-items:center;justify-content:center}
+.tm-social{color:var(--dim);transition:color .2s,transform .2s;display:flex;align-items:center}
+.tm-social:hover{color:var(--gold);transform:translateY(-2px)}
+.tm-social svg{width:13px;height:13px;fill:currentColor}
+@media(max-width:600px){
+  .tm-grid{grid-template-columns:repeat(2,1fr);gap:28px 16px}
+  .tm-grid.tm-top{grid-template-columns:repeat(2,1fr)}
+}
 @media(max-width:600px){
   .ab-panel-inner{padding:4px 0 28px 28px}
   .ab-trigger{padding:22px 0}
@@ -1023,11 +1047,17 @@ function render(){
       num:'04',
       ti: {es:'Nuestros Valores', en:'Our Values', fr:'Nos Valeurs', it:'I Nostri Valori'},
       content: () => `<div class="ab-vals">${t.abMvv[2].vals.map(v=>`<span class="ab-val">${v}</span>`).join('')}</div>`
+    },
+    {
+      key:'equipo',
+      num:'05',
+      ti: {es:'Nuestro Equipo', en:'Our Team', fr:'Notre Équipe', it:'Il Nostro Team'},
+      content: () => `<div id="tmContainer"><p class="tm-loading">${{es:'CARGANDO…',en:'LOADING…',fr:'CHARGEMENT…',it:'CARICAMENTO…'}[lang]}</p></div>`
     }
   ];
 
   g('abAccordion').innerHTML = abItems.map(item=>`
-    <div class="ab-item" data-key="${item.key}">
+    <div class="ab-item${item.key==='equipo'?' ab-team-item':''}" data-key="${item.key}">
       <button class="ab-trigger" onclick="toggleAbout(this,'${item.key}','${item.ti[lang]}')">
         <div class="ab-trigger-left">
           <span class="ab-trigger-num">${item.num}</span>
@@ -1143,6 +1173,11 @@ function toggleAbout(btn, key, label){
 
   if(!isOpen){
     item.classList.add('open');
+    // Cargar equipo si es la sección correspondiente y aún no se cargó
+    if(key==='equipo'){
+      const c = document.getElementById('tmContainer');
+      if(c && c.querySelector('.tm-loading')) loadTeam();
+    }
     // Analytics — dispara evento cuando usuario abre sección
     if(typeof gtag === 'function'){
       gtag('event','about_section_open',{
@@ -1153,6 +1188,121 @@ function toggleAbout(btn, key, label){
       });
     }
   }
+}
+
+// ── TEAM — carga desde Google Sheets ──
+const TEAM_CSV = 'https://docs.google.com/spreadsheets/d/11P-MqBtSLnvZ1ZsDdBuFnWaKJLv74PfwwUw5EyYjPz0/pub?gid=1756163250&single=true&output=csv';
+
+// Orden jerárquico de roles (ajustar si los valores en la hoja difieren)
+const ROLE_ORDER = ['director','directora','ceo','gerente','manager','coordinador','coordinadora','asesor','asesora','advisor','admin','administrador','administradora'];
+
+function roleRank(rol){
+  const r = (rol||'').toLowerCase().trim();
+  const idx = ROLE_ORDER.findIndex(k => r.includes(k));
+  return idx === -1 ? 99 : idx;
+}
+
+// SVG íconos sociales
+const FB_SVG = `<svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`;
+const IG_SVG = `<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2"/></svg>`;
+
+function tmFallback(img){
+  const initial = img.dataset.initial || '?';
+  const cls = img.classList.contains('tm-avatar') ? 'tm-avatar-fallback' : 'tm-avatar-fallback';
+  const div = document.createElement('div');
+  div.className = cls;
+  div.textContent = initial;
+  img.parentNode.replaceChild(div, img);
+}
+
+function loadTeam(){
+  Papa.parse(TEAM_CSV, {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: function(res){
+      const container = document.getElementById('tmContainer');
+      if(!container) return;
+
+      const rows = (res.data||[]).filter(r=>{
+        const status = (r['Status']||'').trim();
+        return status === 'TRUE' || status === 'true' || status === '1';
+      });
+
+      if(!rows.length){
+        container.innerHTML = `<p style="font-size:12px;color:var(--dim);letter-spacing:2px">— TEAM COMING SOON —</p>`;
+        return;
+      }
+
+      // Ordenar por jerarquía de rol
+      rows.sort((a,b) => roleRank(a['Rol']) - roleRank(b['Rol']));
+
+      // Agrupar en: nivel alto (rank < 4) vs resto
+      const topRows  = rows.filter(r => roleRank(r['Rol']) < 4);
+      const restRows = rows.filter(r => roleRank(r['Rol']) >= 4);
+
+      const tierLabels = {
+        top:  {es:'DIRECCIÓN',      en:'LEADERSHIP',        fr:'DIRECTION',        it:'DIREZIONE'},
+        rest: {es:'EQUIPO ASESOR',  en:'ADVISORY TEAM',     fr:'ÉQUIPE CONSEIL',   it:'TEAM CONSULENZA'}
+      };
+
+      function cardHTML(r, isTop){
+        const name   = (r['Assignee']||'').trim();
+        const rol    = (r['Rol']||'').trim();
+        const picUrl = (r['Pic url']||r['Pic_url']||r['pic url']||'').trim();
+        const fb     = (r['Facebook']||'').trim();
+        const ig     = (r['Instagram']||'').trim();
+
+        const initial = name ? name.charAt(0).toUpperCase() : '?';
+        const imgEl = picUrl
+          ? `<img class="tm-avatar" src="${picUrl}" alt="${name}" loading="lazy" onerror="tmFallback(this)" data-initial="${initial}">`
+          : `<div class="tm-avatar-fallback">${initial}</div>`;
+
+        const socials = [
+          fb ? `<a class="tm-social" href="${fb.startsWith('http')?fb:'https://'+fb}" target="_blank" rel="noopener" title="Facebook">${FB_SVG}</a>` : '',
+          ig ? `<a class="tm-social" href="${ig.startsWith('http')?ig:'https://'+ig}" target="_blank" rel="noopener" title="Instagram">${IG_SVG}</a>` : ''
+        ].join('');
+
+        return `<div class="tm-card">
+          ${imgEl}
+          <p class="tm-name">${name}</p>
+          <p class="tm-role">${rol}</p>
+          ${socials ? `<div class="tm-socials">${socials}</div>` : ''}
+        </div>`;
+      }
+
+      let html = '';
+
+      if(topRows.length){
+        html += `<div class="tm-tier">
+          <p class="tm-tier-label">${tierLabels.top[lang]||tierLabels.top.en}</p>
+          <div class="tm-grid tm-top">${topRows.map(r=>cardHTML(r,true)).join('')}</div>
+        </div>`;
+      }
+      if(restRows.length){
+        html += `<div class="tm-tier">
+          <p class="tm-tier-label">${tierLabels.rest[lang]||tierLabels.rest.en}</p>
+          <div class="tm-grid">${restRows.map(r=>cardHTML(r,false)).join('')}</div>
+        </div>`;
+      }
+
+      container.innerHTML = html;
+      observe();
+
+      // Analytics — team_view
+      if(typeof gtag === 'function'){
+        gtag('event','team_view',{
+          event_category:'About Us',
+          members_count: rows.length,
+          language: lang
+        });
+      }
+    },
+    error: function(){
+      const c = document.getElementById('tmContainer');
+      if(c) c.innerHTML = `<p style="font-size:11px;letter-spacing:2px;color:var(--dim)">— TEAM UNAVAILABLE —</p>`;
+    }
+  });
 }
 
 // ── LANG ──
