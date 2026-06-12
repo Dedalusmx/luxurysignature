@@ -1199,6 +1199,8 @@ function roleRank(rol){
 // SVG íconos sociales
 const FB_SVG = `<svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`;
 const IG_SVG = `<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2"/></svg>`;
+const LI_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`;
+const YT_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#080806"/></svg>`;
 
 function tmFallback(img){
   const initial = img.dataset.initial || '?';
@@ -1237,6 +1239,8 @@ function loadTeam(){
         const picUrl = (r['Pic url']||r['Pic_url']||r['pic url']||'').trim();
         const fb     = (r['Facebook']||'').trim();
         const ig     = (r['Instagram']||'').trim();
+        const li     = (r['LinkedIn']||r['Linkedin']||'').trim();
+        const yt     = (r['YouTube']||r['Youtube']||r['youtube']||'').trim();
 
         const initial = name ? name.charAt(0).toUpperCase() : '?';
         const imgEl = picUrl
@@ -1245,7 +1249,9 @@ function loadTeam(){
 
         const socials = [
           fb ? `<a class="tm-social" href="${fb.startsWith('http')?fb:'https://'+fb}" target="_blank" rel="noopener" title="Facebook">${FB_SVG}</a>` : '',
-          ig ? `<a class="tm-social" href="${ig.startsWith('http')?ig:'https://'+ig}" target="_blank" rel="noopener" title="Instagram">${IG_SVG}</a>` : ''
+          ig ? `<a class="tm-social" href="${ig.startsWith('http')?ig:'https://'+ig}" target="_blank" rel="noopener" title="Instagram">${IG_SVG}</a>` : '',
+          li ? `<a class="tm-social" href="${li.startsWith('http')?li:'https://'+li}" target="_blank" rel="noopener" title="LinkedIn">${LI_SVG}</a>` : '',
+          yt ? `<a class="tm-social" href="${yt.startsWith('http')?yt:'https://'+yt}" target="_blank" rel="noopener" title="YouTube">${YT_SVG}</a>` : ''
         ].join('');
 
         return `<div class="tm-card">
