@@ -213,16 +213,11 @@ img{max-width:100%;display:block}
 /* ── TEAM (5th about accordion item) ── */
 .ab-item.open.ab-team-item .ab-panel{max-height:2400px}
 .tm-loading{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--dim);padding:32px 0;animation:pulse 1.8s ease-in-out infinite}
-.tm-tier{margin-bottom:48px}
-.tm-tier-label{font-size:8px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);opacity:.55;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid rgba(196,163,90,.08)}
 .tm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:32px 24px}
-.tm-grid.tm-top{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));max-width:720px}
 .tm-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0}
 .tm-avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;border:1px solid rgba(196,163,90,.18);filter:grayscale(18%);transition:filter .4s,transform .4s;background:var(--bg2)}
-.tm-top .tm-avatar{width:108px;height:108px}
 .tm-card:hover .tm-avatar{filter:grayscale(0);transform:scale(1.04)}
 .tm-avatar-fallback{width:88px;height:88px;border-radius:50%;background:var(--bg2);border:1px solid rgba(196,163,90,.12);display:flex;align-items:center;justify-content:center;color:var(--gold);opacity:.3;font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic}
-.tm-top .tm-avatar-fallback{width:108px;height:108px}
 .tm-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;color:var(--text);margin-top:16px;margin-bottom:4px;line-height:1.2}
 .tm-role{font-size:8px;font-weight:300;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:12px}
 .tm-socials{display:flex;gap:10px;align-items:center;justify-content:center}
@@ -231,7 +226,6 @@ img{max-width:100%;display:block}
 .tm-social svg{width:13px;height:13px;fill:currentColor}
 @media(max-width:600px){
   .tm-grid{grid-template-columns:repeat(2,1fr);gap:28px 16px}
-  .tm-grid.tm-top{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:600px){
   .ab-panel-inner{padding:4px 0 28px 28px}
@@ -1194,7 +1188,7 @@ function toggleAbout(btn, key, label){
 const TEAM_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdEUO8SD2sTqn38dXV8VCzCddB5caiUUKpcbu6ufFsGYvdqEDadT67S88ltOsQamnVQ6itfSIMnv8r/pub?gid=247088321&single=true&output=csv';
 
 // Orden jerárquico de roles (ajustar si los valores en la hoja difieren)
-const ROLE_ORDER = ['director','directora','ceo','gerente','manager','coordinador','coordinadora','asesor','asesora','advisor','admin','administrador','administradora'];
+const ROLE_ORDER = ['president','director','directora','ceo','gerente','manager','coordinador','coordinadora','asesor','asesora','advisor','admin','administrador','administradora'];
 
 function roleRank(rol){
   const r = (rol||'').toLowerCase().trim();
@@ -1237,16 +1231,7 @@ function loadTeam(){
       // Ordenar por jerarquía de rol
       rows.sort((a,b) => roleRank(a['Rol']) - roleRank(b['Rol']));
 
-      // Agrupar en: nivel alto (rank < 4) vs resto
-      const topRows  = rows.filter(r => roleRank(r['Rol']) < 4);
-      const restRows = rows.filter(r => roleRank(r['Rol']) >= 4);
-
-      const tierLabels = {
-        top:  {es:'DIRECCIÓN',      en:'LEADERSHIP',        fr:'DIRECTION',        it:'DIREZIONE'},
-        rest: {es:'EQUIPO ASESOR',  en:'ADVISORY TEAM',     fr:'ÉQUIPE CONSEIL',   it:'TEAM CONSULENZA'}
-      };
-
-      function cardHTML(r, isTop){
+      function cardHTML(r){
         const name   = (r['Assignee']||'').trim();
         const rol    = (r['Rol']||'').trim();
         const picUrl = (r['Pic url']||r['Pic_url']||r['pic url']||'').trim();
@@ -1271,25 +1256,9 @@ function loadTeam(){
         </div>`;
       }
 
-      let html = '';
-
-      if(topRows.length){
-        html += `<div class="tm-tier">
-          <p class="tm-tier-label">${tierLabels.top[lang]||tierLabels.top.en}</p>
-          <div class="tm-grid tm-top">${topRows.map(r=>cardHTML(r,true)).join('')}</div>
-        </div>`;
-      }
-      if(restRows.length){
-        html += `<div class="tm-tier">
-          <p class="tm-tier-label">${tierLabels.rest[lang]||tierLabels.rest.en}</p>
-          <div class="tm-grid">${restRows.map(r=>cardHTML(r,false)).join('')}</div>
-        </div>`;
-      }
-
-      container.innerHTML = html;
+      container.innerHTML = `<div class="tm-grid">${rows.map(r=>cardHTML(r)).join('')}</div>`;
       observe();
 
-      // Analytics — team_view
       if(typeof gtag === 'function'){
         gtag('event','team_view',{
           event_category:'About Us',
