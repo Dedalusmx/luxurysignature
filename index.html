@@ -1191,7 +1191,7 @@ function toggleAbout(btn, key, label){
 }
 
 // ── TEAM — carga desde Google Sheets ──
-const TEAM_CSV = 'https://docs.google.com/spreadsheets/d/11P-MqBtSLnvZ1ZsDdBuFnWaKJLv74PfwwUw5EyYjPz0/pub?gid=1756163250&single=true&output=csv';
+const TEAM_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdEUO8SD2sTqn38dXV8VCzCddB5caiUUKpcbu6ufFsGYvdqEDadT67S88ltOsQamnVQ6itfSIMnv8r/pub?gid=247088321&single=true&output=csv';
 
 // Orden jerárquico de roles (ajustar si los valores en la hoja difieren)
 const ROLE_ORDER = ['director','directora','ceo','gerente','manager','coordinador','coordinadora','asesor','asesora','advisor','admin','administrador','administradora'];
@@ -1298,7 +1298,8 @@ function loadTeam(){
         });
       }
     },
-    error: function(){
+    error: function(err){
+      console.error('[LRS Team] Error PapaParse:', err);
       const c = document.getElementById('tmContainer');
       if(c) c.innerHTML = `<p style="font-size:11px;letter-spacing:2px;color:var(--dim)">— TEAM UNAVAILABLE —</p>`;
     }
