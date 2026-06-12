@@ -206,11 +206,26 @@ img{max-width:100%;display:block}
 .foot-links a:hover{color:var(--gold)}
 
 /* ── LIGHTBOX ── */
-#lightbox{position:fixed;inset:0;z-index:1500;background:rgba(8,8,6,.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;cursor:zoom-out;backdrop-filter:blur(6px)}
+#lightbox{position:fixed;inset:0;z-index:1500;background:rgba(8,8,6,.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px)}
 #lightbox.open{opacity:1;pointer-events:auto}
-#lbImg{max-width:90vw;max-height:90vh;object-fit:contain;transform:scale(.96);transition:transform .35s}
+#lbImg{max-width:88vw;max-height:85vh;object-fit:contain;transform:scale(.96);transition:transform .3s,opacity .2s;cursor:default;display:block;user-select:none;-webkit-user-drag:none}
 #lightbox.open #lbImg{transform:scale(1)}
-.lb-close{position:absolute;top:24px;right:24px;background:none;border:1px solid rgba(196,163,90,.35);color:var(--gold);font-size:14px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-close{position:absolute;top:20px;right:20px;background:none;border:1px solid rgba(196,163,90,.35);color:var(--gold);font-size:14px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:border-color .2s,color .2s}
+.lb-close:hover{border-color:var(--gold);color:var(--gold-lt)}
+.lb-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(8,8,6,.5);border:1px solid rgba(196,163,90,.3);color:rgba(232,213,163,.7);width:44px;height:44px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .2s,border-color .2s,color .2s;backdrop-filter:blur(4px)}
+.lb-arrow:hover{background:rgba(196,163,90,.18);border-color:var(--gold);color:var(--gold-lt)}
+.lb-arrow svg{width:18px;height:18px;pointer-events:none}
+#lbPrev{left:16px}
+#lbNext{right:16px}
+.lb-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:7px;align-items:center;z-index:10}
+.lb-dot{width:5px;height:5px;border-radius:50%;background:rgba(196,163,90,.25);transition:background .25s,transform .25s;cursor:pointer}
+.lb-dot.active{background:var(--gold);transform:scale(1.4)}
+@media(max-width:768px){
+  .lb-arrow{width:38px;height:38px}
+  #lbPrev{left:6px}
+  #lbNext{right:6px}
+  #lbImg{max-width:94vw;max-height:80vh}
+}
 
 /* ── TOAST ── */
 #shareToast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%) translateY(16px);z-index:700;background:var(--bg2);border:1px solid var(--gold);color:var(--gold-lt);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;padding:12px 28px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;white-space:nowrap}
@@ -344,9 +359,16 @@ img{max-width:100%;display:block}
 </div>
 
 <!-- LIGHTBOX -->
-<div id="lightbox" onclick="closeLightbox()">
-  <button class="lb-close" onclick="closeLightbox()">&#x2715;</button>
-  <img id="lbImg" src="" alt="">
+<div id="lightbox">
+  <button class="lb-close" id="lbClose">&#x2715;</button>
+  <button class="lb-arrow" id="lbPrev" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <img id="lbImg" src="" alt="" draggable="false">
+  <button class="lb-arrow" id="lbNext" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+  <div class="lb-counter" id="lbCounter"></div>
 </div>
 
 <!-- TOAST -->
@@ -603,7 +625,7 @@ function renderProperty(p){
       <div class="d-section">
         <span class="d-section-ey">${t.galLbl}</span>
         <div class="d-gallery-grid">
-          ${imgs.map(src=>`<a href="javascript:void(0)" onclick="openLightbox('${imgUrl(src,1920)}')">
+          ${imgs.map((src,i)=>`<a href="javascript:void(0)" onclick="openLightbox(${i})">
             <img src="${imgUrl(src,800,600)}" loading="lazy" onerror="this.style.opacity=.1">
           </a>`).join('')}
         </div>
@@ -859,16 +881,84 @@ function submitContactForm(){
 }
 
 // ── LIGHTBOX ──
-function openLightbox(src){
-  g('lbImg').src=src;
+let _lbImgs = [];
+let _lbIdx  = 0;
+let _lbTouchX = null;
+
+function _lbSetImg(idx, animate){
+  const img = g('lbImg');
+  _lbIdx = (idx + _lbImgs.length) % _lbImgs.length;
+  if(animate){
+    img.style.opacity='0';
+    img.style.transform='scale(0.94)';
+    setTimeout(()=>{
+      img.src = imgUrl(_lbImgs[_lbIdx], 1920);
+      img.style.opacity='1';
+      img.style.transform='scale(1)';
+    }, 150);
+  } else {
+    img.src = imgUrl(_lbImgs[_lbIdx], 1920);
+  }
+  // dots
+  const dots = g('lbCounter');
+  if(dots){
+    [...dots.children].forEach((d,i)=>d.classList.toggle('active',i===_lbIdx));
+  }
+  // show/hide arrows
+  const single = _lbImgs.length <= 1;
+  g('lbPrev').style.display = single ? 'none' : 'flex';
+  g('lbNext').style.display = single ? 'none' : 'flex';
+}
+
+function openLightbox(idx){
+  const imgs = getAllImgs(propData);
+  _lbImgs = imgs;
+  // build dots (max 12 shown)
+  const counter = g('lbCounter');
+  const maxDots = 12;
+  if(imgs.length > 1 && imgs.length <= maxDots){
+    counter.innerHTML = imgs.map((_,i)=>`<span class="lb-dot${i===idx?' active':''}" onclick="event.stopPropagation();_lbSetImg(${i},true)"></span>`).join('');
+  } else {
+    counter.innerHTML = '';
+  }
+  _lbSetImg(idx, false);
   g('lightbox').classList.add('open');
   document.body.style.overflow='hidden';
 }
+
 function closeLightbox(){
   g('lightbox').classList.remove('open');
   document.body.style.overflow='';
 }
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLightbox(); });
+
+// Keyboard navigation
+document.addEventListener('keydown',e=>{
+  if(!g('lightbox').classList.contains('open')) return;
+  if(e.key==='Escape') closeLightbox();
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') _lbSetImg(_lbIdx+1, true);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')  _lbSetImg(_lbIdx-1, true);
+});
+
+// Arrow buttons
+g('lbPrev').addEventListener('click',e=>{ e.stopPropagation(); _lbSetImg(_lbIdx-1, true); });
+g('lbNext').addEventListener('click',e=>{ e.stopPropagation(); _lbSetImg(_lbIdx+1, true); });
+g('lbClose').addEventListener('click',e=>{ e.stopPropagation(); closeLightbox(); });
+
+// Click backdrop to close (not on image or arrows)
+g('lightbox').addEventListener('click',function(e){
+  if(e.target===this) closeLightbox();
+});
+
+// Touch swipe
+g('lightbox').addEventListener('touchstart',e=>{ _lbTouchX = e.touches[0].clientX; },{passive:true});
+g('lightbox').addEventListener('touchend',e=>{
+  if(_lbTouchX===null) return;
+  const dx = e.changedTouches[0].clientX - _lbTouchX;
+  _lbTouchX = null;
+  if(Math.abs(dx) < 40) return; // too short
+  if(dx < 0) _lbSetImg(_lbIdx+1, true);
+  else        _lbSetImg(_lbIdx-1, true);
+},{passive:true});
 
 // ── SHARE ──
 let _propName='';
