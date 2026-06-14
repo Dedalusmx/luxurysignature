@@ -38,10 +38,10 @@ img{max-width:100%;display:block}
 .cur-btn{background:none;border:none;font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;color:var(--dim);cursor:pointer;padding:3px 7px;transition:color .2s,background .2s}
 .cur-btn.active{background:var(--gold);color:var(--bg);font-weight:500}
 .cur-btn:hover:not(.active){color:var(--gold)}
-.lang-sw{display:flex;align-items:center;gap:5px}
-.lang-btn{background:none;border:none;font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;color:var(--dim);cursor:pointer;padding:3px;transition:color .2s}
-.lang-btn.active,.lang-btn:hover{color:var(--gold)}
-.lang-sep{color:var(--dim);opacity:.3;font-size:7px}
+.lang-sw{display:flex;align-items:center}
+.lang-sel{background:transparent;border:none;border-bottom:1px solid rgba(196,163,90,.25);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:2px;text-transform:uppercase;color:var(--gold);cursor:pointer;padding:4px 20px 4px 2px;appearance:none;-webkit-appearance:none;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23C4A35A'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 2px center;transition:border-color .2s}
+.lang-sel:hover{border-color:var(--gold)}
+.lang-sel option{background:#0F0E0C;color:#F0EBE1;font-family:'Raleway',sans-serif;letter-spacing:1px}
 @media(max-width:700px){
   .nav-title{display:none}
   .currency-sw{display:none}
@@ -310,13 +310,12 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
       <button class="cur-btn" data-cur="CAD">CAD</button>
     </div>
     <div class="lang-sw">
-      <button class="lang-btn" data-lang="fr">FR</button>
-      <span class="lang-sep">◆</span>
-      <button class="lang-btn active" data-lang="en">EN</button>
-      <span class="lang-sep">◆</span>
-      <button class="lang-btn" data-lang="es">ES</button>
-      <span class="lang-sep">◆</span>
-      <button class="lang-btn" data-lang="it">IT</button>
+      <select class="lang-sel" id="langSel" onchange="setLang(this.value)">
+        <option value="en">EN</option>
+        <option value="es">ES</option>
+        <option value="fr">FR</option>
+        <option value="it">IT</option>
+      </select>
     </div>
   </div>
 </nav>
@@ -415,7 +414,7 @@ footer{padding:56px 6%;background:var(--bg2);border-top:1px solid var(--border);
     <a href="https://www.youtube.com/@LuxuryRealEstateSignature" target="_blank" title="YouTube">
       <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#080806"/></svg>
     </a>
-    <a href="https://www.linkedin.com/company/luxury-real-estate-signature" target="_blank" title="LinkedIn">
+    <a href="https://www.linkedin.com/in/luxury-real-estate-signature-5b5bb3408/" target="_blank" title="LinkedIn">
       <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
     </a>
   </div>
@@ -581,9 +580,9 @@ function applyLang(){
   g('navBackTxt').textContent = t.back;
   g('fSearch').placeholder = t.searchPh;
   g('mapToggleTxt').textContent = t.mapBtn;
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+  const _s=document.getElementById('langSel'); if(_s) _s.value=lang;
   // Footer
-  g('ftLk').innerHTML = `<a href="#">${t.ftL}</a><a href="#">${t.ftP}</a><a href="#">${t.ftC}</a>`;
+  g('ftLk').innerHTML = `<a href="legal-notice.html">${t.ftL}</a><a href="privacy-policy.html">${t.ftP}</a><a href="cookies-policy.html">${t.ftC}</a>`;
   g('ftCp').textContent = t.ftCp;
   buildFilterSelects();
   renderResults();
@@ -1037,14 +1036,14 @@ document.querySelectorAll('.cur-btn').forEach(b=>{
 });
 
 // ── LANG ──
-document.querySelectorAll('.lang-btn').forEach(b=>{
-  b.addEventListener('click',()=>{
-    lang = b.dataset.lang;
-    document.documentElement.lang = lang;
-    applyLang();
-    updateURL();
-  });
-});
+function setLang(l){
+  lang = l;
+  document.documentElement.lang = lang;
+  const sel = document.getElementById('langSel');
+  if(sel) sel.value = lang;
+  applyLang();
+  updateURL();
+}
 
 // ── INIT ──
 async function init(){
