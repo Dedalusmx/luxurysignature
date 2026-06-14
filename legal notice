@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aviso Legal — Luxury Real Estate Signature</title>
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/dphbptped/image/upload/w_32,h_32,c_fill,f_png/v1779854304/file_00000000181071fdb75c1bcfb5823568_detuve.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#080806;color:#F0EBE1;font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+:root{--gold:#C4A35A;--gold-lt:#E8D5A3;--gold-dk:#7A6535;--bg:#080806;--bg2:#0F0E0C;--bg3:#151310;--text:#F0EBE1;--dim:#8A8478;--border:rgba(196,163,90,0.12)}
+a{color:var(--gold);text-decoration:none;transition:color .2s}
+a:hover{color:var(--gold-lt)}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;height:72px;padding:0 6%;display:flex;align-items:center;background:rgba(8,8,6,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-inner{width:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-logo img{height:38px;object-fit:contain;filter:brightness(1.15)}
+.nav-home{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s}
+.nav-home:hover{color:var(--gold)}
+.lang-sw{display:flex;align-items:center;gap:8px}
+.lang-btn{background:none;border:none;font-family:'Raleway',sans-serif;font-size:10px;font-weight:300;letter-spacing:2px;color:var(--dim);cursor:pointer;padding:4px 3px;transition:color .2s}
+.lang-btn.active,.lang-btn:hover{color:var(--gold)}
+.lang-sep{color:var(--dim);opacity:.3;font-size:8px;user-select:none}
+
+/* HERO MINIMAL */
+.page-hero{padding:140px 6% 80px;background:var(--bg2);border-bottom:1px solid var(--border);text-align:center}
+.page-eyelet{display:block;font-size:9px;font-weight:300;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,58px);font-weight:300;font-style:italic;color:var(--text);margin-bottom:16px}
+.page-date{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-top:8px}
+.gline{display:flex;align-items:center;justify-content:center;gap:14px;margin:32px auto 0}
+.gline::before{content:'';flex:1;max-width:90px;height:1px;background:linear-gradient(to right,transparent,var(--gold))}
+.gline::after{content:'';flex:1;max-width:90px;height:1px;background:linear-gradient(to left,transparent,var(--gold))}
+.gdot{width:5px;height:5px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
+
+/* CONTENT */
+.legal-wrap{max-width:820px;margin:0 auto;padding:80px 6% 100px}
+.legal-section{margin-bottom:52px}
+.legal-section h2{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2vw,24px);font-weight:400;font-style:italic;color:var(--gold-lt);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.legal-section p{font-size:14px;line-height:2;color:rgba(240,235,225,.65);margin-bottom:14px;font-weight:300}
+.legal-section ul{padding-left:20px;margin-bottom:14px}
+.legal-section ul li{font-size:14px;line-height:2;color:rgba(240,235,225,.65);margin-bottom:6px;font-weight:300}
+.legal-section strong{color:rgba(240,235,225,.85);font-weight:400}
+.info-block{background:var(--bg2);border:1px solid var(--border);padding:28px 32px;margin-bottom:14px}
+.info-block p{margin:0;font-size:14px;line-height:1.9;color:rgba(240,235,225,.7)}
+.info-block strong{display:block;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;font-weight:400}
+
+/* FOOTER */
+footer{padding:48px 6%;background:var(--bg2);border-top:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
+.ft-logo img{height:44px;object-fit:contain;opacity:.75}
+.ft-links{display:flex;gap:32px;flex-wrap:wrap;justify-content:center}
+.ft-links a{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s}
+.ft-links a:hover{color:var(--gold)}
+.ft-cp{font-size:10px;color:var(--dim);opacity:.4;letter-spacing:.5px}
+
+/* Hidden lang blocks */
+.lang-block{display:none}
+.lang-block.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <img src="https://res.cloudinary.com/dphbptped/image/upload/w_200,q_auto,f_auto/v1779854302/20260526_225431_0000_lgxhla.png" alt="Luxury Real Estate Signature">
+    </a>
+    <div class="lang-sw">
+      <button class="lang-btn active" onclick="setLang('es')">ES</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" onclick="setLang('fr')">FR</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" onclick="setLang('it')">IT</button>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <span class="page-eyelet" id="eyelet">Aviso Legal</span>
+  <h1 class="page-title" id="heroTitle">Aviso Legal</h1>
+  <p class="page-date" id="heroDate">Última actualización: Junio 2026</p>
+  <div class="gline"><span class="gdot"></span></div>
+</div>
+
+<!-- CONTENT -->
+<div class="legal-wrap">
+
+  <!-- ═══ ESPAÑOL ═══ -->
+  <div class="lang-block active" id="block-es">
+
+    <div class="legal-section">
+      <h2>1. Identificación del Responsable</h2>
+      <div class="info-block">
+        <p><strong>Empresa</strong>Luxury Real Estate Signature</p>
+        <p><strong>Director / Representante Legal</strong>Gregory Dewatcher</p>
+        <p><strong>Dirección</strong>Calle 6 Norte Bis., Centro, Playa del Carmen, Quintana Roo, C.P. 77710, México</p>
+        <p><strong>Correo electrónico</strong>info@luxuryrealestatesignature.com</p>
+        <p><strong>Teléfono</strong>+52 984 410 6305</p>
+        <p><strong>Sitio web</strong>https://luxuryrealestatesignature.com</p>
+      </div>
+    </div>
+
+    <div class="legal-section">
+      <h2>2. Objeto del Sitio Web</h2>
+      <p>Este sitio web tiene como finalidad la presentación de servicios de bienes raíces de lujo, servicios de conserjería y asesoría de inversión inmobiliaria en la Riviera Maya (Playa del Carmen, Tulum y Quintana Roo, México). La información publicada tiene carácter meramente informativo y no constituye una oferta contractual vinculante.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>3. Propiedad Intelectual</h2>
+      <p>Todos los contenidos del sitio —textos, imágenes, fotografías, logotipos, diseño gráfico, código fuente y cualquier otro elemento— son propiedad de <strong>Luxury Real Estate Signature</strong> o de terceros que han autorizado su uso, y están protegidos por la legislación mexicana e internacional en materia de propiedad intelectual.</p>
+      <p>Queda expresamente prohibida la reproducción, distribución, transformación o comunicación pública de cualquier contenido sin autorización escrita previa.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>4. Alojamiento y Proveedores Tecnológicos</h2>
+      <ul>
+        <li><strong>Alojamiento web:</strong> GitHub Pages — GitHub, Inc., 88 Colin P. Kelly Jr. St., San Francisco, CA 94107, EE.UU.</li>
+        <li><strong>Gestión de imágenes:</strong> Cloudinary Ltd., 3 Ha'Maskit St., Herzliya, Israel</li>
+        <li><strong>Mapas:</strong> Mapbox, Inc., 50 Beale St., Suite 600, San Francisco, CA 94105, EE.UU.</li>
+        <li><strong>Analítica web:</strong> Google Analytics 4 — Google LLC, 1600 Amphitheatre Pkwy, Mountain View, CA 94043, EE.UU.</li>
+        <li><strong>Automatización y CRM:</strong> Railway Technologies Inc. / AppSheet (Google LLC)</li>
+      </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2>5. Limitación de Responsabilidad</h2>
+      <p>Luxury Real Estate Signature no garantiza la disponibilidad continua del sitio ni la exactitud absoluta de los precios o disponibilidad de propiedades, que pueden cambiar sin previo aviso. La empresa no será responsable de daños derivados del uso o imposibilidad de uso del sitio.</p>
+      <p>Los enlaces a sitios externos son proporcionados a título informativo. Luxury Real Estate Signature no es responsable del contenido de dichos sitios.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>6. Legislación Aplicable</h2>
+      <p>El presente aviso legal se rige por la legislación mexicana vigente, en particular por la <strong>Ley Federal de Protección al Consumidor</strong> y la <strong>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</strong>. Para cualquier controversia, las partes se someten a los tribunales competentes de Playa del Carmen, Quintana Roo, México, salvo que la normativa aplicable disponga otro fuero.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>7. Contacto</h2>
+      <p>Para cualquier consulta relacionada con este aviso legal, puede contactarnos en: <a href="mailto:info@luxuryrealestatesignature.com">info@luxuryrealestatesignature.com</a></p>
+    </div>
+  </div>
+
+  <!-- ═══ ENGLISH ═══ -->
+  <div class="lang-block" id="block-en">
+
+    <div class="legal-section">
+      <h2>1. Company Identification</h2>
+      <div class="info-block">
+        <p><strong>Company</strong>Luxury Real Estate Signature</p>
+        <p><strong>Director / Legal Representative</strong>Gregory Dewatcher</p>
+        <p><strong>Address</strong>Calle 6 Norte Bis., Centro, Playa del Carmen, Quintana Roo, ZIP 77710, Mexico</p>
+        <p><strong>Email</strong>info@luxuryrealestatesignature.com</p>
+        <p><strong>Phone</strong>+52 984 410 6305</p>
+        <p><strong>Website</strong>https://luxuryrealestatesignature.com</p>
+      </div>
+    </div>
+
+    <div class="legal-section">
+      <h2>2. Purpose of the Website</h2>
+      <p>This website is intended for the presentation of luxury real estate services, concierge services, and real estate investment advisory in the Riviera Maya (Playa del Carmen, Tulum, and Quintana Roo, Mexico). The information published is for informational purposes only and does not constitute a binding contractual offer.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>3. Intellectual Property</h2>
+      <p>All content on this site — texts, images, photographs, logos, graphic design, source code, and any other elements — is the property of <strong>Luxury Real Estate Signature</strong> or third parties who have authorized its use, and is protected by Mexican and international intellectual property legislation.</p>
+      <p>Any reproduction, distribution, transformation, or public communication of any content without prior written authorization is expressly prohibited.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>4. Hosting and Technology Providers</h2>
+      <ul>
+        <li><strong>Web hosting:</strong> GitHub Pages — GitHub, Inc., 88 Colin P. Kelly Jr. St., San Francisco, CA 94107, USA</li>
+        <li><strong>Image management:</strong> Cloudinary Ltd., 3 Ha'Maskit St., Herzliya, Israel</li>
+        <li><strong>Maps:</strong> Mapbox, Inc., 50 Beale St., Suite 600, San Francisco, CA 94105, USA</li>
+        <li><strong>Web analytics:</strong> Google Analytics 4 — Google LLC, 1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA</li>
+        <li><strong>Automation & CRM:</strong> Railway Technologies Inc. / AppSheet (Google LLC)</li>
+      </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2>5. Limitation of Liability</h2>
+      <p>Luxury Real Estate Signature does not guarantee the continuous availability of the site or the absolute accuracy of prices or property availability, which may change without notice. The company shall not be liable for any damages arising from the use or inability to use the site.</p>
+      <p>Links to external websites are provided for informational purposes. Luxury Real Estate Signature is not responsible for the content of those sites.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>6. Applicable Law</h2>
+      <p>This legal notice is governed by current Mexican legislation, in particular the <strong>Federal Consumer Protection Law</strong> and the <strong>Federal Law on Protection of Personal Data Held by Private Parties (LFPDPPP)</strong>. For any dispute, the parties submit to the competent courts of Playa del Carmen, Quintana Roo, Mexico, unless applicable law provides otherwise.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>7. Contact</h2>
+      <p>For any questions related to this legal notice, please contact us at: <a href="mailto:info@luxuryrealestatesignature.com">info@luxuryrealestatesignature.com</a></p>
+    </div>
+  </div>
+
+  <!-- ═══ FRANÇAIS ═══ -->
+  <div class="lang-block" id="block-fr">
+
+    <div class="legal-section">
+      <h2>1. Identification du Responsable</h2>
+      <div class="info-block">
+        <p><strong>Entreprise</strong>Luxury Real Estate Signature</p>
+        <p><strong>Directeur / Représentant légal</strong>Gregory Dewatcher</p>
+        <p><strong>Adresse</strong>Calle 6 Norte Bis., Centro, Playa del Carmen, Quintana Roo, C.P. 77710, Mexique</p>
+        <p><strong>Courriel</strong>info@luxuryrealestatesignature.com</p>
+        <p><strong>Téléphone</strong>+52 984 410 6305</p>
+        <p><strong>Site web</strong>https://luxuryrealestatesignature.com</p>
+      </div>
+    </div>
+
+    <div class="legal-section">
+      <h2>2. Objet du Site Web</h2>
+      <p>Ce site web a pour objet la présentation de services immobiliers de luxe, de services de conciergerie et de conseils en investissement immobilier dans la Riviera Maya (Playa del Carmen, Tulum et Quintana Roo, Mexique). Les informations publiées ont un caractère purement informatif et ne constituent pas une offre contractuelle contraignante.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>3. Propriété Intellectuelle</h2>
+      <p>Tous les contenus du site — textes, images, photographies, logos, conception graphique, code source et tout autre élément — sont la propriété de <strong>Luxury Real Estate Signature</strong> ou de tiers ayant autorisé leur utilisation, et sont protégés par la législation mexicaine et internationale en matière de propriété intellectuelle.</p>
+      <p>Toute reproduction, distribution, transformation ou communication publique de tout contenu sans autorisation écrite préalable est expressément interdite.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>4. Hébergement et Prestataires Technologiques</h2>
+      <ul>
+        <li><strong>Hébergement web :</strong> GitHub Pages — GitHub, Inc., 88 Colin P. Kelly Jr. St., San Francisco, CA 94107, États-Unis</li>
+        <li><strong>Gestion des images :</strong> Cloudinary Ltd., 3 Ha'Maskit St., Herzliya, Israël</li>
+        <li><strong>Cartographie :</strong> Mapbox, Inc., 50 Beale St., Suite 600, San Francisco, CA 94105, États-Unis</li>
+        <li><strong>Analytique web :</strong> Google Analytics 4 — Google LLC, 1600 Amphitheatre Pkwy, Mountain View, CA 94043, États-Unis</li>
+        <li><strong>Automatisation et CRM :</strong> Railway Technologies Inc. / AppSheet (Google LLC)</li>
+      </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2>5. Limitation de Responsabilité</h2>
+      <p>Luxury Real Estate Signature ne garantit pas la disponibilité continue du site ni l'exactitude absolue des prix ou de la disponibilité des propriétés, lesquels peuvent changer sans préavis. La société n'est pas responsable des dommages résultant de l'utilisation ou de l'impossibilité d'utiliser le site.</p>
+      <p>Les liens vers des sites externes sont fournis à titre informatif. Luxury Real Estate Signature n'est pas responsable du contenu de ces sites.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>6. Droit Applicable</h2>
+      <p>Les présentes mentions légales sont régies par la législation mexicaine en vigueur, notamment la <strong>Loi fédérale de protection du consommateur</strong> et la <strong>Loi fédérale sur la protection des données personnelles détenues par des particuliers (LFPDPPP)</strong>. Pour tout litige, les parties se soumettent aux tribunaux compétents de Playa del Carmen, Quintana Roo, Mexique.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>7. Contact</h2>
+      <p>Pour toute question relative aux présentes mentions légales, veuillez nous contacter à : <a href="mailto:info@luxuryrealestatesignature.com">info@luxuryrealestatesignature.com</a></p>
+    </div>
+  </div>
+
+  <!-- ═══ ITALIANO ═══ -->
+  <div class="lang-block" id="block-it">
+
+    <div class="legal-section">
+      <h2>1. Identificazione del Responsabile</h2>
+      <div class="info-block">
+        <p><strong>Azienda</strong>Luxury Real Estate Signature</p>
+        <p><strong>Direttore / Rappresentante Legale</strong>Gregory Dewatcher</p>
+        <p><strong>Indirizzo</strong>Calle 6 Norte Bis., Centro, Playa del Carmen, Quintana Roo, C.P. 77710, Messico</p>
+        <p><strong>Email</strong>info@luxuryrealestatesignature.com</p>
+        <p><strong>Telefono</strong>+52 984 410 6305</p>
+        <p><strong>Sito web</strong>https://luxuryrealestatesignature.com</p>
+      </div>
+    </div>
+
+    <div class="legal-section">
+      <h2>2. Scopo del Sito Web</h2>
+      <p>Questo sito web ha lo scopo di presentare servizi immobiliari di lusso, servizi di concierge e consulenza per investimenti immobiliari nella Riviera Maya (Playa del Carmen, Tulum e Quintana Roo, Messico). Le informazioni pubblicate hanno carattere puramente informativo e non costituiscono un'offerta contrattuale vincolante.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>3. Proprietà Intellettuale</h2>
+      <p>Tutti i contenuti del sito — testi, immagini, fotografie, loghi, design grafico, codice sorgente e qualsiasi altro elemento — sono di proprietà di <strong>Luxury Real Estate Signature</strong> o di terzi che ne hanno autorizzato l'uso, e sono protetti dalla legislazione messicana e internazionale in materia di proprietà intellettuale.</p>
+      <p>È espressamente vietata qualsiasi riproduzione, distribuzione, trasformazione o comunicazione pubblica di qualsiasi contenuto senza previa autorizzazione scritta.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>4. Hosting e Fornitori Tecnologici</h2>
+      <ul>
+        <li><strong>Hosting web:</strong> GitHub Pages — GitHub, Inc., 88 Colin P. Kelly Jr. St., San Francisco, CA 94107, USA</li>
+        <li><strong>Gestione immagini:</strong> Cloudinary Ltd., 3 Ha'Maskit St., Herzliya, Israele</li>
+        <li><strong>Mappe:</strong> Mapbox, Inc., 50 Beale St., Suite 600, San Francisco, CA 94105, USA</li>
+        <li><strong>Analisi web:</strong> Google Analytics 4 — Google LLC, 1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA</li>
+        <li><strong>Automazione e CRM:</strong> Railway Technologies Inc. / AppSheet (Google LLC)</li>
+      </ul>
+    </div>
+
+    <div class="legal-section">
+      <h2>5. Limitazione di Responsabilità</h2>
+      <p>Luxury Real Estate Signature non garantisce la disponibilità continua del sito né l'assoluta accuratezza dei prezzi o della disponibilità degli immobili, che possono cambiare senza preavviso. La società non è responsabile per danni derivanti dall'uso o dall'impossibilità di utilizzare il sito.</p>
+      <p>I link a siti esterni sono forniti a scopo informativo. Luxury Real Estate Signature non è responsabile del contenuto di tali siti.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>6. Legge Applicabile</h2>
+      <p>Il presente avviso legale è disciplinato dalla legislazione messicana vigente, in particolare dalla <strong>Legge Federale sulla Protezione dei Consumatori</strong> e dalla <strong>Legge Federale sulla Protezione dei Dati Personali detenuti da Privati (LFPDPPP)</strong>. Per qualsiasi controversia, le parti si sottomettono ai tribunali competenti di Playa del Carmen, Quintana Roo, Messico.</p>
+    </div>
+
+    <div class="legal-section">
+      <h2>7. Contatto</h2>
+      <p>Per qualsiasi domanda relativa al presente avviso legale, contattateci a: <a href="mailto:info@luxuryrealestatesignature.com">info@luxuryrealestatesignature.com</a></p>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-logo"><img src="https://res.cloudinary.com/dphbptped/image/upload/w_200,q_auto,f_auto/v1779854302/20260526_225431_0000_lgxhla.png" alt="Luxury Real Estate Signature"></div>
+  <div class="ft-links" id="ftLk"></div>
+  <p class="ft-cp">© 2026 Luxury Real Estate Signature · Playa del Carmen, Quintana Roo, México</p>
+</footer>
+
+<script>
+const LABELS = {
+  es:{eyelet:'Aviso Legal',title:'Aviso Legal',date:'Última actualización: Junio 2026',links:['<a href="legal-notice.html">Aviso Legal</a>','<a href="privacy-policy.html">Privacidad</a>','<a href="cookies-policy.html">Cookies</a>']},
+  en:{eyelet:'Legal Notice',title:'Legal Notice',date:'Last updated: June 2026',links:['<a href="legal-notice.html">Legal Notice</a>','<a href="privacy-policy.html">Privacy Policy</a>','<a href="cookies-policy.html">Cookies</a>']},
+  fr:{eyelet:'Mentions Légales',title:'Mentions Légales',date:'Dernière mise à jour : juin 2026',links:['<a href="legal-notice.html">Mentions légales</a>','<a href="privacy-policy.html">Confidentialité</a>','<a href="cookies-policy.html">Cookies</a>']},
+  it:{eyelet:'Note Legali',title:'Note Legali',date:'Ultimo aggiornamento: giugno 2026',links:['<a href="legal-notice.html">Note Legali</a>','<a href="privacy-policy.html">Privacy</a>','<a href="cookies-policy.html">Cookie</a>']}
+};
+let curLang = 'es';
+function setLang(l){
+  curLang = l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.textContent.toLowerCase()===l));
+  document.querySelectorAll('.lang-block').forEach(b=>b.classList.remove('active'));
+  document.getElementById('block-'+l).classList.add('active');
+  const lb = LABELS[l];
+  document.getElementById('eyelet').textContent = lb.eyelet;
+  document.getElementById('heroTitle').textContent = lb.title;
+  document.getElementById('heroDate').textContent = lb.date;
+  document.getElementById('ftLk').innerHTML = lb.links.join('');
+}
+setLang('es');
+</script>
+</body>
+</html>
