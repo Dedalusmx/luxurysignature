@@ -993,7 +993,8 @@ const L = {
   }
 };
 
-let lang = 'en';
+const _urlLang = new URLSearchParams(window.location.search).get('lang');
+let lang = ['es','en','fr','it'].includes(_urlLang) ? _urlLang : 'en';
 const g = id => document.getElementById(id);
 
 function render(){
@@ -1310,6 +1311,12 @@ function observe(){
   },{threshold:0.1});
   document.querySelectorAll('.rev').forEach(el=>ob.observe(el));
 }
+
+// Activar botón del idioma inicial
+document.querySelectorAll('.lang-btn').forEach(b=>{
+  b.classList.toggle('active', b.dataset.lang === lang);
+});
+document.documentElement.lang = lang;
 
 render();
 
