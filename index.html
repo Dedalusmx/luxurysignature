@@ -1169,8 +1169,23 @@ const _urlLang = new URLSearchParams(window.location.search).get('lang');
 let lang = ['es','en','fr','it'].includes(_urlLang) ? _urlLang : 'en';
 const g = id => document.getElementById(id);
 
+// ── WHATSAPP FLOTANTE: número y mensaje según idioma (ES → español, resto → inglés) ──
+const WA_NUMBER = '529841343546';
+const WA_MSG = {
+  es: 'Hola, me interesa saber más sobre sus propiedades y servicios.',
+  en: 'Hello, I’d like to learn more about your properties and services.'
+};
+function updateWaFloat(){
+  const a = document.getElementById('waFloat');
+  if(!a) return;
+  const msg = lang === 'es' ? WA_MSG.es : WA_MSG.en;
+  a.href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
+}
+document.addEventListener('DOMContentLoaded', updateWaFloat);
+
 function render(){
   const t = L[lang];
+  updateWaFloat();
   // Nav
   g('navLinks').innerHTML = t.nav.map((n,i)=>`<li><a href="${t.href[i]}">${n}</a></li>`).join('');
   // Hero
