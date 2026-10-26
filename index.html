@@ -259,6 +259,37 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,te
   .ab-trigger-left{gap:16px}
 }
 
+
+/* ── TEAM: tarjeta de perfil (modal) ── */
+.tm-open{background:none;border:none;padding:0;cursor:pointer;border-radius:50%;display:block}
+.tm-open:focus-visible{outline:2px solid var(--turq);outline-offset:4px}
+#tmModal{position:fixed;inset:0;z-index:600;background:rgba(41,43,41,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s}
+#tmModal.open{opacity:1;pointer-events:auto}
+.tmm-box{background:var(--ivory);width:100%;max-width:880px;max-height:calc(100vh - 48px);overflow:auto;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);position:relative;transform:translateY(18px);transition:transform .45s var(--ease)}
+#tmModal.open .tmm-box{transform:none}
+.tmm-img{background:var(--sand);min-height:100%;aspect-ratio:4/5;overflow:hidden}
+.tmm-img img{width:100%;height:100%;object-fit:cover;display:block}
+.tmm-ini{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-family:var(--serif);font-style:italic;font-size:110px;color:var(--muted)}
+.tmm-body{padding:60px 50px 46px;display:flex;flex-direction:column}
+.tmm-role{font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.tmm-name{font-family:var(--serif);font-style:italic;font-size:clamp(30px,3vw,42px);font-weight:400;color:var(--char);line-height:1.1}
+.tmm-line{width:40px;height:2px;background:var(--turq);margin:22px 0 24px}
+.tmm-bio{font-size:15px;line-height:1.85;color:var(--muted);white-space:pre-line;flex:1}
+.tmm-socials{display:flex;gap:10px;margin-top:34px;flex-wrap:wrap}
+.tmm-soc{width:42px;height:42px;border:1px solid var(--line-strong);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--char);text-decoration:none;transition:background .25s,color .25s,border-color .25s}
+.tmm-soc svg{width:16px;height:16px;fill:currentColor}
+.tmm-soc:hover{background:var(--char);border-color:var(--char);color:var(--ivory)}
+.tmm-soc.is-wa{background:var(--turq);border-color:var(--turq);color:var(--char)}
+.tmm-soc.is-wa:hover{background:var(--char);border-color:var(--char);color:var(--turq)}
+.tmm-close{position:absolute;top:14px;right:14px;width:40px;height:40px;background:var(--ivory);border:none;border-radius:50%;font-size:17px;color:var(--char);cursor:pointer;z-index:2;transition:background .2s}
+.tmm-close:hover{background:var(--sand)}
+@media(max-width:700px){
+  #tmModal{padding:0;align-items:flex-end}
+  .tmm-box{grid-template-columns:1fr;max-height:92vh}
+  .tmm-img{aspect-ratio:auto;height:38vh;min-height:0}
+  .tmm-body{padding:30px 26px 34px}
+}
+
 /* ── SERVICES ── */
 #services{background:var(--ivory)}
 .srv-layout{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line)}
@@ -1353,6 +1384,72 @@ function tmFallback(img){
   img.parentNode.replaceChild(div, img);
 }
 
+// ── TEAM: tarjeta de perfil ──
+const WA_SVG = `<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>`;
+let _tmRows = [];
+let _tmLastFocus = null;
+
+function tmUrl(u){ return u.startsWith('http') ? u : 'https://' + u; }
+function tmWaUrl(v){
+  if(!v) return '';
+  if(/^https?:/i.test(v)) return v;
+  let d = v.replace(/\D/g,'');
+  if(d.length === 10) d = '52' + d;          // número local MX sin lada país
+  return d ? 'https://wa.me/' + d : '';
+}
+function tmBio(r){
+  const k = {fr:'Bio FR',en:'Bio EN',es:'Bio ES',it:'Bio IT'}[lang];
+  return ((r[k]||'').trim() || (r['Bio']||r['bio']||r['BIO']||'').trim());
+}
+function openTm(i){
+  const r = _tmRows[i]; if(!r) return;
+  const name   = (r['Assignee']||'').trim();
+  const pic    = (r['Pic url']||r['Pic_url']||r['pic url']||'').trim();
+  const imgBox = g('tmmImg');
+  imgBox.innerHTML = '';
+  if(pic){
+    const im = document.createElement('img');
+    im.src = pic; im.alt = name;
+    im.onerror = ()=>{ imgBox.innerHTML = `<div class="tmm-ini">${(name.charAt(0)||'?').toUpperCase()}</div>`; };
+    imgBox.appendChild(im);
+  } else {
+    imgBox.innerHTML = `<div class="tmm-ini">${(name.charAt(0)||'?').toUpperCase()}</div>`;
+  }
+  g('tmmName').textContent = name;
+  g('tmmRole').textContent = (r['Rol']||'').trim();
+  const bio = tmBio(r);
+  g('tmmBio').textContent = bio;
+  g('tmmBio').style.display = bio ? '' : 'none';
+
+  const wa = tmWaUrl((r['WhatsApp']||r['Whatsapp']||r['whatsapp']||r['Telefono']||r['Teléfono']||r['Phone']||r['Celular']||'').trim());
+  const fb = (r['Facebook']||'').trim();
+  const ig = (r['Instagram']||'').trim();
+  const li = (r['LinkedIn']||r['Linkedin']||'').trim();
+  const yt = (r['YouTube']||r['Youtube']||r['youtube']||'').trim();
+  g('tmmSoc').innerHTML = [
+    wa ? `<a class="tmm-soc is-wa" href="${wa}" target="_blank" rel="noopener" title="WhatsApp" aria-label="WhatsApp">${WA_SVG}</a>` : '',
+    ig ? `<a class="tmm-soc" href="${tmUrl(ig)}" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">${IG_SVG}</a>` : '',
+    fb ? `<a class="tmm-soc" href="${tmUrl(fb)}" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook">${FB_SVG}</a>` : '',
+    li ? `<a class="tmm-soc" href="${tmUrl(li)}" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">${LI_SVG}</a>` : '',
+    yt ? `<a class="tmm-soc" href="${tmUrl(yt)}" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube">${YT_SVG}</a>` : ''
+  ].join('');
+
+  _tmLastFocus = document.activeElement;
+  g('tmModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(()=>{ const c = document.querySelector('.tmm-close'); if(c) c.focus(); }, 50);
+
+  if(typeof gtag === 'function') gtag('event','team_profile_open',{event_category:'About Us',member:name,language:lang});
+}
+function closeTm(){
+  g('tmModal').classList.remove('open');
+  document.body.style.overflow = '';
+  if(_tmLastFocus) _tmLastFocus.focus();
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && g('tmModal') && g('tmModal').classList.contains('open')) closeTm();
+});
+
 function loadTeam(){
   Papa.parse(TEAM_CSV, {
     download: true,
@@ -1375,7 +1472,8 @@ function loadTeam(){
       // Ordenar por jerarquía de rol
       rows.sort((a,b) => roleRank(a['Rol']) - roleRank(b['Rol']));
 
-      function cardHTML(r){
+      _tmRows = rows;
+      function cardHTML(r, i){
         const name   = (r['Assignee']||'').trim();
         const rol    = (r['Rol']||'').trim();
         const picUrl = (r['Pic url']||r['Pic_url']||r['pic url']||'').trim();
@@ -1397,14 +1495,14 @@ function loadTeam(){
         ].join('');
 
         return `<div class="tm-card">
-          ${imgEl}
+          <button type="button" class="tm-open" onclick="openTm(${i})" aria-label="${name}">${imgEl}</button>
           <p class="tm-name">${name}</p>
           <p class="tm-role">${rol}</p>
           ${socials ? `<div class="tm-socials">${socials}</div>` : ''}
         </div>`;
       }
 
-      container.innerHTML = `<div class="tm-grid">${rows.map(r=>cardHTML(r)).join('')}</div>`;
+      container.innerHTML = `<div class="tm-grid">${rows.map((r,i)=>cardHTML(r,i)).join('')}</div>`;
       observe();
 
       if(typeof gtag === 'function'){
@@ -1676,6 +1774,21 @@ window.addEventListener('load', function(){
   updateLogo();
 });
 </script>
+
+<!-- TEAM PROFILE CARD -->
+<div id="tmModal" role="dialog" aria-modal="true" aria-labelledby="tmmName" onclick="if(event.target===this)closeTm()">
+  <div class="tmm-box">
+    <button type="button" class="tmm-close" onclick="closeTm()" aria-label="Close">✕</button>
+    <div class="tmm-img" id="tmmImg"></div>
+    <div class="tmm-body">
+      <p class="tmm-role" id="tmmRole"></p>
+      <h3 class="tmm-name" id="tmmName"></h3>
+      <div class="tmm-line"></div>
+      <p class="tmm-bio" id="tmmBio"></p>
+      <div class="tmm-socials" id="tmmSoc"></div>
+    </div>
+  </div>
+</div>
 
 <!-- WHATSAPP FLOTANTE -->
 <!-- UNIT SELECTOR -->
