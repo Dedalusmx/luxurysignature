@@ -329,6 +329,25 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,te
 .prp-lk{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--char);text-decoration:none;border-bottom:2px solid var(--turq);padding-bottom:3px;transition:color .2s,border-color .2s;display:inline-block}
 .prp-lk:hover{color:var(--turq-dk)}
 
+
+/* ── SELECTOR DE PAÍS (catálogo) ── */
+.prp-country{display:flex;align-items:center;gap:18px;margin:-20px 0 40px;position:relative;z-index:5}
+.cty-lbl{font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted)}
+.cty-dd{position:relative}
+.cty-btn{display:inline-flex;align-items:center;gap:14px;background:var(--ivory);border:1px solid var(--line-strong);padding:14px 20px 14px 22px;font-family:var(--sans);font-size:11.5px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--char);cursor:pointer;transition:border-color .25s}
+.cty-btn:hover,.cty-dd.open .cty-btn{border-color:var(--char)}
+.cty-btn svg{width:12px;height:12px;transition:transform .3s var(--ease)}
+.cty-dd.open .cty-btn svg{transform:rotate(180deg)}
+.cty-menu{position:absolute;top:calc(100% + 6px);left:0;min-width:100%;list-style:none;background:var(--ivory);border:1px solid var(--line);box-shadow:0 18px 40px -22px rgba(41,43,41,.4);padding:6px 0;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .25s,transform .25s var(--ease),visibility .25s}
+.cty-dd.open .cty-menu{opacity:1;visibility:visible;transform:none}
+.cty-opt{display:block;width:100%;text-align:left;background:none;border:none;border-left:2px solid transparent;padding:12px 22px;font-family:var(--sans);font-size:14px;color:var(--char);cursor:pointer;white-space:nowrap;transition:background .2s}
+.cty-opt:hover{background:var(--sand)}
+.cty-opt[aria-selected="true"]{border-left-color:var(--turq);font-weight:500}
+.prp-soon{grid-column:1/-1;background:var(--ivory);padding:72px 40px;text-align:center}
+.prp-soon-ti{font-family:var(--serif);font-style:italic;font-size:clamp(26px,2.8vw,36px);font-weight:400;color:var(--char);margin-bottom:12px}
+.prp-soon-tx{font-size:15px;color:var(--muted);margin-bottom:28px}
+@media(max-width:600px){.prp-country{flex-direction:column;align-items:flex-start;gap:10px;margin:-24px 0 32px}.cty-dd,.cty-btn{width:100%;justify-content:space-between}}
+
 /* ── INVEST ── */
 #invest{background:var(--ivory)}
 .st-g{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);margin:0 0 64px}
@@ -511,6 +530,7 @@ footer{padding:64px 6% 48px;background:var(--char);display:flex;flex-direction:c
       <h2 class="s-ti" id="pTi"></h2>
       <div class="s-div"><div class="gdot"></div></div>
     </div>
+    <div class="prp-country" id="prpCountry"></div>
     <div class="prp-g" id="prpG"></div>
     <div id="prpMore"></div>
   </div>
@@ -615,6 +635,78 @@ const IC = [
 const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdEUO8SD2sTqn38dXV8VCzCddB5caiUUKpcbu6ufFsGYvdqEDadT67S88ltOsQamnVQ6itfSIMnv8r/pub?gid=0&single=true&output=csv';
 let allFetched  = [];
 let renderedProps = [];
+
+// ── País del catálogo ──
+// Filas sin columna de país se consideran México (catálogo actual).
+// Para otros países: agregar columna "Pais" en el Sheet con MX / US / DO (o el nombre).
+let country = 'MX';
+const COUNTRIES = {
+  MX:{name:{es:'México',en:'Mexico',fr:'Mexique',it:'Messico'},
+      cta:{es:'Invertir en México',en:'Invest in Mexico',fr:'Investir au Mexique',it:'Investire in Messico'},
+      alias:['mx','mex','mexico','méxico','mexique','messico']},
+  US:{name:{es:'Estados Unidos',en:'United States',fr:'États-Unis',it:'Stati Uniti'},
+      cta:{es:'Invertir en Estados Unidos',en:'Invest in the United States',fr:'Investir aux États-Unis',it:'Investire negli Stati Uniti'},
+      alias:['us','usa','united states','estados unidos','eeuu','ee.uu.','états-unis','stati uniti']},
+  DO:{name:{es:'República Dominicana',en:'Dominican Republic',fr:'République dominicaine',it:'Repubblica Dominicana'},
+      cta:{es:'Invertir en República Dominicana',en:'Invest in the Dominican Republic',fr:'Investir en République dominicaine',it:'Investire nella Repubblica Dominicana'},
+      alias:['do','rd','dominican republic','república dominicana','republica dominicana','république dominicaine','repubblica dominicana']}
+};
+function rowCountry(r){
+  const v = String(r['Pais']||r['País']||r['pais']||r['country']||r['Country']||'').trim().toLowerCase();
+  if(!v) return 'MX';
+  for(const k in COUNTRIES){ if(COUNTRIES[k].alias.includes(v)) return k; }
+  return v.toUpperCase();
+}
+function renderCountrySel(){
+  const box = g('prpCountry'); if(!box) return;
+  const lbl = {es:'Catálogo',en:'Catalogue',fr:'Catalogue',it:'Catalogo'}[lang];
+  const chev = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><polyline points="2 4.5 6 8.5 10 4.5"/></svg>';
+  box.innerHTML = `
+    <span class="cty-lbl" id="ctyLbl">${lbl}</span>
+    <div class="cty-dd" id="ctyDd">
+      <button type="button" class="cty-btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="ctyLbl ctyCur">
+        <span id="ctyCur">${COUNTRIES[country].cta[lang]}</span>${chev}
+      </button>
+      <ul class="cty-menu" role="listbox">
+        ${Object.keys(COUNTRIES).map(k=>`<li><button type="button" class="cty-opt" role="option" data-cty="${k}" aria-selected="${k===country}">${COUNTRIES[k].name[lang]}</button></li>`).join('')}
+      </ul>
+    </div>`;
+}
+function closeCountryDd(){
+  const dd = g('ctyDd'); if(!dd) return;
+  dd.classList.remove('open');
+  dd.querySelector('.cty-btn').setAttribute('aria-expanded','false');
+}
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('.cty-btn');
+  const opt = e.target.closest('.cty-opt');
+  if(btn){
+    const dd = g('ctyDd'); const open = !dd.classList.contains('open');
+    dd.classList.toggle('open', open); btn.setAttribute('aria-expanded', String(open));
+    if(open){ const sel = dd.querySelector('[aria-selected="true"]'); if(sel) sel.focus(); }
+    return;
+  }
+  if(opt){
+    country = opt.dataset.cty;
+    closeCountryDd();
+    renderFiltered();
+    const b = document.querySelector('.cty-btn'); if(b) b.focus();
+    return;
+  }
+  if(!e.target.closest('#ctyDd')) closeCountryDd();
+});
+document.addEventListener('keydown', e=>{
+  const dd = g('ctyDd');
+  if(!dd || !dd.classList.contains('open')) return;
+  if(e.key==='Escape'){ closeCountryDd(); dd.querySelector('.cty-btn').focus(); }
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+    e.preventDefault();
+    const opts = [...dd.querySelectorAll('.cty-opt')];
+    const i = opts.indexOf(document.activeElement);
+    const n = e.key==='ArrowDown' ? Math.min(i+1, opts.length-1) : Math.max(i-1, 0);
+    opts[n].focus();
+  }
+});
 
 const IMG_COLS = ['image[0].url','image[1].url','image[2].url','image[3].url','image[4].url',
                   'image[5].url','image[6].url','image[7].url','image[8].url','image[9].url'];
@@ -751,6 +843,7 @@ function parseTimestamp(ts){
 
 function getFiltered(){
   return allFetched
+    .filter(r => rowCountry(r) === country)
     .sort((a,b) => parseTimestamp(b['timestamp']||b['Timestamp']||b['TIMESTAMP']) -
                    parseTimestamp(a['timestamp']||a['Timestamp']||a['TIMESTAMP']));
 }
@@ -761,9 +854,26 @@ function renderFiltered(){
   const filtered  = getFiltered();
   const grouped   = groupByName(filtered);
   const visible   = grouped.slice(0, 3);
-  renderPropsFromData(visible);
+  renderCountrySel();
 
   const moreWrap = g('prpMore');
+  if(!visible.length && country !== 'MX'){
+    const soon = {
+      es:{tx:'Próximamente nuevas propiedades en esta región.', lk:'Cuéntenos qué busca'},
+      en:{tx:'New listings in this region are coming soon.',    lk:'Tell us what you’re looking for'},
+      fr:{tx:'De nouvelles propriétés arrivent bientôt dans cette région.', lk:'Dites-nous ce que vous recherchez'},
+      it:{tx:'Nuove proprietà in questa regione in arrivo.',    lk:'Diteci cosa cercate'}
+    }[lang];
+    g('prpG').innerHTML = `<div class="prp-soon">
+      <p class="prp-soon-ti">${COUNTRIES[country].cta[lang]}</p>
+      <p class="prp-soon-tx">${soon.tx}</p>
+      <a href="#contact" class="prp-lk">${soon.lk}</a>
+    </div>`;
+    moreWrap.innerHTML = '';
+    return;
+  }
+  renderPropsFromData(visible);
+
   const labels = {
     es:{btn:'VER CATÁLOGO COMPLETO', sub:'Explora todas nuestras propiedades disponibles'},
     en:{btn:'VIEW FULL CATALOGUE',   sub:'Explore all our available properties'},
