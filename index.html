@@ -198,7 +198,9 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,te
 .gline::before,.gline::after{content:'';flex:1;max-width:110px;height:1px;background:var(--line-strong)}
 .gdot{width:28px;height:2px;background:var(--turq);flex-shrink:0}
 .mf-ti{font-family:var(--serif);font-size:clamp(34px,4.6vw,60px);font-weight:300;font-style:italic;color:var(--char);margin:0 auto 30px;line-height:1.15;max-width:900px}
-.mf-tx{max-width:660px;margin:0 auto;font-size:16px;line-height:1.95;color:var(--muted);font-weight:300}
+.mf-tx{max-width:700px;margin:0 auto;font-size:16px;line-height:1.95;color:var(--muted);font-weight:300}
+.mf-tx p{margin:0 0 1.3em}
+.mf-tx .mf-sign{font-family:var(--serif);font-style:italic;font-size:clamp(20px,2vw,25px);font-weight:400;line-height:1.5;color:var(--char);margin:40px 0 0}
 
 /* ── SECCIONES COMUNES ── */
 .sec{padding:120px 0}
@@ -484,7 +486,7 @@ footer{padding:64px 6% 48px;background:var(--char);display:flex;flex-direction:c
   <div class="s-in">
     <div class="gline"><div class="gdot"></div></div>
     <h2 class="mf-ti rev" id="mfTi"></h2>
-    <p class="mf-tx rev" id="mfTx"></p>
+    <div class="mf-tx rev" id="mfTx"></div>
     <div class="gline"><div class="gdot"></div></div>
   </div>
 </section>
@@ -839,8 +841,8 @@ const L = {
     hSlogan:'Là où les opportunités deviennent des projets de vie',
     hLoc:'Playa del Carmen · Tulum · Quintana Roo',
     c1:'VOIR LES PROPRIÉTÉS',c2:'NOS SERVICES',
-    mfTi:"Plus qu'une agence.",
-    mfTx:"OceanSide Properties est votre passeport vers une vie d'exception au cœur de la Riviera Maya. Nous orchestrons chaque détail de votre parcours — du premier vol en hélicoptère au-dessus de Tulum jusqu'à la signature de votre propriété de rêve.",
+    mfTi:"Plus qu’une agence immobilière.<br>Un partenaire pour votre prochain chapitre.",
+    mfTx:"<p>Chez OceanSide Properties, nous croyons que trouver un foyer, c’est bien plus qu’acheter une propriété : c’est créer une vie qui vous ressemble. Que vous fassiez vos premiers pas vers l’accession à la propriété, que vous cherchiez un lieu où grandir ensemble, que vous investissiez dans de nouvelles opportunités ou que vous ouvriez un chapitre plus serein et plus riche de sens au bord de la mer, nous sommes là pour vous accompagner à chaque étape.</p><p>De la découverte du bien idéal à l’exploration de vos options, jusqu’à l’achat et au-delà, nous réunissons une expertise de confiance, un accompagnement personnalisé et un service de qualité pour rendre ce parcours clair, accessible et gratifiant.</p><p class=\"mf-sign\">Vos objectifs. Votre parcours. Un lieu bien à vous.</p>",
     abEy:'· À PROPOS DE NOUS',abTi:'QUI SOMMES-NOUS',
     abIntro:"OceanSide Properties est une entreprise spécialisée dans l'immobilier et les services d'accompagnement pour les investisseurs, les familles et les personnes souhaitant s'établir sur la Riviera Maya. Notre engagement est d'offrir une expérience professionnelle, transparente et personnalisée à chaque étape du processus d'achat, de vente ou d'investissement immobilier.",
     abCol1p:["Grâce à une connaissance approfondie du marché immobilier de la région, nous aidons nos clients à trouver des propriétés adaptées à leurs besoins, leurs objectifs et leur style de vie — que ce soit pour y vivre, passer des vacances, générer des revenus locatifs ou diversifier leur patrimoine.","Nous nous distinguons par une attention de proximité, un conseil intégral et des solutions sur mesure, accompagnant nos clients de la recherche de la propriété idéale jusqu'à la clôture réussie de l'opération."],
@@ -886,8 +888,8 @@ const L = {
     hSlogan:'Where opportunities become life projects',
     hLoc:'Playa del Carmen · Tulum · Quintana Roo',
     c1:'EXPLORE PROPERTIES',c2:'OUR SERVICES',
-    mfTi:"More than an agency.",
-    mfTx:"OceanSide Properties is your passport to an exceptional life at the heart of the Riviera Maya. We orchestrate every detail of your journey — from your first helicopter flight above Tulum to signing the deed of your dream property.",
+    mfTi:"More than a real estate agency.<br>A partner in your next chapter.",
+    mfTx:"<p>At OceanSide Properties, we believe finding a home is about more than buying a property — it’s about creating a life that feels right for you. Whether you’re taking your first step toward homeownership, finding a place to grow together, investing in new opportunities, or settling into a slower, more meaningful chapter by the sea, we’re here to guide you every step of the way.</p><p>From discovering the right property and exploring your options to navigating the buying process and beyond, we bring together trusted expertise, personalized guidance, and quality service to make the journey feel clear, accessible, and rewarding.</p><p class=\"mf-sign\">Your goals. Your journey. A place to call your own.</p>",
     abEy:'· ABOUT US',abTi:'WHO WE ARE',
     abIntro:"OceanSide Properties is a company specializing in real estate and advisory services for investors, families and individuals seeking to establish themselves on the Riviera Maya. Our commitment is to provide a professional, transparent, and personalized experience at every stage of the buying, selling, or investment process.",
     abCol1p:["With extensive knowledge of the regional real estate market, we help our clients find properties that match their needs, goals, and lifestyle — whether to live in, vacation at, generate rental income from, or diversify their wealth portfolio.","We distinguish ourselves through close personal attention, comprehensive advisory, and tailored solutions, accompanying our clients from the search for the ideal property through to the successful closing of every transaction."],
@@ -933,8 +935,8 @@ const L = {
     hSlogan:'Donde las oportunidades se convierten en proyectos de vida',
     hLoc:'Playa del Carmen · Tulum · Quintana Roo',
     c1:'EXPLORAR PROPIEDADES',c2:'NUESTROS SERVICIOS',
-    mfTi:"Más que una agencia.",
-    mfTx:"OceanSide Properties es su pasaporte hacia una vida excepcional en el corazón de la Riviera Maya. Orquestamos cada detalle de su viaje — desde su primer vuelo en helicóptero sobre Tulum hasta la firma de su propiedad soñada.",
+    mfTi:"Más que una agencia inmobiliaria.<br>Un aliado en su próximo capítulo.",
+    mfTx:"<p>En OceanSide Properties creemos que encontrar un hogar es mucho más que comprar una propiedad: se trata de crear una vida que se sienta a su medida. Ya sea que esté dando su primer paso hacia una casa propia, buscando un lugar para crecer juntos, invirtiendo en nuevas oportunidades o comenzando un capítulo más pausado y significativo junto al mar, estamos aquí para acompañarle en cada paso del camino.</p><p>Desde descubrir la propiedad ideal y explorar sus opciones hasta guiarle en el proceso de compra y más allá, reunimos experiencia confiable, asesoría personalizada y un servicio de calidad para que el camino sea claro, accesible y gratificante.</p><p class=\"mf-sign\">Sus metas. Su camino. Un lugar que pueda llamar suyo.</p>",
     abEy:'· ACERCA DE NOSOTROS',abTi:'QUIÉNES SOMOS',
     abIntro:"OceanSide Properties es una empresa especializada en bienes raíces y servicios de acompañamiento para inversionistas, familias y personas que desean establecerse en la Riviera Maya. Nuestro compromiso es brindar una experiencia profesional, transparente y personalizada en cada etapa del proceso de compra, venta o inversión inmobiliaria.",
     abCol1p:["Con amplio conocimiento del mercado inmobiliario de la región, ayudamos a nuestros clientes a encontrar propiedades que se adapten a sus necesidades, objetivos y estilo de vida, ya sea para vivir, vacacionar, generar ingresos por rentas o diversificar su patrimonio.","Nos distinguimos por ofrecer atención cercana, asesoría integral y soluciones a la medida, acompañando a nuestros clientes desde la búsqueda de la propiedad ideal hasta el cierre exitoso de la operación."],
@@ -980,8 +982,8 @@ const L = {
     hSlogan:'Dove le opportunità diventano progetti di vita',
     hLoc:'Playa del Carmen · Tulum · Quintana Roo',
     c1:'ESPLORA PROPRIETÀ',c2:'I NOSTRI SERVIZI',
-    mfTi:"Più di un'agenzia.",
-    mfTx:"OceanSide Properties è il vostro passaporto verso una vita eccezionale nel cuore della Riviera Maya. Orchestriamo ogni dettaglio del vostro percorso — dal primo volo in elicottero sopra Tulum alla firma della vostra proprietà dei sogni.",
+    mfTi:"Più di un’agenzia immobiliare.<br>Un partner per il vostro prossimo capitolo.",
+    mfTx:"<p>In OceanSide Properties crediamo che trovare casa sia molto più che acquistare una proprietà: significa creare una vita che vi rispecchi. Che stiate muovendo i primi passi verso una casa di proprietà, cercando un luogo in cui crescere insieme, investendo in nuove opportunità o iniziando un capitolo più lento e significativo in riva al mare, siamo qui per accompagnarvi in ogni fase del percorso.</p><p>Dalla scoperta della proprietà giusta all’esplorazione delle vostre opzioni, fino al processo di acquisto e oltre, uniamo competenza affidabile, consulenza personalizzata e un servizio di qualità per rendere il percorso chiaro, accessibile e gratificante.</p><p class=\"mf-sign\">I vostri obiettivi. Il vostro percorso. Un luogo da chiamare casa.</p>",
     abEy:'· CHI SIAMO',abTi:'LA NOSTRA STORIA',
     abIntro:"OceanSide Properties è un'azienda specializzata nel settore immobiliare e nei servizi di accompagnamento per investitori, famiglie e persone che desiderano stabilirsi nella Riviera Maya. Il nostro impegno è offrire un'esperienza professionale, trasparente e personalizzata in ogni fase del processo di acquisto, vendita o investimento immobiliare.",
     abCol1p:["Grazie all'ampia conoscenza del mercato immobiliare della regione, aiutiamo i nostri clienti a trovare proprietà adatte alle loro esigenze, obiettivi e stile di vita — che si tratti di abitarci, trascorrere le vacanze, generare redditi da locazione o diversificare il patrimonio.","Ci distinguiamo per l'attenzione personalizzata, la consulenza integrale e le soluzioni su misura, accompagnando i clienti dalla ricerca della proprietà ideale fino alla chiusura dell'operazione."],
@@ -1037,8 +1039,8 @@ function render(){
   g('hCta1').textContent = t.c1;
   g('hCta2').textContent = t.c2;
   // Manifesto
-  g('mfTi').textContent = t.mfTi;
-  g('mfTx').textContent = t.mfTx;
+  g('mfTi').innerHTML = t.mfTi;
+  g('mfTx').innerHTML = t.mfTx;
   // About
   g('abEy').textContent = t.abEy;
   g('abTi').textContent = t.abTi;
