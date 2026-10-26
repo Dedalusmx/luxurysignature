@@ -266,17 +266,20 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,te
 .srv-c{background:var(--sand);padding:60px 56px;position:relative;overflow:hidden;cursor:default;min-height:320px;display:flex;flex-direction:column;justify-content:flex-end}
 .srv-bg-img{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1s ease,transform 1.4s ease;transform:scale(1.06);z-index:0}
 /* Velo marfil: la foto se disuelve hacia el texto, como luz sobre piedra */
-.srv-bg-dim{position:absolute;inset:0;background:linear-gradient(100deg,rgba(241,245,245,.97) 0%,rgba(241,245,245,.9) 38%,rgba(241,245,245,.45) 72%,rgba(241,245,245,.08) 100%);z-index:1;opacity:0;transition:opacity 1s ease}
+.srv-bg-dim{position:absolute;inset:0;background:linear-gradient(100deg,rgba(41,43,41,.78) 0%,rgba(41,43,41,.62) 38%,rgba(41,43,41,.3) 72%,rgba(41,43,41,.1) 100%);z-index:1;opacity:0;transition:opacity 1s ease}
 .srv-c.srv-visible .srv-bg-img{opacity:1;transform:scale(1)}
 .srv-c.srv-visible .srv-bg-dim{opacity:1}
-.srv-c.srv-visible .srv-num{opacity:.09}
+.srv-c.srv-visible .srv-num{opacity:.16;color:var(--ivory)}
+.srv-c.srv-visible .srv-ti{color:var(--ivory)}
+.srv-c.srv-visible .srv-de{color:rgba(241,245,245,.85)}
+.srv-c.srv-visible .srv-arr svg{color:var(--ivory)}
 .srv-c.srv-visible .srv-line{width:72px}
 .srv-c.srv-visible .srv-arr{opacity:1;transform:none}
 .srv-inner{position:relative;z-index:2;max-width:560px}
 .srv-num{font-family:var(--serif);font-size:96px;font-weight:300;color:var(--char);opacity:.05;line-height:1;position:absolute;top:12px;right:28px;pointer-events:none;transition:opacity .6s;z-index:2}
 .srv-line{width:28px;height:2px;background:var(--turq);margin-bottom:28px;transition:width .7s var(--ease)}
-.srv-ti{font-family:var(--serif);font-size:clamp(23px,2.2vw,30px);font-weight:400;font-style:italic;color:var(--char);margin-bottom:12px;line-height:1.2}
-.srv-de{font-size:15px;line-height:1.85;color:var(--muted);max-width:520px}
+.srv-ti{font-family:var(--serif);font-size:clamp(23px,2.2vw,30px);font-weight:400;font-style:italic;color:var(--char);margin-bottom:12px;line-height:1.2;transition:color .8s ease}
+.srv-de{font-size:15px;line-height:1.85;color:var(--muted);max-width:520px;transition:color .8s ease}
 .srv-arr{position:absolute;bottom:34px;right:42px;width:20px;height:20px;opacity:0;transform:translateX(-6px);transition:opacity .4s,transform .4s;z-index:2}
 .srv-arr svg{width:100%;height:100%;color:var(--turq-dk)}
 .srv-c:first-child{min-height:440px}
@@ -286,7 +289,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,te
 @media(max-width:600px){
   .srv-c{padding:38px 24px}
   .srv-num{font-size:72px}
-  .srv-bg-dim{background:linear-gradient(180deg,rgba(241,245,245,.55) 0%,rgba(241,245,245,.92) 55%,rgba(241,245,245,.97) 100%)}
+  .srv-bg-dim{background:linear-gradient(180deg,rgba(41,43,41,.25) 0%,rgba(41,43,41,.62) 55%,rgba(41,43,41,.8) 100%)}
 }
 
 /* ── PROPERTIES ── */
